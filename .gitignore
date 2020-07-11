@@ -1,0 +1,16 @@
+
+.vscode/settings.json
+*.doc
+Tex/Applied Machine Learning Project.bib
+Tex/ML_Coursework.bib
+book-dataset/
+*.toc
+*.log
+*.fls
+*.gz
+*.out
+*.xdv
+*.blg
+*.bbl
+*.aux
+*.fdb_latexmk

@@ -1,0 +1,43 @@
+Other:
+    ☐ Learn how to import functions from a custom file...
+    ☐ Copy over WAME optimizer code
+    ☐ Learn to pause and restart training and save history to objects
+    ☐ Put some work on git
+
+Image processing:
+    ✔ Produce file of image sizes and class for viz/analysis in R @done(20-06-14 20:36)
+    Produce 3 versions of images:
+        ✔ Most common size padded, not scaled @done(20-05-24 14:57)
+        ✔ Default, not scaled @done(20-05-24 14:57)
+        ✔ Cropped to common, not scaled @done(20-05-24 14:57)
+    ✔ Find function to scale depending on each input required @done(20-05-24 15:05)
+    
+Model creating:
+    ☐ Make a basic version that does all the following with alexnet:
+        ✔ Read and and reshape the data @done(20-06-28 12:28)
+        ✔ Load a pre-trained model @done(20-06-28 12:28)
+        ☐ Add in early stopping
+        ☐ Add in checkpoints
+        ☐ Retrain the model (just fully connected) by itself
+        ☐ Store the historic resutls of the model
+        ☐ Store the best resultant model and what step it was at
+        ☐ Run on the test data
+        ☐ Stores the predicted results
+        ☐ Runs some basic analysis on the results.
+    ☐ Train and test basic AlexNet with minor tuning on all 6 versions (3 datasets, with/without adding in original size information)
+    ☐ Train tune and test AlexNet
+    ☐ Train tune and test inception-resnetV2
+    ☐ Train tune and test resneXt
+
+Reulsts exploration:
+    ☐ Compare the results and explore where failures occur etc.
+    ☐ Do analysis on sizes and colours per class in R
+    ☐ Do some other stuff here I guess
+
+Make images:
+    ☐ Take 2 best and 1 worst class and use libary to try and make images from them
+    ☐ Produce the gif if you can because it looks cool
+    ☐ If you have the time, try to use DGN-AMs maybe?
+
+Write up:
+    ☐ Write it up (split this out more)

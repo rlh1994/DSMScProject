@@ -1,0 +1,1453 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\usepackage[margin=3cm]{geometry}
+\usepackage[superscript,nomove]{cite}
+\numberwithin{equation}{section}
+\DeclareMathOperator{\Lagr}{\mathcal{L}}
+\numberwithin{figure}{section}
+\usepackage[makeroom]{cancel}
+\usepackage{gensymb}
+\DeclareMathOperator\arctanh{arctanh}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen,  
+colorlinks=true}
+
+
+
+
+\begin{document}
+\renewcommand\citeform[1]{[#1]}
+
+\title{On Higher Dimensional Black Holes and the Instability of the Extremal Reissner-Nordstr\"om}
+\author{\\Ryan Hill \\\\
+Supervisor: Dr Rodolfo Russo\\\\
+Queen Mary, University Of London\\\\
+\texttt{r.l.hill@se12.qmul.ac.uk}}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+%
+%
+\graphicspath{{images/}}
+%
+\begin{abstract}
+We study the derivation of the Schwarzschild and Reissner-Nordstr\"om (RN) black hole metrics in both four and $D$ dimensions before discussing the application of thermodynamics to these solutions. We then discuss the instability of the extremal RN black hole in four dimensions, before considering the same case for a five dimensional metric as a specific reduction of the Strominger-Vafa black hole; finding the same instability present in this as well. 
+\end{abstract}
+%
+\clearpage
+%
+{\hypersetup{linkcolor=black}
+\tableofcontents}
+\thispagestyle{empty}
+%
+\clearpage
+%
+\setcounter{page}{1}
+\section{Introduction}
+The theoretical study of black holes is important to the understanding of General Relativity (GR), making predictions for observational experiments, and even aiding in the understanding of a quantum theory of gravity. This research project will focus on the study of two types of black holes, the Schwarzschild and Reissner-Nordstr\"om (RN) solutions, first deriving the metric for a general spherical solution in 4-dimensions in section.\ref{sub:general_spherical_solution} and then specialising to Schwarzschild solution in section.\ref{sub:schwarzschild_solution} before next deriving the RN solution in section.\ref{sub:reissner_nordstr"om_solution}. Then we will repeat the process for in D-dimensions; again starting with the general spherically symmetric case in section.\ref{sub:general_spherically_symmetric_solutions} before specialising once more to the Schwarzschild in section.\ref{sub:schwarzschild_solution_in_extra_dimensions}, and finally the RN in section.\ref{sub:reissner_nordstom_soltuion_in_extra_dimensions}. 
+
+We will then move on to look at the thermodynamics of these systems in section.\ref{sec:blackhole_thermodynamics} and we discuss how we can assign temperature and entropy to the horizon of a black hole. Next we move onto look at the instability of the extremal ($T=0$) RN black hole and how to show this explicitly in section.\ref{sec:intability_of_extremal_rn_black_hole} before finally doing the same but for a 5-D RN metric reduced from the Strominger-Vafa line element and showing the the instability still exists here in section.\ref{sec:5d_charged_black_holes_from_string_theory}. The reason we want to look at this further metric is there exists addition (super)symmetries in this case and it may have been that this did not give rise to the instability; however this is not the case and the instability remains. Finally we review the complete work in section.\ref{sec:conclusion} as well as providing some additional published results for further reading and then discussing possible continuations/extensions of this work. 
+
+A solid foundation of GR is already expected of the reader and, whilst not necessary, a basic understanding of differential forms will be particularly useful for the derivation of the higher dimensional metrics. We will be working mostly in natural units where $\hbar = c =\mu_{0} = \epsilon_{0} = k_b = 1$ where the only exception is that $G_{N}\ne 1$. For completeness a review of GR is provided in the next section. 
+%
+%
+\subsection{Whistle-stop Review of General Relativity}
+%Write here about what is required and why we only cover basic stuff
+\subsubsection{Tensors} % (fold)
+Tensors are an important part of GR and as such the review of them here will be brief as we expect the reader to have a solid foundation in them already. Tensors are mathematical objects of possibly multiple dimensions that leave vectors unchanged under a coordinate transform; they will change the components of the vector, but the overall vector is invariant. This can be written explicitly as a \emph{Tensor Transformation Law}
+\begin{equation}
+	{T^{\prime\mu}}_{\nu\rho} = \frac{\partial x^{\prime\mu}}{\partial x^\sigma}\frac{\partial x^\tau}{\partial x^{\prime\nu}}\frac{\partial x^\alpha}{\partial x^{\prime\rho}}{T^\sigma}_{\tau\alpha}
+\end{equation}
+where $x^\mu$ are the original coordinates and $x^{\prime\mu}$ are the transformed coordinates. This was an example but can be extrapolated to higher or lower rank tensors, some examples of which include
+\begin{itemize}
+	\item Rank 0: Scalars
+	\item Rank 1: Vectors 
+	\item Rank 2: 2-dimensional matrix
+\end{itemize}
+and so on. It is important to note that these are just examples of a tensor with such a rank but are not all of those rank tensors. For example, all vectors are rank 1 tensors but not all rank 1 tensors are vectors, i.e. vectors $\subset$ rank 1 tensors. The reason we use these objects is that the laws of physics must be invariant in all frames, rather than just the inertial ones required for Special Relativity, and as such GR is formulated using these objects to allow us to consider accelerating frames.
+%
+%
+% subsubsection tensors (end)
+\subsubsection{The Metric} % (fold)
+\label{subsub:the_metric}
+In General Relativity (GR) the metric is the most fundamental tensor; it describes a specific spacetime and contains information mainly relating to distances and causality for a specific coordinate system. For any general metric it will be denoted $g_{\mu\nu}$, where $\mu,\nu\ =0,1 \ldots D-1$ and $D$ is the dimension of the spacetime. The flat space metric (also known as the Minkowski Metric) will be denoted with $\eta_{\mu\nu}$ and in $D=4$ 
+\begin{equation}
+	\eta_{\mu\nu} = 
+	\begin{pmatrix}
+		-1 & 0 & 0 & 0 \\
+		0 & 1 & 0 & 0 \\
+		0 & 0 & 1 & 0 \\
+		0 & 0 & 0 & 1 
+	\end{pmatrix}
+\end{equation}
+where we have chosen the $(- + + + )$ convention as most GR work uses. The metric is a symmetric $D\times D$ matrix and as such $g_{\mu\nu} = g_{\nu\mu}$, a property we will use often. The next item we need to discuss is the line element
+\begin{equation}
+	ds^2 = dx^\mu dx^\nu g_{\mu\nu}
+\end{equation}
+where $x^\mu$ are the coordinates in that spacetime, $ds^2$ is an interval between two points in spacetime and is invariant under coordinate transformations i.e
+\begin{equation}
+	ds'^2=ds^2
+\end{equation}
+where $ds'^2$ is the line element in a new coordinate system.
+% subsubsection the_metric (end)
+\subsubsection{The Christoffel Symbols} % (fold)
+\label{subsub:the_christoffel_symbolse}
+A problem arises when we want to differentiate tensors as the usual partial derivative of a tensor does not transform as a tensor, and as such we use the covariant derivative, $D_\mu$. This introduces a different problem, how do we define $D_\mu$ such that it transforms as a tensor? If we examine how the partial derivatives transforms it is trivial to show that 
+\begin{align}
+	\partial_\mu V^\nu &\rightarrow \frac{\partial}{\partial x^{\prime\mu}} V^\nu(x^{\prime\mu})\\
+	&= \frac{\partial x^\rho}{\partial x^{\prime\mu}} \frac{\partial x^{\prime\nu}}{\partial x^\sigma} \frac{\partial V^\sigma}{\partial x^\rho} + \frac{\partial x^\rho}{\partial x^{\prime\mu}}\frac{\partial^2 x^{\prime\nu}}{\partial x^\rho \partial x^\sigma}V^\sigma
+\end{align}
+where the second term is obviously not obeying the tensor transformation law. The obvious solution to this is to define the covariant derivative with a term that, under a change of coordinates, exactly cancels the second term. Doing this means that we would need
+\begin{equation}
+	\Gamma^{\prime\nu}_{\mu\rho} = \frac{\partial x^\sigma}{\partial x^{\prime\mu}} \frac{\partial x^\tau}{\partial x^{\prime\rho}} \frac{\partial x^{\prime\nu}}{\partial x^\omega}\Gamma^{\omega}_{\sigma\tau} - \frac{\partial x^\tau}{\partial x^{\prime\mu}}\frac{\partial^2 x^{\prime\nu}}{\partial x ^{\prime\rho}  \partial x^\tau}. \label{eq:chris_satisfy}
+\end{equation}
+There are many possible choices of this term, known as a connection, that would satisfy this equation; one such choice is the Levi-Civita connection
+\begin{equation}
+	\Gamma^{\mu}_{\nu\rho}=\frac{1}{2}g^{\mu\sigma}[\partial_\rho g_{\sigma\nu} + \partial_\nu g_{\sigma\rho} - \partial_\sigma g_{\nu\rho}], \label{eq:Christoffel_symbol}
+\end{equation}
+which we shall call the Christoffel symbol, where I have verified independently that this satisfies (\ref{eq:chris_satisfy}). Now we have defined this connection we can write the general form of the covariant derivative acting on a rank $m+n$ tensor as 
+\begin{multline}
+	D_\mu {A^{\nu_1,\nu_2,...,\nu_m}}_{\sigma_1,\sigma_2,\dots,\sigma_n}  = \partial_\mu{A^{\nu_1,\nu_2,...,\nu_m}}_{\sigma_1,\sigma_2,\dots,\sigma_n} \\+ \Gamma^{\nu_1}_{\mu\rho}{A^{\rho,\nu_2,\dots,\nu_m}}_{\sigma_1,\sigma_2,\dots,\sigma_n} + \Gamma^{\nu_2}_{\mu\rho}{A^{\nu_1,\rho,...,\nu_m}}_{\sigma_1,\sigma_2,\dots,\sigma_n} + \dots \\
+	 - \Gamma^{\rho}_{\mu\sigma_1}{A^{\nu_1,\nu_2,\dots,\nu_m}}_{\rho,\sigma_2,\dots,\sigma_n} - \Gamma^{\rho}_{\mu\sigma_2}{A^{\nu_1,\nu_2,\dots,\nu_m}}_{\sigma_1,\rho,\dots,\sigma_n} - \dots.
+\end{multline}
+Finally we can define the geodesic equation, that is the path between two points in a spacetime that has a constant tangent vector. Said another way it is the shortest path between two points e.g. in flat space this is a straight line. The geodesic equation can be derived by considering the requirement that the tangent vector be constant and then \emph{covariantising} the derivatives. Expanding the relevant terms we get 
+\begin{equation}
+	\frac{d^2x^\mu}{ds^2} + \Gamma^{\mu}_{\nu\rho}\frac{dx^\nu}{ds}\frac{dx^\rho}{ds} = 0.
+\end{equation}
+% subsubsection the_christoffel_symbols (end)
+\subsubsection{Curvature} % (fold)
+\label{subsub:curvature}
+We now finally move on to the tensors needed to describe the curvature of a given spacetime, the first is the Riemann Curvature Tensor, ${R^\rho}_{\mu\nu\sigma}$ which is defined as
+\begin{align}
+	[D_\nu,D_\sigma]A^\rho &= {R^\rho}_{\mu\nu\sigma} A^\mu \\
+	\implies {R^\rho}_{\mu\nu\sigma} &= \partial_\nu \Gamma^{\rho}_{\sigma\mu} - \partial_\sigma \Gamma^{\rho}_{\nu\mu} + \Gamma^{\rho}_{\nu \lambda}\Gamma^{\lambda}_{\sigma\mu} - \Gamma^{\rho}_{\sigma \lambda}\Gamma^{\lambda}_{\nu \mu} \label{eq:riemann}
+\end{align}
+where the intermediate steps are tedious but trivial. We can also define the entirely covariant form of this as
+\begin{equation}
+ 	R_{\rho\mu\nu\sigma}=g_{\rho\lambda}{R^\rho}_{\mu\nu\sigma}= \frac{1}{2}\left(\partial_{\mu}\partial_{\nu}g_{\sigma\rho}-\partial_{\nu}\partial_{\rho}g_{\mu\sigma} -\partial_{\mu}\partial_{\sigma}g_{\nu\rho} + \partial_{\sigma}\partial_{\rho}g_{\sigma\nu}  \right) + g_{\rho\lambda}\left(\Gamma^{\lambda}_{\nu \alpha}\Gamma^{\alpha}_{\sigma\mu} - \Gamma^{\lambda}_{\sigma \alpha}\Gamma^{\alpha}_{\nu \mu}\right)
+\end{equation}
+where we use the definition of the Christoffel from (\ref{eq:Christoffel_symbol}) to simplify the first two terms. As this is a rank-4 tensor it has $D^4$ components which even in a 4-dimensional space time means 256 components; fortunately we can see from the covariant form that this tensor has some properties which greatly reduce the number of unique components and these are
+\begin{align}
+	R_{\mu\nu\sigma\rho} &= -R_{\nu\mu\sigma\rho} = -R_{\mu\nu\rho\sigma} \label{eq:riemann-prop-1}\\
+	R_{\mu\nu\sigma\rho} &= R_{\sigma\rho\mu\nu} \\
+	R_{\mu\nu\rho\sigma} &+ R_{\mu\rho\sigma\nu} + R_{\mu\sigma\nu\rho} = 0 \label{eq:riemann-prop-3}
+\end{align}
+which, again in 4 dimensions, brings the number of unique components down to 20.
+We also have the Ricci tensor, which is a rank-2 tensor and is a contraction of the Riemann tensor of the form
+\begin{equation}
+	R_{\mu\nu} = {R^\lambda}_{\mu\lambda\nu}. \label{eq:ricci}
+\end{equation}
+Then finally we have the Ricci scalar which tells you about the local curvature of the universe and is a contraction of the Ricci tensor with the inverse metric, i.e.
+\begin{equation}
+	R = R_{\mu\nu}g^{\mu\nu} \label{eq:ricscalar}
+\end{equation}
+which is related to the curvature of the universe by
+\begin{align}
+R > 0 &\iff \text{Positive curvature}\\
+R = 0 &\impliedby \text{Flat space}\\
+R < 0 &\iff \text{Negative curvature}
+\end{align}
+where it is important to note that not all $R=0$ values are flat space, but all flat space has $R=0$.
+% subsubsection curvature (end)
+\subsection{The Einstein Field Equations} % (fold)
+\label{sub:The_einstein_field_equations}
+%Talk about the importance of the equation and why this is actually fully derived
+%
+%
+%
+\subsubsection{The Einstein-Hilbert Action} % (fold)
+\label{subsub:the_einstein-hilbert_action}
+The Einstein Field Equations (EFEs) are a set of coupled, non-linear, partial differential equations that can provide us with a link between the geometry of spacetime, and what fills the universe (energy, matter, etc). To derive the EFEs we must start with the Einstein-Hilbert action
+\begin{equation}
+	\label{eq:HE_action}
+	S = \int \sqrt{-g} \left(\frac{R}{16\pi G} + \Lagr_F\right)d^Dx
+\end{equation}
+where $g$ is the determinant of the metric, $R$ is the Ricci scalar, $G$ is Newton's gravitational constant, and $\Lagr_F$ is a general Lagrangian term that describes a field, e.g. electromagnetism or matter, and can be set to 0 if you are considering the vacuum.\\
+For now let us keep $\Lagr_F$ general and we can specialise to a particular case later. We shall begin as usual by varying the action w.r.t $g^{\mu\nu}$
+\begin{equation}
+	\frac{\delta S}{\delta g^{\mu\nu}} = \int \left(\frac{1}{16\pi G} \frac{\delta(\sqrt{-g}R)}{\delta g^{\mu\nu}} + \frac{\delta(\sqrt{-g}\Lagr_F)}{\delta g^{\mu\nu}}\right)d^Dx.
+\end{equation}
+Now by expanding out the first term and pulling out some terms we can write this in the form
+\begin{equation}
+	{\delta S} = \int \left(\frac{1}{16\pi G} \left(\frac{\delta(R)}{\delta g^{\mu\nu}} + \frac{R}{\sqrt{-g}}\frac{\delta(\sqrt{-g})}{\delta g^{\mu\nu}}\right) + \frac{1}{\sqrt{-g}}\frac{\delta(\sqrt{-g}\Lagr_F)}{\delta g^{\mu\nu}}\right)\sqrt{-g}\;\delta g^{\mu\nu} d^Dx = 0
+\end{equation}
+using the principle of least action to equate this to zero. Then finally we know this must be true for all $\delta g^{\mu\nu}$ and as such can finally conclude that
+\begin{equation}
+	\frac{\delta(R)}{\delta g^{\mu\nu}} + \frac{R}{\sqrt{-g}}\frac{\delta(\sqrt{-g})}{\delta g^{\mu\nu}} = -\frac{16\pi G}{\sqrt{-g}}\frac{\delta(\sqrt{-g}\Lagr_F)}{\delta g^{\mu\nu}}. \label{eq:EFE_unfinished}
+\end{equation}
+% subsubsection the_einstein-hilbert_action (end)
+\subsubsection{Variation of the Ricci Scalar} % (fold)
+\label{subsub:variation_of_the_ricci_scalar}
+Let's now focus the LHS and calculate each of the two terms individually, starting with the variation of the Ricci Scalar. Before we can work on the Ricci scalar, we need to work out how it depends on the metric, which means we need to return to the higher rank tensor, the Riemann tensor, and more precisely the equation defining it in terms of Christoffel symbols as we gave in (\ref{eq:riemann}), once we have this we can vary the Riemann tensor. Remembering that we can commute the variation and the partial derivative, which gives us
+\begin{equation}
+	\delta {R^\rho}_{\mu\nu\sigma} = \partial_\nu \delta\Gamma^{\rho}_{\mu\sigma} - \partial_\sigma \delta\Gamma^{\rho}_{\mu\nu} + \delta\Gamma^{\rho}_{\nu \lambda}\Gamma^{\lambda}_{\mu\sigma} + \Gamma^{\rho}_{\nu \lambda}\delta\Gamma^{\lambda}_{\mu\sigma} - \delta\Gamma^{\rho}_{\sigma \lambda}\Gamma^{\lambda}_{\mu \nu} - \Gamma^{\rho}_{\sigma \lambda}\delta\Gamma^{\lambda}_{\mu \nu}.
+\end{equation}
+It's important to understand that $\delta\Gamma$ is just the difference of two connections and is fortunately a tensor, as such we can take the covariant derivative of it
+\begin{equation}
+	D_\lambda(\delta \Gamma^\rho_{\nu\mu}) = \partial_\lambda(\delta \Gamma^{\rho}_{\nu\mu}) +\Gamma^{\rho}_{\lambda\sigma}\delta \Gamma^{\sigma}_{\nu\mu} - \Gamma^{\sigma}_{\lambda\mu}\delta \Gamma^{\rho}_{\sigma\nu} - \Gamma^{\sigma}_{\lambda\nu}\delta \Gamma^{\rho}_{\sigma\mu}
+\end{equation}
+which looks similar to what we had before, but we don't quite have the terms we want. Next we take the difference of two of these terms and, as we will see, this will give us the equation we are looking for;
+\begin{multline}
+ 	D_\nu(\delta \Gamma^\rho_{\mu\sigma}) - D_\sigma(\delta \Gamma^\rho_{\mu\nu}) = \left[\partial_\nu(\delta \Gamma^{\rho}_{\mu\sigma}) + \Gamma^{\rho}_{\nu\lambda}\delta \Gamma^{\lambda}_{\mu\sigma} - \Gamma^{\lambda}_{\nu\sigma}\delta \Gamma^{\rho}_{\lambda\mu} - \Gamma^{\lambda}_{\nu\mu}\delta \Gamma^{\rho}_{\lambda\sigma}\right] \\- \left[\partial_\sigma(\delta \Gamma^{\rho}_{\mu\nu}) + \Gamma^{\rho}_{\sigma\lambda}\delta \Gamma^{\lambda}_{\mu\nu} - \Gamma^{\lambda}_{\sigma\mu}\delta \Gamma^{\rho}_{\lambda\nu} - \Gamma^{\lambda}_{\sigma\nu}\delta \Gamma^{\rho}_{\lambda\mu}\right] = \delta {R^\rho}_{\mu\nu\sigma}. \label{eq:delta_riemann}
+\end{multline} 
+The next step is comparably much easier as we only have to contract the upper and lower-middle index, that is
+\begin{align}
+	R_{\mu\nu} &= {R^\rho}_{\mu\rho\nu}\\
+	\delta R_{\mu\nu} &= D_\rho(\delta \Gamma^\rho_{\mu\nu}) - D_\nu(\delta \Gamma^\rho_{\mu\rho}),
+\end{align}
+where we have relabelled the indices from (\ref{eq:delta_riemann}) such that $\nu\leftrightarrow\sigma$ then $\sigma\rightarrow\rho$ so that $\rho$ is summed over. Then finally we have to compute the Ricci scalar,
+\begin{align}
+R &= g^{\mu\nu} R_{\mu\nu}\\
+\implies \delta R &= \delta g^{\mu\nu}R_{\mu\nu} + g^{\mu\nu} \delta R_{\mu\nu}\\
+&= R_{\mu\nu}\delta g^{\mu\nu} + g^{\mu\nu}(D_\rho(\delta \Gamma^{\rho}_{\nu\mu}) - D_\nu(\delta \Gamma^{\rho}_{\rho\mu}))
+\end{align}
+but by using the fact that the covariant derivative of the metric is zero and by relabelling dummy indices this can be written as
+\begin{equation}
+	\delta R = R_{\mu\nu}\delta g^{\mu\nu} + D_\sigma(g^{\mu\nu}\delta \Gamma^{\sigma}_{\mu\nu} - g^{\mu\sigma}\delta \Gamma^{\rho}_{\mu\rho}).
+\end{equation}
+The second term in this equation is now clearly a total derivative, and as such does not contribute to the action and can be ignored giving us that $\delta R = R_{\mu\nu}\delta g^{\mu\nu}$ and that the term from (\ref{eq:EFE_unfinished}) gives us
+\begin{equation}
+	\frac{\delta R}{\delta g^{\mu\nu}} = R_{\mu\nu}.
+\end{equation}
+% subsubsectionvariation_of_the_ricci_scalar (end)
+\subsubsection{Variation of the Determinant of the Metric} % (fold)
+\label{subsub:variation_of_the_determinant_of_the_metric}
+Now we want to focus on the second term that contains the variation of $\sqrt{-\det(g_{\mu\nu})}$. We start simply by taking the chain rule to simplify the problem and get
+\begin{equation}
+	\delta(\sqrt{-g}) = \frac{-1}{2\sqrt{-g}}\delta(g). \label{eq:metric_var_unfinished}
+\end{equation}
+We will now use a trick to simplify the calculation and, without loss of generality, change to a coordinate system where the metric is diagonal meaning that 
+\begin{align}
+	g &= \prod_{\mu=0}^{D-1} g_{\mu\mu}\\
+	\implies \delta g & = \delta(\prod_{\mu=0}^{D-1} g_{\mu\mu}).
+\end{align}
+Once expanded this gives us
+\begin{align}
+	\delta g & = \delta(g_{00})\prod_{\mu \neq 0 }g_{\mu\mu} + \delta(g_{11})\prod_{\mu\neq 1} g_{\mu\mu} \dots + \delta(g_{(D-1)(D-1)})\prod_{\mu\neq D-1} g_{\mu\mu}\\
+	&= (\prod_{\mu=0}^{D-1} g_{\mu\mu})\sum_{\mu=0}^{D-1} \frac{\delta g_{\mu\mu}}{g_{\mu\mu}} = g g^{\mu\mu} \delta g_{\mu\mu}
+\end{align}
+where we have explicitly placed in the summation to make the factorisation easier to follow, and then used the fact that the metric is diagonal to write $1$ divided by the metric as the inverse metric. We can now return to a non-diagonal metric having done the otherwise difficult part of the calculation and using the fact that $g_{\mu\nu}\delta g^{\mu\nu} = - g^{\mu\nu} \delta g_{\mu\nu}$ we can write (\ref{eq:metric_var_unfinished}) as
+\begin{align}
+	\delta(\sqrt{-g}) = \frac{-\sqrt{-g}}{2}g_{\mu\nu}\delta g^{\mu\nu}.
+\end{align}
+Then bringing together all of this work we can write Einstein's Field Equations as
+\begin{equation}
+	R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R = 8\pi G\; T_{\mu\nu} \label{eq:efe}
+\end{equation}
+where the RHS can be written as $G_{\mu\nu}\equiv R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R$ and
+\begin{equation}
+	T_{\mu\nu}=\frac{-2}{\sqrt{-g}}\frac{\delta(\sqrt{-g}\Lagr_F)}{\delta g^{\mu\nu}}
+\end{equation} 
+is the \emph{stress-energy tensor} (SE tensor) which describes the physical properties (e.g. energy density, stress, etc) of the space, and in the vacuum $T_{\mu\nu} = 0$. This is the arguably the most important equation in GR, the RHS describes purely the geometry of the spacetime as where the LHS describes only the physical properties of the spacetime which might otherwise be impossible to relate.
+Another form of the equation includes a cosmological constant, $\Lambda$ and is written as
+\begin{equation}
+	R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R +g_{\mu\nu}\Lambda= 8\pi G\; T_{\mu\nu}
+\end{equation}
+but for the entirety of this report we will always consider the cosmological constant to be equal to 0.
+% subsubsection variation_of_the_determinant_of_the_metric (end)
+% subsection deriving_the_einstein_field_equations (end)
+\subsubsection{Testing the EFE for the 4 Dimensional EM Case} % (fold)
+\label{sub:from_the_vacumm_to_electromagnetism}
+Let us step away from the general expression for the SE tensor and specialise to the case where $\Lagr_D = \Lagr_{E.M}$ so that we can add electromagnetism to our spacetime. We will start by deriving the general form of $T_{\mu\nu}$ before checking our result by comparing with known results in 4 dimensions. First we need to write the Lagrangian density of electromagnetism as
+\begin{equation}
+	\Lagr_{E.M} = \frac{-1}{4} F_{\mu\nu} F_{\rho\sigma} g^{\mu\rho} g^{\nu\sigma}
+\end{equation}
+where $F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu$ and $A$ is the electromagnetic 4-potential. By considering flat spacetime, then by considering both the form of this and the solution to the Euler-Lagrange equations it is trivial to show that you can derive all of Maxwell's equations in covariant form
+\begin{align}
+	D_{\mu}F^{\mu\nu}&=J^{\nu}\\
+	D_{\mu}\left(\frac{1}{2}\epsilon^{\mu\nu\rho\lambda}F_{\rho\lambda}\right)&=0
+\end{align}
+where $\epsilon^{\mu\nu\rho\lambda}$ is the Levi-Civita symbol and $J=\left(\rho,\vec{J}\right)$ is the covariant four-vector that contains the charge density, $\rho$, and the current density $\vec{J}$.
+Let us start our derivation of the SE tensor by splitting the variation into two terms
+\begin{align}
+	T_{\mu\nu}&=\frac{-2}{\sqrt{-g}}\frac{\delta(\sqrt{-g}\Lagr_{E.M})}{\delta g^{\mu\nu}}\\
+	&= \frac{-2}{\sqrt{-g}}\left(\frac{\delta(\sqrt{-g})\Lagr_{E.M}}{\delta g^{\mu\nu}} + \frac{\sqrt{-g}(\delta \Lagr_{E.M})}{\delta g^{\mu\nu}} \right);
+	\label{eq:SE_EM_unf}
+\end{align}
+fortunately for us we have already calculated the first term and so can already simplify this to
+\begin{equation}
+	T_{\mu\nu}= g_{\mu\nu}\Lagr_{E.M} - 2 \frac{\delta \Lagr_{E.M}}{\delta g^{\mu\nu}}. \label{eq:energy_mom_tensor_w_lagr}
+\end{equation}
+It is important to remember that this variation is with respect to the metric and that $F_{\mu\nu}$ does not depend on the metric and as such can be considered constant. As well as this we must be careful to change the indices on the terms in the Lagrangian as these are free indices, whereas the ones on the metric variation are fixed. With this all in mind we can write
+\begin{equation}
+	\delta \Lagr_{E.M} = \frac{-1}{4}F_{\alpha\beta}F_{\rho\sigma}( (\delta g^{\alpha\rho}) g^{\beta\sigma} + g^{\alpha\rho} (\delta g^{\beta\sigma})).
+\end{equation}
+Then we simply have that
+\begin{align}
+	\frac{\delta\Lagr_{E.M}}{\delta g^{\mu\nu}} &= \frac{-1}{4}F_{\alpha\beta}F_{\rho\sigma}({\delta^\alpha}_\mu {\delta^\rho}_\nu g^{\beta\sigma} + g^{\alpha\rho} {\delta^\beta}_\mu {\delta^\sigma}_\mu)\\
+	&=\frac{-1}{4} (F_{\mu\beta}F_{\nu\sigma}g^{\beta\sigma} + F_{\alpha\nu}F_{\rho\mu}g^{\alpha\rho})
+\end{align}
+where ${\delta^\alpha}_\mu$ is the Kronecker delta function. Which when inserted into (\ref{eq:SE_EM_unf}) gives
+\begin{align}
+	T_{\mu\nu}&=\frac{-1}{4}g_{\mu\nu}F_{\alpha\beta}F_{\rho\sigma}g^{\alpha\rho}g^{\beta\sigma} + \frac{1}{2} g^{\beta\sigma}F_{\mu\beta}F_{\nu\sigma} + \frac{1}{2} g^{\alpha\rho}F_{\alpha\mu}F_{\rho\nu}\\
+	&=\frac{-1}{4}g_{\mu\nu}F_{\alpha\beta}F^{\alpha\beta}+  {F_\mu}^\sigma F_{\nu\sigma} \label{eq:SE_EM_fin}
+\end{align}
+where we have relabelled some dummy indices and used the anti-symmetric property of $F$ (i.e $F_{\mu\nu} = -F_{\nu\mu}$). Finally if we wish to check the validity of our results we can specialise further and consider the 4 dimensional flat-space case where the $(0,0)$ component of the SE tensor should be the energy density of the E.M field. The E.M tensor in 4 dimensions is written as
+\begin{equation}
+	F_{\mu\nu} = 
+		\begin{pmatrix}
+		0 & -E_x & -E_y & -E_z \\
+		E_x & 0 & B_z & -B_y \\
+		E_y & -B_z & 0 & B_x \\
+		E_z & B_y & -B_x & 0 
+	\end{pmatrix}
+\end{equation}
+and from this it follows that $F_{\mu\nu}F^{\mu\nu} = 2(B^2-E^2)$. So we finally have that
+\begin{align}
+	T^{00}&=\frac{-1}{4}\eta^{00}F_{\alpha\beta}F^{\alpha\beta}+  {F^0}_\sigma F^{0\sigma}\\
+	&=\frac{-1}{4}(-1)2(B^2-E^2) + E^2\\
+	&= \frac{E^2+B^2}{2}
+\end{align}
+which is the energy density we expected.
+% subsection from__the_vacumm_to_electromagnetism (end)
+%
+%
+\section{Black Holes} % (fold)
+\label{sec:black_holes}
+\subsection{History} % (fold)
+\label{sub:history}
+Isaac Newton first published his theory of gravity in 1687 in his Philosophi{\ae} Naturalis Principia Mathematica but it wasn't until almost a century later in 1783 that Rev. John Mitchell, a scientist in the fields of geology and physics, first came up with the idea that an object might be so massive that the escape velocity would be greater than the speed of light and wrote as much to Henry Cavendish;
+\begin{quote}
+\begin{textit}{If the semi-diameter of a sphere of the same density as the Sun were to exceed that of the Sun in the proportion of 500 to 1, a body falling from an infinite height towards it would have acquired at its surface greater velocity than that of light, and consequently supposing light to be attracted by the same force in proportion to its vis inertiae, with other bodies, all light emitted from such a body would be made to return towards it by its own proper gravity.} \\
+\end{textit}
+-J. Michell, ``A letter to Henry Cavendish'' \cite{michell_leter}.
+\end{quote}
+Laplace later wrote about the idea of these \emph{Dark Stars} in the first two editions of his book \emph{Exposition du syst{\'e}me du Monde} but removed them from later editions and never seemed to mention the idea again\cite{gillispie2000pierre}. It was largely due to there being no understanding of how a massless wave could be influenced by gravity that the idea pretty much disappeared until the 20\textsuperscript{th} century when the idea resurfaced due to Einstein's Theory of General Relativity in 1915. It was only a few months later that Karl Schwarzschild found a solution to EFE for a spherical non-rotating mass. Work continued throughout the first half of the century in developing the properties of this object, showing the singularity at the Schwarzschild radius was simply a coordinate singularity as well as providing some astronomical limits on star masses that would provide unstable systems.
+The 1960's and onwards were a golden age for GR with discoveries of solutions for both rotating and charged black holes, the discovery of neutron stars, the development of the \emph{No Hair Theorem}, as well as it being shown that singularities appear in generic solutions.
+The 1970's gave us the thermodynamics of black holes (Sec \ref{sec:blackhole_thermodynamics}) and since then there has been steady work on studying black holes, both observational and theoretical, and the field is still active today.
+% subsection history (end)
+\subsection{Causality of Black Holes} % (fold)
+\label{sub:understanding_black_holes}
+We will see that the metrics for black holes will end up having a form of 
+\begin{equation}
+	ds^2= -f(r)dt^2 + f^{-1}(r)dr^2+\ldots
+\end{equation}
+which for a certain value of $r=r_{0}$, the horizon, has that $f(r_{0})=0$. What this means is that for an observer at infinity time will seem to stop at this value of r; if the observer were to watch an object fall towards the black hole it would seem to take an infinite amount of time for object to reach the horizon. As for the object itself, for most cases it would not feel a change in passing through the horizon as the curvature of space at this point is not likely to be much more than on earth, however what will change is the light cones. As the object falls towards the horizon, the lines of the light cones which in flat space have a 45\textsuperscript{} angle between the lines and either axis, start to move towards each other as $f(r)\to 0$. At the horizon the lines of the light cone aren't a cone at all, but a single line from past to future; once inside the horizon the light cone \emph{spreads out} once again but with time and space swapped (due to the sign of $f(r)$ flipping) which means that the future of such an object is to move towards $r=0$ just as for any object outside the horizon the future is to move towards greater $t$, see figure (\ref{fig:light_cones}) for a pictorial representation.
+\begin{figure}
+        \includegraphics[scale=0.4]{light_cones.pdf}
+	\caption{Light cones of the spacetime up to and beyond the horizon }
+	\label{fig:light_cones}
+\end{figure}
+%
+%
+% subsection understanding_black_holes (end)
+\subsection{General Spherically Symmetric Solutions in 4 Dimensions} % (fold)
+\label{sub:general_spherically_symmetric_solutions}
+We would now like to begin finding solutions to (\ref{eq:efe}) and more specifically those solutions which give rise to black holes. To start with we will consider a spherically symmetric static solution. Whilst it is possible to write a more general spherically symmetric line element we will choice to use one where the angular function has been fixed as $r^{2}$ which leaves us with
+\begin{equation}
+	ds^2= -f(r)dt^2 + g(r)dr^2+r^2 d{\Omega}^2_{D-2}
+\end{equation}
+where $d{\Omega}^2_{D-2}$ is the angular contribution to the metric in $D$ dimensions; in 4 dimensions this is $d\theta^2+sin^2(\theta)d\phi^2$. With some knowledge of the solutions we will arrive at, as well as following the work by Ahmad et al\cite{Ahmad:2013tia} it is more convenient to write our line element in the form
+\begin{equation}
+	ds^2= -e^{2\Phi(r)}dt^2 + e^{2\Lambda(r)}dr^2 + r^2 d{\Omega}^2_{2} \label{eq:sch-met-func-4d}.
+\end{equation}
+Now the non-zero Christoffel symbols for this metric are
+\renewcommand{\arraystretch}{2}
+\begin{equation}
+	\begin{array}{llll}
+		\Gamma^{t}_{rt}=\Phi^\prime & & & \\
+		\Gamma^{r}_{rr}=\Lambda^\prime &\Gamma^{r}_{tt}=\Phi^\prime e^{2(\Phi-\Lambda)} &\Gamma^{r}_{\theta\theta}=-re^{-2\Lambda} &\Gamma^{r}_{\phi\phi}=-r\sin^2(\theta) e^{-2\Lambda} \\
+		\Gamma^{\theta}_{r\theta}=\frac{1}{r} 	&\Gamma^{\theta}_{\phi\phi}=-\sin(\theta)\cos(\theta) & &\\
+		\Gamma^{\phi}_{r\phi}=\frac{1}{r} &\Gamma^{\phi}_{\theta\phi}=\cot(\theta) & &
+	\end{array}
+\end{equation}
+where the prime denotes a derivative with respect to $r$. With these we can calculate the six unique non-zero Riemann Tensors which are\renewcommand{\arraystretch}{1}
+\begin{align}
+&{R^t}_{\theta\theta t}=\Phi^\prime r e^{-2\Lambda}\nonumber \\ 
+&{R^r}_{\theta\theta r}= -r \Lambda^\prime e^{-2\Lambda}\nonumber\\ 
+&{R^r}_{\phi\phi r}= -\Lambda^\prime r \sin^2(\theta) e^{-2\Lambda}\nonumber\\
+&{R^r}_{ttr}= -(\Phi^{\prime\prime}+\Phi^{\prime 2} -\Lambda^\prime\Phi^\prime)e^{2(\Phi-\Lambda)}\nonumber\\
+&{R^\phi}_{tt\phi}= \frac{-1}{r}\Phi^\prime e^{2(\Phi-\Lambda)}\nonumber\\
+&{R^\phi}_{\theta\theta\phi}= e^{-2 \Lambda} -1.
+\end{align}
+The next step is to calculate the Ricci Tensor using (\ref{eq:ricci}) and remembering the symmetries of the Riemann tensor from (\ref{eq:riemann-prop-1}-\ref{eq:riemann-prop-3}) we find that the four non-zero Ricci tensors are the symmetric ones, i.e.
+\begin{align}
+R_{tt}&=\left(\Phi^{\prime\prime}+\Phi^{\prime2}-\Phi^\prime\Lambda^\prime+\frac{2}{r}\Phi^\prime\right)e^{2(\Phi-\Lambda)} \label{eq:riccibh1}	\\
+R_{rr}&=-\Phi^{\prime\prime}-\Phi^{\prime2}+\Phi^\prime\Lambda^\prime+\frac{2}{r}\Lambda^\prime\label{eq:riccibh2}\\
+R_{\theta\theta}&=(-r\Phi^\prime+r\Lambda^\prime -1)e^{-2\Lambda} +1	\label{eq:riccibh3}\\
+R_{\phi\phi}&=[(-r\Phi^\prime+r\Lambda^\prime -1)e^{-2\Lambda} +1]\sin^2(\theta) = R_{\theta\theta} \sin^2(\theta).\label{eq:riccibh4}
+\end{align}
+For completeness we will calculate the Ricci Scalar using (\ref{eq:ricscalar})
+\begin{equation}
+	R=e^{-2\Lambda}\left(-2\Phi^{\prime\prime}-2\Phi^{\prime2}+2\Phi^\prime\Lambda^\prime- \frac{4}{r}\Phi^\prime +\frac{4}{r}\Lambda^\prime -\frac{2}{r^2}\right) +\frac{2}{r^2}
+\end{equation}
+and also all non-zero components of the Einstein tensor
+\begin{align}
+G_{tt} &= e^{2(\Phi-\Lambda)}\left(\frac{2}{r}\Lambda^\prime - \frac{1}{r^2}\right) +\frac{1}{r^2}e^{2\Phi}	\\
+G_{rr} &= \frac{2}{r}\Phi^\prime + \frac{1}{r^2} - \frac{1}{r^2}e^{2\Lambda}	\\
+G_{\theta\theta} &= e^{-2\Lambda}r^2\left(\Phi^{\prime\prime}+\Phi^{\prime2}-\Lambda^\prime\Phi^\prime +\frac{\Phi^\prime}{r}- \frac{\Lambda^\prime}{r}\right)\\
+G_{\phi\phi} &= \sin^2(\theta)G_{\theta\theta}.
+\end{align}
+% subsection general_spherically_symmetric_solutions (end)
+\subsection{Schwarzschild Solution in 4 Dimensions} % (fold)
+\label{sub:schwarzschild_solution}
+The Schwarzschild solution, first derived by Karl Schwarzschild in 1915 (published in 1916), is the most basic case we can consider; that of a non-charged, non-rotating black hole. To find this solution let us first consider the trace of the Einstein Tensor in 4 dimensions
+\begin{equation}
+	{G^\mu}_\mu = {R^\mu}_\mu- \frac{1}{2}R {\delta^\mu}_\mu = R- 2R =-R
+\end{equation}
+which allows us to write that 
+\begin{equation}
+	R_{\mu\nu}=G_{\mu\nu}+\frac{1}{2}G g_{\mu\nu}.
+\end{equation}
+We want to solve the Einstein equations for the vacuum solution, i.e $G_{\mu\nu}=0$ which we have just shown is equivalent to $R_{\mu\nu}=0$. We can trivially solve (\ref{eq:riccibh4}) when $\theta=n\pi$ and we know that $e^{2(\Phi-\Lambda)}\ne0$ so we can use this to simplify (\ref{eq:riccibh1}). Adding the reduced version of this to (\ref{eq:riccibh2}) gives us that
+\begin{align}
+	\frac{2}{r}(\Lambda^\prime+\Phi^\prime)=0 &\implies \Lambda^\prime = - \Phi^\prime\\
+	\implies \Phi + \Lambda &= C
+\end{align}
+where $C$ is a constant. This means we can now write the line element as 
+\begin{equation}
+	ds^2 =-e^{-2\Lambda}c^{2C}dt^2 + e^{2\Lambda}dr^2 + r^2 d{\Omega}^2_{2}
+\end{equation}
+but by going to a coordinate system where we take $t\to e^Ct$ then we can effectively have that $C=0$. By now using this information in (\ref{eq:riccibh3}) we can arrive at a single first-order linear differential equation;
+\begin{equation}
+	2r\Lambda^\prime e^{-2\Lambda} - e^{-2\Lambda} +1 = 0
+\end{equation}
+which we can rewrite in the form
+\begin{equation}
+	\frac{d}{dr}(-re^{-2\Lambda}) =-1
+\end{equation}
+which easily provides us with the solution that
+\begin{equation}
+	re^{-2\Lambda}=re^{2\Phi}= r \pm a.
+\end{equation}
+It is worth at this point checking that this solution makes sense before calculating a value for $a$; to do so we will consider the solution as $r\to \infty$ as this should look like flat space. 
+\begin{align}
+\lim_{r\to\infty}1\pm \frac{a}{r} =1 \implies e^{-2\Lambda}=e^{2\Lambda}=e^{2\Phi} =1
+\end{align}
+which gives us back our flat metric as we expected. We can calculate the value of $a$ by comparing the action of a particle $\int m \;ds$ with the usual form of an action $\int (T-V)dt$ with this potential being the Newtonian gravitational potential 
+\begin{equation}
+	V=-\frac{GmM}{r}.
+\end{equation} Doing so gives us that $a=\frac{2GM}{c^2}=r_s$, where $G$ is Newtons gravitational constant, $M$ is the mass of the black hole, $r_s$ is the Schwarzschild radius and $c$ is the speed of light (although for us of course $c=1$). The final form of the Schwarzschild line element is then
+\begin{equation}
+	ds^2 = -\left(1- \frac{2GM}{r}\right)dt^2 +\left(1- \frac{2GM}{r}\right)^{-1}dr^2 + r^2d\Omega^2_{2}.
+\end{equation}
+% subsection schwarzschild_solution (end)
+\subsection{Reissner-Nordstr\"om Solution in 4 Dimensions} % (fold)
+\label{sub:reissner_nordstr"om_solution}
+The next solution we will look at is the case of a charged, non-rotating, black hole meaning that we are no longer solving for a vacuum case of the Einstein equations. Before we calculate our SE tensor let us re-write here, for convenience, the line element we are using as well as (\ref{eq:SE_EM_fin}) for the SE tensor in electromagnetism
+\begin{align}
+	ds^2 &= -e^{2\Phi}dt^2 + e^{2\Lambda}dr^2 + r^2 d{\Omega}^2_{2};\\
+	T_{\mu\nu}&=\frac{-1}{4}g_{\mu\nu}F_{\alpha\beta}F^{\alpha\beta}+  {F_\mu}^\sigma F_{\nu\sigma}.
+\end{align}
+Now we begin the work of calculating the SE tensor components for the electric case as the Reissner-Nordstr\"om (RN) solution has a zero magnetic field. We remind ourselves that electromagnetic tensor, $F_{\mu\nu}$, can be written as 
+\begin{equation}
+	F_{\mu\nu} = \partial_{\mu}A_{\nu} - \partial_{\nu}A_{\mu}
+\end{equation}
+where $A$ is the 4-potential of the electromagnetic field with the first component being related to the electric field and the remaining components related to the magnetic field; as such the last 3 are equal to zero in our case. For now we shall consider a generic radial electric potential and later specialise to the Coulomb potential as this will make it easier to consider the higher dimensional case when we come to that. Using all of this information gives us that
+\begin{align}
+	A_{0}&=e^{2\Psi(r)}
+	&F_{\mu\nu}(r)=
+	\begin{cases}
+		2\Psi ^{\prime} e^{2\Psi}, &\text{if } \mu\nu=tr\\
+		-2\Psi ^{\prime} e^{2\Psi}, &\text{if } \mu\nu=rt\\
+		0, 	&\text{otherwise}
+	\end{cases}
+\end{align}
+where the electromagnetic tensor is obviously still traceless and anti-symmetric. We will also need the version where both indices are raised and using our general metric this gives us that
+\begin{equation}
+	F^{\mu\nu}(r)=
+	\begin{cases}
+		-2\Psi ^{\prime} e^{2\Psi-2\Phi-2\Lambda}, &\text{if } \mu\nu=tr\\
+		2\Psi ^{\prime} e^{2\Psi-2\Phi-2\Lambda}, &\text{if } \mu\nu=rt\\
+		0, 	&\text{otherwise}.
+	\end{cases}
+\end{equation}
+Looking at our equation for the stress energy tensor we see that our next step is to calculate the inner product of $F$
+\begin{align}
+	F_{\mu\nu}F^{\mu\nu}&=F_{rt}F^{rt}+F_{tr}F^{tr}=2F_{rt}F^{rt}\\
+	&=-8\Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda}.
+\end{align}
+We also need the mixed product
+\begin{align}
+	{F_{\mu}}^{\sigma} F_{\nu\sigma}&= F^{\gamma\sigma}F_{\nu\sigma}g_{\mu\gamma}\\
+	&=g_{\mu\gamma}\left(F^{\gamma t}F_{\nu t}+ F^{\gamma r}F_{\nu r}\right)
+\end{align}
+where we have used the fact that the tensor is only non-zero for two values to simplify the expression. The next step is to calculate the full SE tensor which now most generally can be written as
+\begin{equation}
+	T_{\mu\nu}= 2g_{\mu\nu}\Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda} +g_{\mu\gamma}\left(F^{\gamma t}F_{\nu t}+ F^{\gamma r}F_{\nu r}\right)
+\end{equation}
+which we can see will be a diagonal matrix with elements
+\begin{align}
+	T_{tt}&=-2\Psi ^{\prime 2} e^{4\Psi-2\Lambda} +4\Psi ^{\prime 2} e^{4\Psi-2\Lambda}\\
+	T_{rr}&=2 \Psi ^{\prime 2} e^{4\Psi-2\Phi} -4 \Psi ^{\prime 2} e^{4\Psi-2\Phi}\\
+	T_{\theta\theta}&=2r^{2} \Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda}\\
+	T_{\phi\phi}&= \sin^2(\theta) \;T_{\theta\theta}
+\end{align}
+which can be written in the matrix form as
+\begin{equation}
+	T_{\mu\nu} = 
+		2 \Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda} \begin{pmatrix}
+		e^{2\Phi} & 0 & 0 & 0 \\
+		0 & -e^{2\Lambda} & 0 & 0 \\
+		0 & 0 & r^{2} & 0 \\
+		0 & 0 & 0 & r^{2}\sin^{2}(\theta)
+	\end{pmatrix}.
+\end{equation}
+Next we use all the quantities we have calculated in the EFEs to solve for the unknown functions. As before the two angular equations are linearly dependent and as such we only have 3 equations which with some minor rearrangement are
+\begin{align}
+	e^{-2\Lambda}\left(\frac{2}{r}\Lambda^\prime - \frac{1}{r^2}\right) +\frac{1}{r^2}&= 16\pi G \Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda}\label{eq:charged_efe_1}\\
+	e^{-2\Lambda}\left(\frac{2}{r}\Phi^\prime + \frac{1}{r^2}\right) - \frac{1}{r^2} &=-16\pi G \Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda}\\
+	e^{-2\Lambda}\left(\Phi^{\prime\prime}+\Phi^{\prime2}-\Lambda^\prime\Phi^\prime +\frac{\Phi^\prime}{r}- \frac{\Lambda^\prime}{r}\right)&=16\pi G \Psi ^{\prime 2} e^{4\Psi-2\Phi-2\Lambda}.
+\end{align}
+From the first two equations it falls out that once again $\Lambda ^{\prime} =-\Phi ^{\prime}$ giving us as with the Schwarzschild case that $e^{2\Lambda}=e^{-2\Phi}$. Next we take the third equation, simplifying it using the relation between $\Lambda$ and $\Phi$, and equate it to the first to give us that
+\begin{equation}
+	e^{2\Phi}\left(\Phi ^{\prime\prime} + 2\Phi ^{\prime 2} +\frac{4\Phi ^{\prime} }{r} +\frac{1}{r^{2}}\right)= \frac{1}{r^{2}}.
+\end{equation}
+Much like before we can write this in terms of differentials of our original function
+\begin{equation}
+	\frac{1}{2}\frac{d^{2}}{dr^{2}} e^{2\Phi} +\frac{2}{r}\left(\frac{d}{dr}e^{2\Phi}\right) + \frac{e^{2\Phi}}{r^{2}}=\frac{1}{r^{2}} \label{eq:charged_diff_eq_to_solve}
+\end{equation}
+which is solvable if we try the ansatz 
+\begin{equation}
+	e^{2\Phi}=A+\frac{B}{r}+\frac{C}{r^{2}}.
+\end{equation}
+By plugging this ansatz into (\ref{eq:charged_diff_eq_to_solve}) we get that $A=1$, we know that $B=-2GM$ from the homogeneous case which leaves us with just $C$ to find. By using this ansatz in (\ref{eq:charged_efe_1}) we discover that
+\begin{align}
+	\frac{C}{r^{4}}&=16\pi G \Psi ^{\prime 2} e^{4\Psi}\\
+	&= 4\pi G \left(\frac{d}{dr}e^{2\Psi}\right)^{2}.
+\end{align}
+Now is when we will choice a particular electric potential; by using the Coulomb potential we can set 
+\begin{equation}
+	A_{\mu}=\left(\frac{q}{4\pi r},0,0,0\right)
+\end{equation}
+and this gives us that $C=\frac{Gq^{2}}{4\pi}\equiv GQ^{2}$ giving us that our final expression for the Reissner-Nordstr\"om line element is
+\begin{equation}
+	ds^2 = -\left(1- \frac{r_s}{r} +\frac{r_Q^2}{r^2}\right)dt^2 +\left(1- \frac{r_s}{r} +\frac{r_Q^2}{r^2}\right)^{-1}dr^2 + r^2d\Omega^2_{(2)}
+\end{equation}
+where $r_s$ is the Schwarzschild radius as before and $r_Q^2=GQ^{2}$.
+% subsection reissner_nordstr"om_solution (end)
+\subsection{Spherical Solutions in Extra Dimensions} % (fold)
+\label{sub:spherical_solution_in_extra_dimensions}
+\subsubsection{General Spherical Solution} % (fold)
+\label{sub:general_spherical_solution}
+It would be useful for us to have an expression for the Schwarzschild and RN metrics and radii in higher dimensions and so we shall derive here the general form of these for $D\ge 4$. To do this we will be working through the derivation using differential forms and operators, including wedge products and connections. Whilst a comprehensive understanding of the topic is not required to follow the derivation as I shall provide all necessary properties and equations as we reach them, I will not be explaining these in any detail and will simplify definitions where helpful so should you wish to have a more rigorous introduction to the topic I suggest \emph{Differential Geometry, Gauge Theories, and Gravity} by M. G\"ockeler and T. Sch\"ucker\cite{ differential_geometry}, specifically chapters (1-5).
+
+To begin with we assume a metric of a very similar form as (\ref{eq:sch-met-func-4d}) with the only change being the dimension of the last term
+\begin{equation}
+	ds^2= -e^{2\Phi(r)}dt^2 + e^{2\Lambda(r)}dr^2 + r^2 d{\Omega}^2_{d-1}
+\end{equation}
+where now $d{\Omega}^2_{d-1}$ is the squared solid angle element for $d\ge 3$ dimensions and $d=D-1$ where $D$ is as always the total dimension of our spacetime. More explicitly we can write
+\begin{equation}
+	d{\Omega}^2_{d-1} = d\xi^2_{d-1} + \sum_{i=1}^{d-2}\prod_{j=i+1}^{d-1}\sin^2(\xi_j)d\xi^2_i
+\end{equation}
+where $\xi_i$ are the angles of our hyper-spherical coordinates with ranges $0\le \xi_1 <2\pi$ and $0\le \xi_k \le \pi$ where $k=2,\dots,d-1$. It is worth pointing out here that we have reversed the order of the angular components in our metric, something which has no impact on any calculations as the order of coordinates is completely arbitrary, but something that makes writing the angular elements in a concise form much easier to do. With this our metric now looks like
+\begin{equation}
+		g_{\mu\nu}= 
+		\begin{pmatrix}
+		-e^{2\Phi(r)} & 0 & 0 & 0\dots & 0 & 0 \\
+		0 & e^{2\Lambda(r)} & 0 & 0\dots & 0 & 0 \\
+		0 & 0 & r^2\prod_{i=2}^{d-1}\sin^2(\xi_i) & 0\dots & 0 & 0 \\
+		\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		0 & 0 & 0 & \dots & r^2\sin^2(\xi_{d-1}) & 0 \\
+		0 & 0 & 0 & \dots & 0 & r^2
+	\end{pmatrix}.
+\end{equation}
+In the remainder of this subsection Greek indices will run over all spacetime dimensions, $r$ and $t$ will be reserved for the radial and time coordinates, and Latin indices will run only over all angular coordinates, where as always repeated indices are summed over; we shall also drop the explicit written dependence on $r$ for the unknown functions and all primes will represent derivatives with respect to $r$.
+
+We shall make our choice of frame (which is analogous to a coordinate system for our purposes) such that we are using an orthonormal basis, ${\omega^\mu}$ (in most books an orthonormal frame is usually written as ${e^\mu}$ but as we are dealing with exponentials this would get confusing very quickly). These basis can be written explicitly as
+\begin{align}
+\omega^{t} &= e^{\Phi}dt 	\\
+\omega^{r} &= e^{\Lambda}dr 	\\
+\omega^{1} &= r \sin(\xi_{d-1})\sin(\xi_{d-2})\dots\sin(\xi_2) d\xi_1 	\\
+\vdots 	\\
+\omega^{k} &= r\sin(\xi_{d-1})\sin(\xi_{d-2})\dots \sin(\xi_{k+1})d\xi_k\\
+\vdots \\
+\omega^{d-1} &= r d\xi_{d-1}
+\end{align}
+with which we can compactly write $ds^2=\eta_{\mu\nu}\omega^\mu\otimes\omega^\nu$ where $\eta_{\mu\nu}$ is the usual Minkowski metric in $D$ dimensions.
+
+The first step is to use Cartan's first structure equation which defines torsion, $T$, as
+\begin{equation}
+	T^{\mu}=d\beta^{\mu}+\Gamma^{\mu}_{\nu} \wedge \beta^{\nu} \label{eq:torsion}
+\end{equation}
+where $d$ is the exterior derivative (whose relevant properties we give below), $\beta$ is a general frame, $\Gamma$ is a 1-form connection (not a Christoffel symbol) and $\wedge$ is a \emph{wedge product} which allows for the product of \emph{forms}. The exact definition of the wedge product is not important to our calculations but the relevant property of it is \emph{graded commutativity}, i.e.
+\begin{equation}
+	\phi\wedge\psi=(-1)^{pq}\psi\wedge\phi
+\end{equation}
+where $\phi$ is a p-form and $\psi$ is a q-form; for our purposes we will only ever be using this with 1-forms so we will have $\omega^i\wedge\omega^{j}=-\omega^{j}\wedge\omega^{i}$ which importantly means that $\omega^i\wedge\omega^{i}=0$. The exterior derivative takes you from a p-form to a (p+1)-form and for our purposes you can consider to act similar to a usual derivative whilst adding a wedge product, although this is most definitely not true. The only other property we need to use is that 
+\begin{equation}
+	ddx=d^2x=0.
+\end{equation}
+Again, I have only supplied the relevant definitions and properties of these objects and they are much more deep and complicated than I have made them seem to be, but to properly introduce the required knowledge would require a much larger work. 
+
+Now, gravity is a torsion free theory which means we can rewrite (\ref{eq:torsion}) as
+\begin{equation}
+	d\omega^{\mu}=-\Gamma^{\mu}_{\nu}\wedge\omega^{\nu}. \label{eq:useful_torsion}
+\end{equation}
+Now that we have this form we can use it to start working out the connections;
+\begin{align}
+	d\omega^{t}&=d(e^\Phi)dt+e^\Phi \cancelto{0}{d^2t}\\
+	&=\Phi^{\prime}e^{\Phi}dr\wedge dt\\
+	&=\Phi^{\prime}e^{-\Lambda}\omega^{r}\wedge\omega^{t}=-\Phi^{\prime}e^{-\Lambda}\omega^{t}\wedge\omega^{r}
+\end{align}
+where in the last line we have used the definitions of $\omega^{r,t}$ to substitute in for $dr,dt$. Comparing this with (\ref{eq:useful_torsion}) gives us that 
+\begin{equation}
+	\Gamma^{t}_{r}=e^{-\Lambda}\Phi^{\prime} \omega^{t} + f_{tr}(r)\omega^{r}
+\end{equation}
+with $f_{tr}$ being an arbitrary function that arises from the fact that $\omega^i\wedge\omega^{i}=0$. This also means that 
+\begin{equation}
+	\Gamma^{t}_{k}= f_{tk}(r)\omega^{k}.
+\end{equation}
+Next it is easy to see that $d\omega^{r}=0$ and so we have that 
+\begin{equation}
+	\Gamma^{r}_{\alpha}=f_{r\alpha}(r)\omega^{\alpha}.
+\end{equation}
+The slightly trickier task is calculating $d\omega^k$ so let us split it into two pieces, the part that involves $r$ and the part that involves the angular coordinates;
+\begin{align}
+	d\omega^{k}&=dr\wedge\frac{1}{r}\omega^{k} + \text{Other terms}\\
+	dr\wedge\frac{1}{r}\omega^{k} &= \frac{1}{r}e^{-\Lambda}\omega^{r}\wedge\omega^{k}
+\end{align}
+where in the first line we used that the $r$-derivative of $\omega^{k}$ is $\frac{1}{r}\omega^{k}$. This gives us
+\begin{equation}
+	\Gamma^{k}_{r}= \frac{1}{r}e^{-\Lambda}\omega^{k} + f_{kr}(r)\omega^{r}.
+\end{equation}
+Finally we have to calculate the part with the angular coordinates. Let us consider what happens on just one term first; the differential would act on one of the sine functions, creating a cosine and a $d\xi_j$ combining all the remaining sine functions and the factor of $r$ to be wedged with $d\xi_i$ (when $j>i$). We can recombine the $r$ and all the sine functions into the original $\omega^{i}$ but we are missing one sine and have an extra $\cos(\xi_{j}) d\xi_{j}$ which we can mostly solve by simply having each term multiplied by a cotangent function. The next step is to remove the $d\xi_{j}$ and replace it with an $\omega$ of some kind; considering that $j$ must be greater than $i$ it means that were $i$ to equal $(d-2)$ then the substitution would be easy as you get $d\xi_{d-1}=\frac{1}{r}\omega^{d-1}$, then for $i=(d-3)$ one would get $\xi_{d-2}=\frac{1}{r\sin(\xi_{d-1})}\omega^{d-2}$ and so on. Continuing this trend allows us to simply write that 
+\begin{align}
+	d\omega^{i}&=\frac{\cot(\xi_j)\omega^{j}\wedge\omega^{i}}{\sin(\xi_{d-1})\dots\sin(\xi_{j+1})}\\
+	\implies \Gamma^{i}_{j} &= \frac{1}{r}\frac{\cot(\xi_j)}{\sin(\xi_{d-1})\dots\sin(\xi_{j+1})}\omega^{i} + f_{ij}(r)\omega^{j}.
+\end{align}
+Finally we can solve these generic functions by using the property that the connection is antisymmetric in lowered indices in an orthonormal basis, i.e.
+\begin{equation}
+	\Gamma_{\mu\nu}=-\Gamma_{\nu\mu}
+\end{equation}
+which with a little bit of thinking allows us to see that
+\begin{equation}
+	f_{\alpha\beta}(r)=
+	\begin{cases}
+		e^{-\Lambda}\Phi^{\prime}, &\text{if } \alpha=r \text{ and } \beta=t\\
+		0, 	&\text{otherwise}
+	\end{cases}
+\end{equation}
+which leaves us with 3 unique non-zero connections
+\begin{align}
+\Gamma^{t}_{r}&=\Gamma^{t}_{r}=	e^{-\Lambda}\Phi^{\prime} \omega^{t}\\
+\Gamma^{k}_{r}&=-\Gamma^{r}_{k}=	\frac{1}{r}e^{-\Lambda}\omega^{k}\\
+\Gamma^{i}_{j}&=-\Gamma^{j}_{i}=	\frac{1}{r}\frac{\cot(\xi_j)}{\sin(\xi_{d-1})\dots\sin(\xi_{j+1})}\omega^{i} \;\;\;\;\;\;\;\;\;\;\;(i<j).
+\end{align}
+Now that we have the connections we can use Cartan's second structure equation
+\begin{equation}
+	R^{\mu}_{\nu}=d \Gamma^{\mu}_{\nu}+\Gamma^{\mu}_{\lambda}\wedge \Gamma^{\lambda}_{\nu}
+\end{equation}
+to calculate the curvature.
+\begin{align}
+{R^{t}}_{r} &= d(e^{-\Lambda}\Phi^{\prime}\omega^{t}) + 0\\
+			&= -e^{-\Lambda} \Lambda ^{\prime} \Phi ^{\prime} dr \wedge \omega^{t} + e^{-\Lambda}\Phi ^{\prime\prime}  dr \wedge \omega^{t} +e^{-\Lambda} \Phi ^{\prime} d\omega^{t}\\
+			&=e^{-\Lambda}\left[ -\Lambda ^{\prime} \Phi ^{\prime} + \Phi ^{\prime\prime}\right]dr \wedge \omega^{t} + e^{-\Lambda}\Phi ^{\prime} (-\Gamma^{r}_{t}\wedge \omega^{r})\\
+			&=e^{-\Lambda}\left[ -\Lambda ^{\prime} \Phi ^{\prime} + \Phi ^{\prime\prime}\right]e^{-\Lambda} \omega^{r}\wedge \omega^{t} +e^{-\Lambda}\Phi ^{\prime}  (-e^{-\Lambda}\Phi ^{\prime} \omega^{t}\wedge \omega^{r})\\
+			&=e^{-2\Lambda}\left(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2\right) \omega^{r}\wedge \omega^{t}
+\end{align}
+where from the second to the third line we once again used (\ref{eq:useful_torsion}). Also we get that
+\begin{align}
+{R^{t}}_{k} &= \Gamma^{t}_{\lambda}\wedge \Gamma^{\lambda}_{k} = \Gamma^{t}_{r}\wedge \Gamma^{r}_{k}\\
+			&= e^{-\Lambda}\Phi ^{\prime}  \omega^{t} \wedge -\frac{1}{r}e^{-\Lambda}\omega^{k}\\
+			&= \frac{-1}{r}e^{-2\Lambda} \Phi ^{\prime} \omega^{t} \wedge \omega^{k}\\
+{R^{r}}_{k} &=d \Gamma^{r}_{k}+\Gamma^{r}_{i}\wedge \Gamma^{i}_{k}.
+\end{align}
+If we quickly look at the last term it is easy to convince ourselves it is $0$ as $\Gamma^{r}_{i}$ contains an $\omega^{i}$ and so does $\Gamma^{i}_{k}$ and therefore it equates to zero. Continuing with the exterior derivative
+\begin{align}
+{R^{r}}_{k} &=d\left(\frac{1}{r}e^{-\Lambda}\omega^{k}\right)\\
+			&= \frac{1}{r^{2}}e^{-\Lambda} dr\wedge \omega^{k}	+ \frac{1}{r}e^{-\Lambda}\Lambda ^{\prime} dr \wedge \omega^{k}	- \frac{1}{r}e^{-\Lambda} d\omega^{k}\\
+			&=\left(\frac{1}{r^{2}}e^{-\Lambda} +\frac{1}{r}e^{-\Lambda}\Lambda ^{\prime} \right) dr \wedge \omega^{k} +\frac{1}{r}e^{-\Lambda}\left(\Gamma^{k}_{r} \wedge \omega^{r} + \Gamma^{k}_{j} \wedge \omega^{j}\right)\\
+			&=\left(\frac{1}{r^{2}}e^{-\Lambda} +\frac{1}{r}e^{-\Lambda}\Lambda ^{\prime} \right)e^{-\Lambda}\omega^{r} \wedge \omega^{k} +\frac{1}{r}e^{-\Lambda}\left(\Gamma^{k}_{r} \wedge \omega^{r}\right)\\
+			&=\left(\frac{1}{r^{2}}e^{-2\Lambda} +\frac{1}{r}e^{-2\Lambda}\Lambda ^{\prime} \right)\omega^{r} \wedge \omega^{k} +\frac{1}{r}e^{-2\Lambda}\omega^{k} \wedge \omega^{r}\\
+			&= \frac{1}{r}e^{-2\Lambda} \Lambda ^{\prime} \omega^{r}\wedge \omega^{k}
+\end{align}
+where we dropped the last term in the third line as you can write that connection in terms of $\omega^{j}$. Finally we quote\cite{extra_dimension_thesis} without proof the result of the final calculation
+\begin{equation}
+	{R^{i}}_{j} = \frac{1}{r^{2}}(1-e^{-2\Lambda})\omega^{i}\wedge \omega^{j}.
+\end{equation}
+Next we will use the relation 
+\begin{equation}
+	{R^{\mu}}_{\nu} = {R^{\mu}}_{\nu\rho\sigma}\omega^{\rho}\wedge\omega^{\sigma}
+\end{equation}
+and the four symmetries of the Riemann tensor as given in (\ref{eq:riemann-prop-1}-\ref{eq:riemann-prop-3}) to give us the 4 unique Curvature tensors
+\begin{align}
+{R^{t}}_{rtr} &=-{R^{r}}_{trt} = - e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2)\\
+{R^{t}}_{ktk} &=-{R^{k}}_{tkt} = -\frac{1}{r} \Phi ^{\prime} e^{-2\Lambda}\\
+{R^{r}}_{krk} &= {R^{k}}_{rkr} = \frac{1}{r} e^{-2\Lambda} \Lambda ^{\prime} \\
+{R^{i}}_{jij} &=				 \frac{1}{r^{2}}(1-e^{-2\Lambda}).
+\end{align}
+The penultimate step is to calculate the Ricci tensor
+\begin{align}
+R_{\mu\nu}&={R^{\lambda}}_{\mu\lambda\nu}\\
+R_{tt} &= - e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2)+ \frac{1}{r} \Phi ^{\prime} e^{-2\Lambda}(d-1)\\
+R_{rr} &= e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2) +\frac{1}{r} e^{-2\Lambda} \Lambda ^{\prime}(d-1)\\
+R_{kk} &= \frac{1}{r} e^{-2\Lambda}(\Lambda ^{\prime} -\Phi ^{\prime} ) + \frac{1}{r^{2}}(1-e^{-2\Lambda})(d-2)
+\end{align}
+where the factors on the end terms come from the fact that $k$ can take $(d-1)$ values and $i$, whilst having the same range, is constrained to not equal $j$ so can take $(d-2)$ values. Finally we calculate the Ricci scalar $R={R^{\mu}}_{\mu}$
+\begin{equation}
+	R= -2e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2) +\frac{2}{r} e^{-2\Lambda}(\Lambda ^{\prime} -\Phi ^{\prime})(d-1)+ \frac{1}{r^{2}}(1-e^{-2\Lambda})(d-2)(d-1).
+\end{equation}
+It is now we can return fully to the methods we are used to and so we take the next step of calculating the Einstein tensor 
+\begin{equation}
+	G_{\mu\nu} = R_{\mu\nu}-\frac{1}{2}\eta_{\mu\nu}R.
+\end{equation}
+where we can use the Minkowski metric because of the basis we are working in. Unsurprisingly the only non-zero components are the diagonal elements which are given by
+\begin{align}
+G_{tt}&= \frac{1}{r} \Lambda ^{\prime} e^{-2\Lambda}(d-1) + \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-2)(d-1)\label{eq:einstein_tensor_higher_d_1} \\
+G_{rr}&= \frac{1}{r} \Phi ^{\prime} e^{-2\Lambda}(d-1) - \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-2)(d-1) \\
+G_{kk}&= e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2) -\frac{1}{r} e^{-2\Lambda}(\Lambda ^{\prime} -\Phi ^{\prime})(d-2)- \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-3)(d-2).\label{eq:einstein_tensor_higher_d_3}
+\end{align}
+\subsubsection{Schwarzschild Solution in Extra Dimensions} % (fold)
+\label{sub:schwarzschild_solution_in_extra_dimensions}
+Until now everything we have done is true for a spherically symmetric static solution but just as when we first derived the Schwarzschild metric, we now impose the condition that $G_{\mu\nu} =0$ which leaves us with two linearly independent equations and we shall pick the time and radial components of the Einstein tensor for convenience. By taking $G_{tt}+G_{rr}=0$ we can get that
+\begin{equation}
+	\Phi ^{\prime} +\Lambda ^{\prime} =0
+\end{equation}
+as we had for the 4-dimensional case; this means we can now write the line element as 
+\begin{equation}
+	ds^2 =-e^{-2\Lambda}dt^2 + e^{2\Lambda}dr^2 + r^2 d{\Omega}^2_{d-1}
+\end{equation}
+By solving $G_{tt}=0$ in a similar way to before we can work out what $e^{-2\Lambda}$ is equal to;
+\begin{align}
+	\frac{1}{r} \Lambda ^{\prime} e^{-2\Lambda}(d-1) + \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-2)(d-1)&=0\\
+	2re^{-2\Lambda}\Lambda ^{\prime} +(d-2) -(d-2)e^{-2\Lambda}&=0\\
+	-2r^{d-2}e^{-2\Lambda}\Lambda ^{\prime} +(d-2)r^{d-3}e^{-2\Lambda} &= (d-2)\\
+	\left[r^{d-2}e^{-2\Lambda}\right]^{\prime} &=(d-2)\\
+	\implies e^{-2\Lambda}&=1 + \frac{C}{r^{d-2}}
+\end{align}
+where $C$ is a constant of integration similar to previously that we will calculate next. Remembering that we made it so $d=D-1$ we can finally arrive at the (almost) complete line element of a Schwarzschild black hole in D dimensions
+\begin{equation}
+	ds^2 =-\left(1+\frac{C}{r^{D-3}}\right)dt^2 + \left(1+\frac{C}{r^{D-3}}\right)^{-1}dr^2 + r^2 d{\Omega}^2_{D-2}.
+\end{equation}
+\subsubsection{Schwarzschild Radius in Extra Dimensions} % (fold)
+\label{sub:schwarzschild_radius_in_d_dimensions}
+To find the value of the constant in our new metric and also find the Schwarzschild radius in D dimensions we start by looking at the higher dimensional gravitational acceleration in the Newtonian case
+\begin{equation}
+	g_{D}=\frac{d^{2}r}{dt^{2}}= -\frac{G_{D}M}{r^{D-2}} \label{eq:newt-extra}
+\end{equation}
+where $G_{D}$ is the gravitational constant in D dimensions which we can define as 
+\begin{equation}
+	G_{D}=\frac{(D-3)}{(D-2)}\frac{8\pi G_{N}^{(D)}}{\Omega_{D-2}}=\frac{(D-3)}{(D-2)}\frac{\Gamma\left(\frac{(D-1)}{2}\right)}{2\pi^{\frac{(D-1)}{2}}}8\pi G_{N}^{(D)}
+\end{equation}
+where $\Omega_{D-2}$ is the surface area of a $(D-2)$ sphere, $\Gamma(x)$ is the gamma function and $G_{N}^{(D)}$ is a constant proportional to the 4-dimensional gravitational constant, roughly speaking it is $G_{N}$ multiplied by the characteristic length of the extra dimensions to the power of $(D-4)$\cite{ newton_higher_dimension} i.e.
+\begin{equation}
+	G_{N}^{(D)}\approx G_{N} l^{m}
+\end{equation}
+where $l$ is the length, usually of the order of the radius of the extra dimensions, and $m=(D-4)$. Next we remember that the acceleration of a free particle can be calculated using the geodesic equation which we rewrite here for convenience 
+\begin{equation}
+	\frac{d^2x^\mu}{ds^2} + \Gamma^{\mu}_{\nu\rho}\frac{dx^\nu}{ds}\frac{dx^\rho}{ds} = 0.
+\end{equation}
+where $\frac{d^2x^\mu}{ds^2}$ is the acceleration of the particle. If we consider the particle to be far from the black hole ($r^{D-3}>>C$) then in this limit we have that the proper time is roughly equal to the coordinate time $s=t$. In this case we get that $\frac{dx^{\mu}}{ds}=(1,0,0,0)$ and then comparing the equations we see that
+\begin{equation}
+	g_{D}=\frac{d^{2}r}{dt^{2}}=-\Gamma^{r}_{tt}
+\end{equation}
+which we can extend to the near case. Now using the definition of the Christoffel symbols we get that
+\begin{equation}
+	g_{D}=-\Gamma^{r}_{tt}=\frac{1}{2}\frac{1}{g_{rr}}\partial_{r}g_{tt}.
+\end{equation}
+If we keep terms down to the order of $r^{-(D-2)}$ then we get that 
+\begin{equation}
+	g_{D}\approx \frac{(D-3)C}{2r^{D-2}}
+\end{equation}
+which comparing with (\ref{eq:newt-extra}) we can see that
+\begin{equation}
+	C_{2}=\frac{-2G_{D}}{(D-3)}.
+\end{equation}
+Combining this with our definition for $G_{D}$ we get the final form of our line element as 
+\begin{equation}
+	ds^2 =-f(r)dt^2 + \frac{1}{f(r)}dr^2 + r^2 d{\Omega}^2_{D-2}
+\end{equation}
+where the function $f(r)$ is given by
+\begin{equation}
+	f(r)=\left(1-\frac{16\pi G_{N}^{(D)}M}{(D-2)\Omega_{D-2}}\frac{1}{r^{D-3}}\right).
+\end{equation}
+This line element is true for all cases when $D\ge 4$ as when $D=3$ we get a flat space solution outside of the matter.
+
+The final calculation we need to do is to calculate the actual Schwarzschild radius for D dimensions, that is when $f(r_{S,D})=0$ which we can solve with
+\begin{equation}
+	r_{S,D}=\left(\frac{16\pi G_{N}^{(D)}M}{(D-2)\Omega_{D-2}}\right)^\frac{1}{(D-3)}
+\end{equation} 
+which when $D=4$ recovers the usual Schwarzschild radius of $2G_{N}M$ as expected.
+% subsection schwarzschild_radius_in_d_dimensions (end)
+% subsection spherical_solution_in_extra_dimensions (end)
+\subsubsection{Reissner-Nordstr\"om Solution in Extra Dimensions} % (fold)
+\label{sub:reissner_nordstom_soltuion_in_extra_dimensions}
+If instead we wanted to derive the solution of a charged black hole in extra dimensions we can extend our general electrostatic SE tensor from 4 dimensions to $D=d+1$ and staying in the orthonormal basis, $\omega^{\mu}$, this is written as
+\begin{equation}
+		T_{\mu\nu}= 
+		2\Psi ^{\prime 2} e^{4\Psi(r)}\begin{pmatrix}
+		1 & 0 & 0 & 0\dots & 0 & 0 \\
+		0 & -1 & 0 & 0\dots & 0 & 0 \\
+		0 & 0 & 1 & 0\dots & 0 & 0 \\
+		\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		0 & 0 & 0 & \dots & 1 & 0 \\
+		0 & 0 & 0 & \dots & 0 & 1
+	\end{pmatrix}.
+\end{equation}
+By using this combined with the Einstein tensors as written in (\ref{eq:einstein_tensor_higher_d_1}-\ref{eq:einstein_tensor_higher_d_3}) we can see that as always the equation for the  time component is equal to minus the radial component which gives us the usual $\Lambda ^{\prime}  = - \Phi ^{\prime}$ and $e^{2\Phi}=e^{-2\Lambda}$. Now equating $G_{tt}$ to $G_{kk}$ we get that
+\begin{multline}
+\frac{1}{r} \Lambda ^{\prime} e^{-2\Lambda}(d-1) + \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-2)(d-1) = e^{-2\Lambda}(\Phi ^{\prime\prime} - \Phi ^{\prime} \Lambda ^{\prime} +{\Phi ^{\prime}}^2) \\-\frac{1}{r} e^{-2\Lambda}(\Lambda ^{\prime} -\Phi ^{\prime})(d-2)- \frac{1}{2r^{2}}(1-e^{-2\Lambda})(d-3)(d-2)
+\end{multline}
+which if we write everything in terms of $\Phi$ and by noticing the first term on the right hand side is the differential of a product we get a slightly nicer
+\begin{equation}
+	\frac{d}{dr}(e^{2\Phi}\Phi ^{\prime} )+ \frac{1}{r}e^{2\Phi}\Phi ^{\prime}(3d-5) - \frac{1}{r^{2}}(1-e^{2\Phi})(d-2)^{2}=0.\label{eq:higher_d_em_to_solve}
+\end{equation}
+By trying an ansatz of the form
+\begin{align}
+	e^{2\Phi}=f(r)&=A+\frac{B}{r^{d-2}}+\frac{C}{r^{2(d-2)}}\\
+	f ^{\prime} &= \frac{-B(d-2)}{r^{d-1}} -\frac{C(2d-4)}{r^{2d-3}}\\
+	f ^{\prime\prime} &= \frac{B(d^{2}-3d+2)}{r^{d}} + \frac{C(4d^{2}-14d+12)}{r^{2d-2}} 
+\end{align}
+when plugged into (\ref{eq:higher_d_em_to_solve}) gives us the result that $A=1$ leaving us with two unknowns. $B$ is obviously our higher dimensional Schwarzschild term leaving us to solve only for $C$. To do this we just need to substitute our solution into the EFEs for any component so we shall do it for the $tt$ component. Working through the cancellations we get that 
+\begin{align}
+	\frac{(D-3)(D-2)C}{2r^{(2D-4)}}&=16\pi G_{N}^{(D)} \Psi ^{\prime 2} e^{4\Psi}\\
+	\implies \frac{C}{r^{(2D-4)}}&= \frac{8\pi G_{N}^{(D)}}{(D-3)(D-2)} \left(\frac{d}{dr}e^{2\Psi}\right)^{2}
+\end{align}
+where the differential term is the electric field. It can be shown, by use of QFT or even by an extension of Gauss' Law\cite{Zwiebach:789942}, that the electric potential in higher dimensions is of the form 
+\begin{equation}
+	A_{0}=\frac{1}{(D-3)\Omega_{D-2}}\frac{q}{r^{D-3}}=e^{2\Psi}
+\end{equation}
+which gives us that
+\begin{equation}
+	\frac{C}{r^{(2D-4)}}= \frac{8\pi G_{N}^{(D)}}{(D-3)(D-2)\Omega_{D-2}} \frac{q^{2}}{r^{(2D-4)}}.
+\end{equation}
+Rearranging we see that
+\begin{equation}
+	C=q^{2}\frac{8\pi G_{N}^{(D)}}{(D-3)(D-2)\Omega_{D-2}}\equiv{G_{N}^{(D)}Q^{2}}
+\end{equation}
+and this means we can write our complete line element as
+\begin{equation}
+	ds^2 =-\left(1- \frac{r_{S,D}^{D-3}}{r^{D-3}}+ \frac{r_{Q,D}^{2(D-3)}}{r^{2(D-3)}}	\right)dt^2 + \left(1- \frac{r_{S,D}^{D-3}}{r^{D-3}}+ \frac{r_{Q,D}^{2(D-3)}}{r^{2(D-3)}}	\right)^{-1}dr^2 + r^2 d{\Omega}^2_{D-2} \label{eq:RN_higher_dim_metric}
+\end{equation}
+where 
+\begin{equation}
+	r_{Q,D}=\left(G_{N}^{(D)}Q^{2}\right)^{\frac{1}{2(D-3)}}.
+\end{equation}
+% subsection reissner_nordstom_soltuion_in_extra_dimensions (end)
+\subsection{Other Black Hole Solutions} % (fold)
+\label{sub:other_black_hole_solutions}
+% Mention the Kerr and the Kerr-Newman solutions, maybe write their metrics?
+As well as the solutions we have given above there exists a further class of solutions that also consider the case of a rotating black hole, the Kerr black hole, as well as a charged and rotating case, the Kerr-Newman black hole. We write them here in 4 dimensions just for completeness but shall not consider either of the cases in the remainder of this work. First the Kerr metric in spherical polar coordinates is given by
+\begin{multline}
+	ds^{2}=-\left(1- \frac{r_{s}r}{\rho^{2}}\right)dt^{2}+\frac{\rho^{2}}{\Delta}dr^{2}+\rho^{2}d\theta^{2}+\\
+	+\left(r^{2}+\alpha^{2}+\frac{r_{s}r\alpha^{2}}{\rho^{2}}\sin^{2}\theta\right)\sin^{2}\theta d\phi^{2}- \frac{2r_{s}2\alpha\sin^{2}\theta}{\rho^{2}}dtd\phi
+\end{multline}
+where $r_{s}$ is the Schwarzschild radius and 
+\begin{align}
+	\alpha=\frac{J}{M}\\
+	\rho^{2}=r^{2}+\alpha^{2}\cos^{2}\theta\\
+	\Delta=r^{2}-r_{s}r+\alpha_{2}
+\end{align}
+with $J$ being the angular momentum for the black hole. The Kerr-Newman case is
+\begin{multline}
+	ds^{2}=-\frac{\Delta-\alpha^{2}\sin_{2}\theta}{\rho^{2}}dt^{2}    +\frac{\rho^{2}}{\Delta}dr^{2}   +\rho^{2}d\theta^{2}+\\
+	+(r^{4}+ 2r^{2}\alpha^{2}+ \alpha^{4}- \alpha^{2}\Delta\sin^{2}\theta)\frac{\sin^{2}\theta d\phi^{2}}{\rho^{2}}   + (\Delta -r^{2}-\alpha^{2})\frac{2\alpha\sin^{2}\theta dt d\phi}{\rho^{2}}
+\end{multline}
+where everything is as before except for $\Delta$ which now is defined as
+\begin{equation}
+	\Delta=r^{2}-r_{s}r+\alpha_{2} +r^{2}_{Q}
+\end{equation}
+with $r^{2}_{Q}$ being equal to $Q^{2}G$ as before. 
+
+Finally whilst we have only considered spherical solutions in higher dimensions it is possible to have different topological solutions in higher dimensions so that instead of a spherical black hole you could have a \emph{black ring} with $S^{1}\times S^{D-3}$ topology as shown in 5 dimensions by Emparan and Reall in 2002\cite{Emparan:2001wn}, or even a black hole with a ring surrounding it known as a \emph{black Saturn}. Working in higher dimensions greatly reduces the constraints on black hole topologies and the uniqueness theorem breaks down as well meaning that the number of possible solutions is not as well constrained; however we will work with just the solutions we have derived and leave it to the reader to read further about these solutions should they wish.
+% subsection other_black_hole_solutions (end)
+
+% section black_hole_solutions_to_efes (end)
+
+\section{Black hole Thermodynamics} % (fold)
+\label{sec:blackhole_thermodynamics}
+\subsection{Area of 4-Dimensional Black Holes} % (fold)
+\label{sub:area_of_black_holes}
+We model all black holes as spheres and as such they obey the usual equation for their area. We take the radius of the black hole to be the radius of the event horizon(s); so for the Schwarzschild black hole we have that 
+\begin{equation}
+	A_s=4\pi r_s^2.
+\end{equation}
+To solve for the Reissner-Nordstr\"om case we must first find the radius of the horizons i.e. where $g_{tt}=0$; solving this quadratic equation gives us the solutions that
+\begin{equation}
+	r_\pm=\frac{r_s\pm \sqrt{r_s^2-4r_q^2}}{2}
+\end{equation}
+where once again we remind ourselves that $r_q^2=\frac{Gq^2}{4\pi}\equiv GQ^2$. Looking at this we see that we have 3 cases
+\begin{enumerate}
+	\item 2 horizons if $r_s^2-4r_q^2>0$
+	\item 0 horizons if $r_s^2-4r_q^2<0$
+	\item 1 horizon if $r_s^2-4r_q^2=0$
+\end{enumerate}
+where the third case is known as the extremal case which has interesting thermodynamic properties and occurs when $GM^2=Q^2$. The case of no horizons is what is known as a \emph{naked singularity} and whilst not forbidden by GR it is excluded as it is not possible in EM to have an object with it's charge greater than its mass. Again this leads us to a simple expressions for the area of the black hole
+\begin{equation}
+	A^{(\pm)}_{RN}=4\pi r_{\pm}.
+\end{equation}
+% subsection area_of_black_holes (end)
+\subsection{Surface Gravity of 4-Dimensional Black Holes} % (fold)
+\label{sub:surface_gravity_of_black_holes}
+The surface gravity of an object, $\kappa$, is defined as 
+\begin{equation}
+	\kappa^2=\frac{1}{2}(D^a\chi^b)(D_a\chi_b)
+\end{equation}
+where the expression is to be evaluated at the horizon and $\chi$ is a Killing vector which satisfies the relation that
+\begin{equation}
+	D_{\mu}\chi_{\nu}+D_{\nu}\chi_{\mu}=0;
+\end{equation}
+another way of saying this is that if you shift the metric $g$ a small amount by $\chi$ then $g$ remains unchanged. The Killing vector for both our cases is $\chi^a \sim(1,0,0,0)$ as the metrics are independent of $t$ which also means that $\chi_a \sim (-(1-\frac{r_s}{r},0,0,0)$. To calculate the covariant derivative we only need to calculate the Christoffel symbols that have $t$ as one or more of their indices of which for the Schwarzschild solution there are only two
+\begin{align}
+\Gamma^{t}_{tr}&=\frac{1}{2}\frac{r_s}{r^2-rr_s}=\frac{1}{2}\left(1- \frac{r_s}{r}\right)^{-1}\frac{r_s}{r^2} \\
+\Gamma^{r}_{tt}&=\frac{1}{2}\frac{rr_s-r_s^2}{r^3}=\frac{1}{2}\left(1- \frac{r_s}{r}\right)\frac{r_s}{r^2}.
+\end{align}
+The two non-zero derivatives are therefore
+\begin{align}
+D^r\chi^t&=D_r\chi^t g^{rr}=\frac{1}{2}\frac{r_s}{r^2}\\
+D^t\chi^r&=D_t\chi^r g^{tt}=-\frac{1}{2}\frac{r_s}{r^2}
+\end{align}
+from which we can see that $D^r\chi^t=-D^t\chi^r$ and due to the fact that $g_{tt}=-(g_{rr})^{-1}$ we also have that $D_t\chi_r=-D^t\chi^r$ and $D_r\chi_t=-D^r\chi^t$. Putting this all together we can arrive at the final result
+\begin{align}
+	\kappa^2=(D^t\chi^r)^2&=\left. \frac{r_s^2}{4r^4}\right|_{r=r_s} = \frac{1}{4r_s^2}\\
+	&\implies \kappa_s=\frac{1}{2r_s}.
+\end{align}
+Applying the same methods to the charged case we again calculate the non-zero, t-indexed, Christoffel symbols
+\begin{align}
+\Gamma^{t}_{tr}&=\frac{1}{2}\left(1- \frac{r_s}{r}- \frac{r_q^2}{r^2}\right)^{-1}\frac{rr_s-2r^2_q}{r^3} \\
+\Gamma^{r}_{tt}&=\frac{1}{2}\left(1- \frac{r_s}{r}- \frac{r_q^2}{r^2}\right)\frac{rr_s-2r^2_q}{r^3}
+\end{align}
+giving the equation for the surface gravity as 
+\begin{align}
+	\kappa^2&=(D^t\chi^r)^2=\frac{(rr_s-2r_q^2)^2}{4r^6}\\
+	&\implies \kappa_{RN}^{(\pm)}=\left. \frac{rr_s-2r_q^2}{2r^3}\right|_{r=r_\pm}.
+\end{align}
+Evaluating this in the case where $r=r_\pm$ gives us a seemingly \emph{ugly} expression of
+\begin{equation}
+	\kappa_{RN}^{(\pm)}=2 \;\frac{r_s^2\pm r_s\sqrt{r_s^2-4r_q^2}-4r_q^2}{\left(r_s\pm\sqrt{r_s^2-4r_q^2}\right)^3}.
+\end{equation}
+By noticing the similarity of the first and last term in the numerator with those inside the square root we find the it is possible to rewrite this expression as
+\begin{align}
+	\kappa_{RN}^{(\pm)}&=2 \;\frac{\left(r_s\pm\sqrt{r_s^2-4r_q^2}\right)\left(\pm\sqrt{r_s^2-4r_q^2}\right)}{\left(r_s\pm\sqrt{r_s^2-4r_q^2}\right)^3}\\
+	&=2\;\frac{(r_\pm-r_\mp)}{4r_\pm^2}\\
+	\implies \kappa_{RN}^{(\pm)}&=\frac{r_\pm - r_\mp}{2r_\pm^2}.
+\end{align}
+The most interesting feature of this quantity is that in this form it is easy to see what happens when $r_+=r_-$, i.e. in the extremal case; we can see that the surface gravity at the horizon of such a black hole is zero, something that will become even more interesting when we make the connection between surface gravity and temperature in the next section.
+% subsection surface_gravity_of_black_holes (end)
+\subsection{Temperature and Entropy of 4-Dimensional Black Holes} % (fold)
+\label{sub:temperature_and_entropy}
+The reason for calculating these properties of a black hole is because these are related to thermodynamic variables we can associate with the objects. It is important to note that these are the \emph{effective} properties of a black hole; specifically the temperature of the black hole is just a mathematical concept as the horizon is not itself an object. Starting with the entropy; the motivation for black holes having entropy was provided by Wheeler who proposed a creature (later called Wheeler's demon) that could sit outside a black hole and drop in objects with entropy which would decrease the total entropy outside the black hole, the accessible universe, and therefore violate the second law of thermodynamics. It was later shown by Floyd and Penrose, and Christodoulou that the area of a black hole irreversibly increased under nearly any transformation and it was finally shown in 1971 by Hawking that the area of a black hole never decreased classically. It was finally Bekenstein who suggest that there was a relation between the area of a black hole and its entropy which would solve the violation of the second law which was later verified by Hawking and as such the entropy $S_{BH}$ is often referred to as the \emph{Bekenstein-Hawking} entropy. Hawking also showed, by considering the collapse of a star into a black hole and then comparing this to a black body, that the temperature of a black hole was proportional to the surface gravity at the horizon. Whilst the coefficients of of these relations can be derived mathematically we shall be satisfied by finding them via a dimensional argument followed by the requirement that the first law be satisfied to find any remaining numerical factors. For the remainder of this subsection we will return to SI units meaning that, as an example, $c\ne 1$.
+\subsubsection{Bekenstein-Hawking Entropy of a Black Hole} % (fold)
+\label{sub:bekenstein_hawking_entropy_of_a_black_hole}
+The surface are of a black hole has units of $m^2$ whilst entropy has units of $Kg\;m^{2}\;s^{-2}\;K^{-1}$ which means that for
+\begin{equation}
+	S_{BH}=\alpha A
+\end{equation}
+we have that $\alpha$ has units of $\frac{Kg}{s^{2}K}$. The only physical constant containing Kelvin is the Boltzmann constant $k_{b}$ which has total units of $\frac{Kg\;m^{2}}{s^{2}K}$ which means we now can write that
+\begin{equation}
+	S_{BH}=\beta k_{b}A
+\end{equation}
+where $\beta$ will now need to have units of $m^{-2}$. The only constant with units of just length is the Planck length, $l_{p}$ which is defined as
+\begin{equation}
+	l_{p} =	\sqrt{\frac{\hbar G}{c^{3}}}.
+\end{equation}
+This gives us the almost final expression for the entropy
+\begin{equation}
+	S_{BH}\propto \frac{k_{b}A}{l_{p}^{2}}.
+\end{equation}
+where the constant of proportionality will be determined from the first law. The appearance of $\hbar$ in this equation was surprising as it implied some quantum effects for an entirely classical object and approach.
+\begin{figure}
+	\centering
+        \includegraphics[scale=0.5]{Entropy.pdf}
+	\caption{Entropy of the 3 black hole horizons; notice that the extremal case is when the outer and inner horizons of the RN are equal, and has a non-zero entropy.}
+	\label{fig:entropy}
+\end{figure}
+Figure (\ref{fig:entropy}) plots the shape of the black hole entropies as a function of mass, and in the RN case with a fixed charge, then we can see that the entropy for the Schwarzschild case increases with increasing mass as expected, as does the outer RN horizon. The inner horizon decreases in entropy for an increase in mass, which makes sense as it will get smaller and smaller with added mass, approaching but never reaching the singularity (where the entropy would be zero). The point at which these two curves meet is the extremal RN case i.e. when $GM^{2}=Q^{2}$. Note that the entropy for the RN black hole is always less than that of the Schwarzschild which is as it should be because due to the charge there would be less microstates giving rise to the same macrostate and therefore a lower entropy. 
+\subsubsection{Hawking Temperature and The First Law} % (fold)
+\label{sub:hawking_temperature_and_the_first_law}
+Whilst we took the time with the entropy to make a point of the involvement of $\hbar$ we can just find the coefficient for the temperature by using Plank units meaning that for
+\begin{equation}
+	T_{H} = \gamma\kappa
+\end{equation}
+we have that the units of $\gamma$ must be $\frac{s^{2}}{m}K$. Using Plank units this gives us that
+\begin{equation}
+	\left(\sqrt{\frac{\hbar G}{c^{5}}}\right)^{2}\sqrt{\frac{c^3}{\hbar k_{b}^{2}}}\sqrt{\frac{\hbar c^{5}}{G k_{b}^{2}}}= \frac{\hbar}{c k_{b}}
+\end{equation}
+then we have the expression that 
+\begin{equation}
+	T_{H}\propto \frac{\hbar}{c k_{b}}\kappa.
+\end{equation}
+Next to find the proportionality constants we have to turn to the first law of thermodynamics which in infinitesimal form is written as
+\begin{equation}
+	dE=TdS -PdV
+\end{equation}
+where $P$ is the pressure and $V$ is the volume. It turns out that the pressure in this equation is given by the cosmological constant which in our case is $0$ and as such we can remove this term. By substituting our expressions into this equation we get that
+\begin{equation}
+	c^{2}dM= \frac{\hbar}{c k_{b}}\kappa \frac{k_{b}c^{3}}{\hbar G}dA \alpha
+\end{equation}
+where $\alpha$ is our numerical constant that we are trying to solve for. By working with the Schwarzschild solution and plugging the factors of $c$ into the area and surface gravity such that 
+\begin{align}
+	A_{s} &= 16\pi \frac{G^{2}M^{2}}{c^{4}} \\
+	\implies dA_{s} &= 16\pi \frac{G^{2}}{c^{4}} 2dM\\
+	\kappa_{s} &= \frac{c^{4}}{4GM}
+\end{align}
+then by cancelling down we get the result that
+\begin{equation}
+	dM=8\pi \alpha dM
+\end{equation}
+which means that $\alpha=\frac{1}{8\pi}$. It turns out the factors are $\frac{1}{4}$ for the entropy relation and $\frac{1}{2\pi}$ for the temperature giving us
+\begin{align}
+	S_{BH}=\frac{k_{b}c^{3}A}{4\hbar G}  \label{eq:entropy}\\
+	T_{H}= \frac{\hbar\kappa}{2\pi ck_{b}}.
+\end{align}
+\begin{figure}
+	\centering
+        \includegraphics[scale=0.6]{Temperature_all.pdf}
+	\caption{Temperature of the three black hole horizons; the shape of the outer RN curve is not obvious at this zoom, but can be seen to tend towards the Schwarzschild temperature for a high mass.}
+	\label{fig:temp_all}
+\end{figure}
+To show that these relations hold for the charged case we can to show that they satisfy the first law with a charged particle as well. Starting with taking the entropy for the $r_{+}$ horizon of the RN black hole
+\begin{equation}
+	S= \frac{k_{b}4\pi r_{+}^{2}}{4 l_{p}^{2}}=\frac{k_{b}\pi}{l_{p}^{2}c^{4}}\left(GM+\sqrt{G^{2}M^{2}-GQ^{2}}\right)^{2}
+\end{equation}
+then when we take the variation of the entropy we get that
+\begin{align}
+	dS&=\left(\frac{k_{b}\pi}{l_{p}^{2}c^{4}}\right)2\left(GM+\sqrt{G^{2}M^{2}-GQ^{2}}\right)\left[GdM+\frac{2MG^{2}dM}{2\sqrt{G^{2}M^{2}-GQ^{2}}}+\frac{-2GQdQ}{2\sqrt{G^{2}M^{2}-GQ^{2}}}\right]\\
+	&=\frac{k_{b}2\pi}{Gc\hbar}\left(\frac{G(GM+\sqrt{G^{2}M^{2}-GQ^{2}})^2}{\sqrt{G^{2}M^{2}-GQ^{2}}}dM - \frac{GQ(GM+\sqrt{G^{2}M^{2}-GQ^{2}})}{\sqrt{G^{2}M^{2}-GQ^{2}}}dQ\right).
+\end{align}
+Next using the definition of the surface gravity for the RN case we can write this as
+\begin{equation}
+	dS=\frac{k_{b}2\pi c}{\hbar}\left(\frac{1}{\kappa}c^{2}dM- \frac{Q}{\kappa r_{+}}dQ\right)
+\end{equation}
+which using our definition of the temperature comes out as
+\begin{equation}
+	TdS=dE-\Phi dQ
+\end{equation}
+where $\Phi=\frac{Q}{r_{+}}$ which can also be though of as 
+\begin{equation}
+	\Phi=\left. -A_{0}\right|_{r=r_{+}},
+\end{equation}
+the electric potential of the horizon, which means we have arrived at the first law for the case of a charged particle. 
+\begin{figure}
+	\centering
+        \includegraphics[scale=0.6]{Temperature_RN_outer.pdf}
+	\caption{Temperature of the outer RN horizon}
+	\label{fig:temp_outer_RN}
+\end{figure}
+
+Figure (\ref{fig:temp_all}) shows the curve of temperature for all black hole horizons (with again a fixed charge for the RN case); the most striking feature of this is that for the Schwarzschild the temperature decreases with increasing mass, something that will be discussed more in the next section. Next, figure (\ref{fig:temp_outer_RN}) shows an enlarged version of just the curve for the outer RN horizon. This graph features two distinct regions; the \emph{near-extreme} region which is from the start of the curve to the maxima peak, and the \emph{far, non-extreme} region which is everything after the peak. The second region behaves similarly to the Schwarzschild case where an increase in mass causes a decrease in temperature which makes sense as this is the $M>>Q$ limit. The near-extreme region however behaves as one would classically expect; an increase in mass gives an increase in temperature. The final key point is that at the extremal limit the temperature of the horizon is equal to zero. 
+% subsection hawking_temperature_ (end)
+% subsection bekenstein_hawking_entropy_of_a_black_hole (end)
+% subsection temperature_and_entropy (end)
+% subsection discussion_of_ (end)
+\subsection{Specific Heat Capacity in 4 Dimensions} % (fold)
+\label{sub:specific_heat_capacity_in_4_dimensions}
+Returning now back to our usual units where $\hbar = c = k_b = 1$ we can consider the specific heat of black holes. Specific heat is defined as the change in heat with respect to a change in temperature i.e. $\frac{dE}{dT}$. Fortunately for us the change in heat is proportional to the change in energy which means the change in mass, and the change in temperature is proportional to the change in surface gravity. By plotting the temperature as a function of mass we can see the behaviour of the specific heat, i.e if it is positive or negative. Returning to the graph shown in figure (\ref{fig:temp_all}) we can see the specific heat for the black hole is negative which is very unphysical; the more energy you add the colder the black hole seems to get! In the low mass limit a small change in mass gives a very large decrease in temperature and at the large mass limit it takes a large change in mass to produce any change in temperature. Looking now again at figure (\ref{fig:temp_outer_RN}) we can speak more specifically about the specific heat of this horizon in the two regions. We have plotted temperature on the y-axis and as such the gradient of this graph is actually the inverse of the specific heat which means that at some critical mass the specific heat changes from $\infty$ to $-\infty$ (i.e the peak of the curve), at the extremal point the specific heat is 0 (implying that this is a stable state of the system where adding energy would not increase the temperature which is consistent with the third law of thermodynamics), and finally that at an infinite mass the specific heat is once again (negatively) infinite meaning it is impossible to ever reach a zero temperature black hole by just adding more (uncharged) mass, another agreement with the third law if in a slightly counter-intuitive situation. 
+% subsection specific_heat_capacity_in_4_dimensions (end)
+\subsection{Extending these Quantities to Extra Dimensions} % (fold)
+\label{sub:extending_these_quantities_to_higher_dimensions}
+Extending the temperature and entropy to higher dimensions requires us to extend the definitions of area and surface gravity with the later being only slightly more difficult than the first. Just as when we wanted the surface area of the horizon for the 4-dimensional case we calculated it as the surface of a 2-sphere of radius $r$ we can find the area of a D-dimensional black hole horizon by calculating the surface of a $(D-2)$-sphere
+\begin{equation}
+	A^{(D)}=\Omega_{(D-2)}r^{D-2}=\frac{2\pi^{(\frac{D-1}{2})}}{\Gamma(\frac{D-1}{2})}r^{D-2}
+\end{equation}
+which dimensionally is still correct as the gravitational constant in the Planck length also gains a dimension of length for each extra dimension we add. As for the surface gravity, if we were to write the function that multiplies the $dt^{2}$ as $f(r)$ then it is easy to show that by following the same logic as when calculating $\kappa$ for the 4-dimensional case that we can write the surface gravity more generally as
+\begin{equation}
+	\kappa=\left. \frac{f'(r)}{2}\right|_{r=horizon}.
+\end{equation}
+As we only concerned ourselves with the sign of the specific heat and as this won't change (as only the power and not the sign of the mass terms changes) we shall not be considering this quantity more specifically in higher dimensions but believe it enough to say that the sign of the quantity will remain unchanged. 
+
+\section{Instability of Extremal RN Black Hole in 4D} % (fold)
+\label{sec:intability_of_extremal_rn_black_hole}
+Following on from the consideration of the specific heat of an extremal RN black hole i.e. that at 0 temperature it should be stable under the introduction of a massless scalar perturbation, we can test this more rigorously and as we will see it turns out not to be stable under a general perturbation. There are a few tools we need to discuss/derive before we can show this instability which we will finally show from the work of Aretakis\cite{Aretakis:2011ha}\cite{Aretakis:2011hc} as given clearly by Lucietti et al\cite{Lucietti:2012xr}.
+\subsection{Non-Extreme Instability} % (fold)
+\label{sub:non_extreme_instability}
+We will quickly mention here why we do not concern ourselves with this issue when it comes to non-extreme black holes. Whilst outside the horizon the energy density of a spacelike surface is non-increasing and as this is a function of $\partial_{\mu}\psi$ it means all behaves as expected; when evaluated on the horizon the energy density becomes degenerate and the constraints on $\psi$ disappear. Fortunately this behaviour does not need to be considered by using the horizon redshift, a quantity proportional to $e^{-\kappa v}$ where $\kappa$ is our surface gravity and $v$ is our Killing time vector. By doing this it has been shown that $\psi$ and all its derivatives decay on and outside of the horizon.
+% subsection non_extreme_instability (end)
+\subsection{Klein Gordon Equation in Curved Spacetime} % (fold)
+\label{sub:klein_gordon_equation_in_curved_spacetime}
+Before we can consider adding a perturbation we need to know the equation that governs it; as we will work with a massless scalar this is the Klein-Gordon (KG) equation. The Lagrangian density of the KG equation in Minkowski space is 
+\begin{equation}
+	\Lagr =\frac{1}{2}\eta^{\mu\nu}(\partial_{\mu}\psi)(\partial_{\nu}\psi) -\frac{1}{2}m^{2}\psi^{2}
+\end{equation}
+which to extending to curved space would involve promoting the Minkowski metric to the general metric tensor and replacing all partial derivatives with covariant derivatives; however the covariant derivative of a scalar field is just the partial derivative so these just remain as $\partial_{\mu}\psi$. This would give us the minimally coupled KG equation, however there is another scalar term we could couple to $\psi^{2}$ that would become 0 in flat space, the Ricci scalar. Putting all this together gives us that the new Lagrangian density is
+\begin{equation}
+	\Lagr =\frac{1}{2}g^{\mu\nu}(\partial_{\mu}\psi)(\partial_{\nu}\psi) -\frac{1}{2}(m^{2}+\xi R)\psi^{2} \label{eq:KG_action}
+\end{equation}
+where $\xi$ is some general coupling constant. Remembering that the action becomes
+\begin{equation}
+	S=\int d^{4}x \sqrt{-g}\Lagr
+\end{equation}
+we can get the Euler-Lagrange equations by requiring $\delta S=0$ which then gives us
+\begin{equation}
+	\partial_{\mu}\frac{\partial\sqrt{-g}\Lagr}{\partial(\partial_{\mu}\psi)}-\frac{\partial\sqrt{-g}\Lagr}{\partial\psi}=0.
+\end{equation}
+By plugging (\ref{eq:KG_action}) into these and using the fact that $\sqrt{-g}$ does not depend on $\psi$ or $\partial_{\mu}\psi$ we get that
+\begin{equation}
+	\partial_{\mu}(\sqrt{-g}g^{\mu\nu}\partial_{\nu}\psi)+\sqrt{-g}(m^{2}+\xi R)\psi=0.
+\end{equation}
+When we are in the case of minimal coupling and a massless field we can write this as
+\begin{equation}
+	\frac{1}{\sqrt{-g}}\partial_{\mu}(\sqrt{-g}g^{\mu\nu}\partial_{\nu}\psi)=(D_{\mu}g^{\mu\nu}\partial_{\nu})\psi=\nabla^{2}\psi=0 \label{KG_equation_curved}
+\end{equation}
+where $\nabla$ is the Laplace-Beltrami operator and this is then the form of the KG equation that we will use.
+% subsection klein_gordon_equation_in_curves_spacetime (end)
+\subsection{Eddington Finkelstein Coordinates} % (fold)
+\label{sub:rn_black_hole_in_eddington_finkelstein_coordinates}
+As previously mentioned, the singularity at the horizon for different black holes is only a coordinate singularity rather than a pure spacetime singularity and as such a change of coordinates can remove this singularity. The Eddington Finkelstein (EF) coordinates are ones where radially null geodesics define surfaces of constant time, i.e. in/outgoing radial light rays define lines of constant time. We start to make the change in coordinates by defining a tortoise coordinate $r^{*}$ where 
+\begin{equation}
+	\frac{dr^{*}}{dr}=g_{rr}=\left(1- \frac{2GM}{r}\right)^{-1}
+\end{equation}
+for the Schwarzschild case. It can be checked that 
+\begin{equation}
+	r^{*}=r+2GM\ln\left|\frac{r}{2GM}-1\right|
+\end{equation}
+satisfies this relation. We then define the ingoing EF coordinate, $v=t+r^{*}$ which allows us to write the line element as
+\begin{equation}
+	ds^{2}=-\left(1- \frac{2GM}{r}\right)dv^{2}+2dvdr+r^{2}d\Omega^{2}_{2}
+\end{equation}
+where the horizon is still at $r_{s}=2GM$ but we can see this no longer causes a singularity. Moving now to the extremal RN case we first need to evaluate $g_{tt}=g_{rr}^{-1}$ at $Q^{2}=GM^{2}$
+\begin{equation}
+	\left.\left(1- \frac{2GM}{r}+ \frac{GQ^{2}}{r^{2}}\right)\right|_{GM^{2}=Q^{2}}=\left(1- \frac{GM}{r}\right)^{2}.
+\end{equation}
+Again requiring that
+\begin{equation}
+	\frac{dr^{*}}{dr}=\left(1- \frac{GM}{r}\right)^{-2}
+\end{equation}
+gives us the solution that
+\begin{equation}
+	r^{*}=r +2GM\ln\left|\frac{r-GM}{GM}\right| -\frac{G^{2}M^{2}}{r-GM}
+\end{equation}
+which using the same definition for $v$ leaves our line element as
+\begin{equation}
+	ds^{2}=-\left(1- \frac{GM}{r}\right)^{2}dv^{2}+2dvdr+r^{2}d\Omega^{2}_{2}.
+\end{equation}
+% subsection rn_black_hole_in_eddington_finkelstein_coordinates (end)
+\subsection{Aretakis Instability} % (fold)
+\label{sub:aretakis_instability}
+To see the Aretakis instability we will look at the equation of motion for a massless scalar field, $\psi$, in an extremal RN background. This means studying the KG equation in the case of the metric being the extremal RN metric. The definition of $\nabla^{2}$ has both the inverse metric and the determinant of the metric in it; to calculate these we will use two properties of block diagonal matrices. The first property is that the inverse of a block diagonal matrix is simply the matrix with each block being replaced by the inverse of that block so if
+\begin{equation}
+		M= 
+		\begin{pmatrix}
+		A & 0 & 0 & 0\\
+		0 & B & 0 & 0\\
+		0 & 0 & C & 0\\
+		0 & 0 & 0 & D\\
+	\end{pmatrix}
+\end{equation}
+where $A-D$ are smaller matrices then
+\begin{equation}
+		M^{-1}= 
+		\begin{pmatrix}
+		A^{-1} & 0 & 0 & 0\\
+		0 & B^{-1} & 0 & 0\\
+		0 & 0 & C^{-1} & 0\\
+		0 & 0 & 0 & D^{-1}\\
+	\end{pmatrix}.
+\end{equation}
+The second property we will use is that the determinant of a block diagonal matrix is also the product of the determinants of each block i.e.
+\begin{equation}
+	\det(M)=\det(A)\det(B)\det(C)\det(D).
+\end{equation}
+This allows us to write our inverse metric 
+\begin{equation}
+	g^{\mu\nu}=
+	\begin{pmatrix}
+		0 & 1 & 0 & 0\\
+		1 & (1- \frac{GM}{r})^{2} & 0 & 0\\
+		0 & 0 & \frac{1}{r^{2}} & 0\\
+		0 & 0 & 0 & \frac{1}{r^{2}sin^{2}(\theta)}\\
+	\end{pmatrix}
+\end{equation}
+and determinant as $\sqrt{-g}=r^{2}f(\Omega)$ where $f$ is some arbitrary function of the angles which won't be relevant to the calculations. The next step that will make our work easier is to expand $\psi$ in spherical harmonics
+\begin{equation}
+	\psi(v,r, \Omega)= \sum_{l=0}^{\infty}\psi_{l}(v,r)Y_{l}(\Omega)
+\end{equation}
+where we have removed the index $m$ as it will not be relevant for the work we are doing. Finally we remind ourselves that we can write $\nabla^{2}=\nabla^{2}(v,r)+\nabla^{2}(\Omega)$ and that $r^{2}\nabla^{2}(\Omega)Y_{l}=-l(l+1)Y_{l}.$ Putting this information together into (\ref{KG_equation_curved}) we finally get
+\begin{align}
+	\nabla^{2}\psi&=\frac{1}{r^{2}}\left[\partial_{v}\left(r^{2}\partial_{r}\psi_{l}\right)	+\partial_{r}\left(r^{2}\partial_{v}\psi_{l}\right) + \partial_{r}\left(\left(1- \frac{GM}{r}\right)^{2}r^{2}\partial_{r}\psi_{l}\right) \right]- \frac{1}{r^{2}}l(l+1)\psi_{l}=0\\
+	&=\partial_{v}\left(r^{2}\partial_{r}\psi_{l}\right)	+\partial_{r}\left(r^{2}\partial_{v}\psi_{l}\right) +\partial_{r}(\Delta\partial_{r}\psi_{l})-l(l+1)\psi_{l}=0\\
+	&=r^{2}\partial_{v}\partial_{r}\psi_{l}+2r\partial_{v}\psi +r^{2}\partial_{v}\partial_{r}\psi_{l}+\partial_{r}(\Delta\partial_{r}\psi_{l})-l(l+1)\psi_{l}=0\\
+	&=2r\partial_{v}\partial_{r}(r\psi_{l})+\partial_{r}(\Delta\partial_{r}\psi_{l})-l(l+1)\psi_{l}=0 \label{KG_rn_pert}
+\end{align}
+where $\Delta=(r-GM)^{2}$. If we now set $l=0$ and evaluate at the horizon ($r=GM$) then this reduces to
+\begin{align}
+	GM[\partial_{r}(r\psi_{0})]_{r=GM}&=\text{const}\equiv (GM)^{2}H_{0}\\
+	\implies H_{0}&=\frac{1}{GM}\partial_{r}(r\psi_{0})_{r=GM}
+\end{align}
+which is independent of $v$ and therefore conserved. For general initial conditions $H_{0}$ is non zero which means that $\psi$ and $\partial_{r}\psi$ cannot both tend to zero at late time. Aretakis showed that $\psi$ does decay at late time and therefore $\partial_{r}\psi$ does not decay leading to
+\begin{equation}
+	 \lim_{v\to\infty}(\partial_{r}\psi_{0})= H_{0}.
+\end{equation}
+We also want to look the energy density measured by a radially ingoing observer coming from the EM tensor, $T_{rr}$ which would usually decay due at the horizon due to the redshift. From (\ref{eq:energy_mom_tensor_w_lagr}) we get that
+\begin{equation}
+	T_{\mu\nu}=g_{\mu\nu}\Lagr+\partial_{\mu}\psi\partial_{\nu}\psi
+\end{equation}
+meaning that $T_{rr}=(\partial_{r}\psi)^{2}$ which does not decay at the horizon, this agrees with the absence of the horizon redshift. 
+Next by acting on (\ref{KG_rn_pert}) with $\partial_r$ we can get
+\begin{equation}
+	2\partial_{v}\partial_{r}(r\psi_{l}) +2r\partial_{v}\partial_{r}^{2}(r\psi_{l}) +2\partial_{r}\psi_{l}=0.
+\end{equation}
+By setting $l=0$ and evaluating at the horizon we get that the first term is zero leaving us with
+\begin{equation}
+	\left[GM\partial_{v}\partial_{r}^{2}(r\psi_{0}) +\partial_{r}\psi_{0}\right]_{r=MG}=0.
+\end{equation}
+In the limit that $v\to\infty$ the second term goes to $H_{0}$ giving us that
+\begin{align}
+	(\partial_{v}\partial_{r}^{2}(r\psi_{0}))_{r=GM}\to \frac{-H_{0}}{GM}\\
+	\implies (\partial_{r}^{2}(r\psi_{0}))_{r=GM} = \frac{-H_{0}v}{GM}
+\end{align}
+for late time. Expanding out in the limit as $v\to\infty$ we get that 
+\begin{align}
+	H_{0}+GM(\partial_{r}^{2}\psi_{0})_{r=GM}= \frac{-H_{0}v}{GM}\\
+	(\partial_{r}^{2}\psi_{0})_{r=GM}\approx \frac{-H_{0}v}{(GM)^{2}}.
+\end{align}
+By repeated application of $\partial_{r}$ if can be shown that by keeping only the highest powers of $v$ that $(\partial_{r}^{k}\psi_{0})_{r=M}\propto v^{k-1}$ for late time.
+If instead we want to consider the $l\ne 0$ case then by acting with $\partial_{r}^{l}$ on (\ref{KG_rn_pert}) then evaluating at the horizon we get that
+\begin{equation}
+	2[\partial_{v}\partial_{r}^{l}(r\partial_{r}(r\psi_{l}))]_{r=GM}+(2-l(l+1))(\partial_{r}^{l}\psi_{l})_{r=GM}.
+\end{equation}
+Aretakis has shown that $\partial_{r}^{k}\psi_{l}$ decays outside and on the horizon for $k\le l$ meaning that we can define 
+\begin{equation}
+	H_{l}[\psi]=\frac{1}{(GM)^{2}}[\partial_{r}^{l}(r\partial_{r}(r\psi_{l}))]_{r=GM}
+\end{equation}
+which can be seen is conserved as $[\partial_{v}H_{l}]_{r=M}=0$. It has also been shown that $\partial_{r}^{l+1}\psi_{l}$ generally does not decay at the horizon which gives us that $\partial_{r}^{j}\psi_{l}$ and higher derivatives are proportional to $v^{(j-l-1) }$ for $j\ge l+1$. 
+% subsection aretakis_instability (end)
+% section intability_of_extremal_rn_black_hole (end)
+\section{Charged Black Holes From String Theory} % (fold)
+\label{sec:5d_charged_black_holes_from_string_theory}
+% section 5d_charged_black_holes_from_string_theory (end)
+\subsection{Kaluza Klein Reduction} % (fold)
+\label{sub:kaluza_klein_reduction}
+Consider the 10 dimensional black hole given by the metric that is derived from string theory and given in the paper by Mohaupt\cite{Mohaupt:2000gc}
+\begin{equation}
+	ds^{2}=\frac{1}{\sqrt{Z_{1}Z_{2}}}\left(-dt^{2}+dy^{2}+F(dt-dy)^{2}\right)+\sqrt{Z_{1}Z_{2}}dx^{2}_{i}+\sqrt{\frac{Z_{1}}{Z_{2}}}dy_{i}^{2}
+\end{equation}
+with $i=1,2,3,4$ and
+\begin{equation}
+	Z_{1,2}=1+\frac{Q_{1,2}}{r^{2}} \;\;\;\text{and}\;\;\; F=\frac{Q_{P}}{r^{2}}
+\end{equation}
+which are all harmonic functions i.e. solve the Laplace equation in 4D. These \emph{charges} $Q_{1,2,P}$ are defined as $Q=\hat{Q}_{i}c_{i}$ with $\hat{Q}_{i}\in\mathbb{Z}$ and
+\begin{equation}
+	c_{1}=\frac{4G_{N}^{(5)}R}{\pi\alpha ^{\prime} g_{s}}\;\;\; c_{2}=g_{s}\alpha ^{\prime} \;\;\; c_{P}=\frac{4G_{N}^{(5)}}{\pi R} \label{eq:q_defintions}
+\end{equation}
+here $R$ is the radius of the $y$ dimension, $g_{s}$ is the string coupling constant and $\alpha^{\prime}$ is related to the tension of the string. The reason we can define them this way is that the integers $\hat{Q}_{1},\hat{Q}_{2}$ and $\hat{Q}_{P}$ literally count the number of $D1$-branes, $D5$-branes and the quantised KK momentum (the momentum in the compact dimension $y$) in the background spacetime. The motivation of working with such a metric is that when the charges are not equal we have a generalisation of the extreme RN metric and this metric has some additional symmetries including 2 supersymmetries and as such we might expect this metric to not show evidence of instabilities at the horizon; when the charges are equal we will see that we just have our usual extreme 5D-RN metric in a shifted coordinate system.
+
+We want to reduce this metric to 5 large dimensions, the first step in doing so is to make it such that the dimensions $y_{i}$ and $y$ are small by requiring them to be closed circles;
+\begin{align}
+	y_{i}=y_{i}+2\pi l_{s}\\
+	y=y+2 \pi R
+\end{align}
+where $l_{s}$ is the length of the strings and $R \gg l_{s}$.
+Next we will remove the smaller dimensions, $y_{i}$; remember the action has a term proportional to $\sqrt{-g_{(10\times10)}}R_{(10)}$ which as the metric is block diagonal can be written as
+\begin{equation}
+	\sqrt{-g_{(10\times10)}}R_{(10)}=\sqrt{-g_{(6\times6)}}\sqrt{-g_{4\times4}}R_{(6)}=\sqrt{-\tilde{g}_{(6\times6)}}R_{(6)}
+\end{equation}
+where $\tilde{g}$ is the actual reduced metric and is not equal to $g$. Normally this would mean we have to deal with the trace of the small dimension part of the metric, but if we set $Z_{1}=Z_{2}$ then we have that $\sqrt{-g_{4\times4}}=1$ which means we don't have to concern ourselves with any difficulties when compactify these 4 dimensions and focus on the now 6 dimensional line element. The problem with removing the final compact dimension is the cross term between $y$ and $t$ meaning that we need to do a Kaluza-Klein reduction as just removing the $y$ coordinate as before would result in the remaining line element not satisfying the EFEs. To start with let us remind ourselves that
+\begin{equation}
+	ds^{2}=g_{\mu\nu}dx^{\mu}dx^{\nu}
+\end{equation}
+which means for each point in space we have $d$-differentials. Next we introduce a set of $d$ 1-forms $\{\omega^{\alpha}\}$ which we define as
+\begin{equation}
+	\omega^{a}={E^{a}}_{\mu}(x)dx^{\mu}
+\end{equation}
+where $E$ is a $d\times d$ matrix and is a point-wise function of the spacetime. If we require that these functions satisfy the relation
+\begin{equation}
+	{(^{t}E)_{\mu}}^{a}\eta_{ab}{E^{b}}_{\nu}=g_{\mu\nu},
+\end{equation}
+where $(^{t}E)$ is the transpose of $E$, then these forms are known as the vielbein. The metric can be though of as the square root of it as
+\begin{align}
+	\det(^{t}E\eta E)=\det(^{t}E)\det(\eta)\det(E)=\pm \det(E)^{2}=\det(g)\\
+	\implies \sqrt{|\det(g)|}=|\det(E)|
+\end{align}
+where we have used the properties of the determinant relating to products and transposes. 
+Now we will begin by assuming an ansatz of the form 
+\begin{equation}
+	{E^{a}}_{\mu}= 
+		\begin{pmatrix}
+		{E^{\hat{a}}}_{\hat{\mu}} & {E^{\hat{a}}}_{M}\\
+		{E^{\alpha}}_{\hat{\mu}} & {E^{\alpha}}_{M} \\
+	\end{pmatrix}
+\end{equation}
+where $\hat{a}$ and $\hat{\mu}$ run over our large dimensions and $\alpha$ and $M$ run over the small dimensions to compactify, in our case they will only ever equal $y$. We also choose to set $ {E^{\hat{a}}}_{M}$ to zero giving us a lower-triangular matrix to work with. It is worth noting that ${E^{\alpha}}_{\hat{\mu}}$ looks like a gauge field, $A_{\hat{\mu}}$, where $\alpha$ would count the number of gauge field; in our case just 1. The next step is to see how we can write the metric in terms of the vielbein; by writing 
+\begin{equation}
+	{E^{a}}_{\mu}= 
+		\begin{pmatrix}
+		{E^{\hat{a}}}_{\hat{\mu}} & 0\\
+		e^{\sigma}A_{\mu} & e^{\sigma} \\
+	\end{pmatrix}
+\end{equation}
+we can get that 
+\begin{equation}
+	g_{\mu\nu}= 
+		\begin{pmatrix}
+		\tilde{g}_{\mu\nu} +A_{\mu}A_{\nu}e^{2\sigma} & A_{\mu}e^{2\sigma}\\
+		A_{\mu}e^{2\sigma} & e^{2\sigma} \\
+	\end{pmatrix}
+\end{equation}
+where $\tilde{g}_{\mu\nu}$ is proportional to the $(D-1)$ metric and $\sigma$ is a scalar. Next we will calculate the actual $(D-1)$ metric by looking at how the action changes when this compactification is done. To do this we will make two simplifications; firstly we will assume there is no gauge field as this means we can write the $D$ dimensional metric as
+\begin{equation}
+		g_{\mu\nu}= 
+		\begin{pmatrix}
+		{(^{t}E)_{\hat{\mu}}}^{\hat{a}}\eta_{\hat{a}\hat{b}}{E^{\hat{b}}}_{\hat{\nu}} & 0\\
+		0 & e^{2\sigma} \\
+	\end{pmatrix},
+\end{equation}
+and secondly we will consider just a scalar term in the action to avoid having to deal with working with the Ricci scalar as the answer will be true for the Ricci scalar term as well. Having done this we can write the action as
+\begin{equation}
+	\int d^{d}x\sqrt{g_{(d)}}\sqrt{g_{(D-d)}}\;\partial_{\mu}\phi\;\partial_{\nu}\phi \;g^{\mu\nu}_{(d)}. \label{eq:eh_hilber_action_reduction}
+\end{equation}
+where $d$ is the number of non-compact dimensions. Next, because $\sigma$ is a scalar, we have that
+\begin{equation}
+	\sqrt{g_{(D-d)}}=e^{\sigma}.
+\end{equation}
+We will now perform a Weyl transformation to the metric i.e.
+\begin{equation}
+	g_{\mu\nu}^{(d)}=g_{\mu\nu}^{(5)}e^{\alpha\sigma} \label{eq:weyl_transform}
+\end{equation}
+with $\alpha$ just being some scaling constant. By plugging this into (\ref{eq:eh_hilber_action_reduction}) we get that 
+\begin{equation}
+	\int d^{d}x\sqrt{-g_{(5)}}\;e^{\alpha\sigma \frac{d}{2}+\sigma -\alpha\sigma}\;\partial_{\mu}\phi\;\partial_{\nu}\phi \;g^{\mu\nu}_{(5)}
+\end{equation}
+and then, as we want this action to be independent of the compact scalar $\phi$, we require the exponent to be equal to zero giving us that
+\begin{equation}
+	\alpha=\frac{1}{1- \frac{d}{2}}.
+\end{equation}
+Finally we use this value in (\ref{eq:weyl_transform}) to get that
+\begin{equation}
+	g_{\mu\nu}^{(5)}=g_{\mu\nu}^{(d)}(e^{\sigma})^{\frac{-1}{1-d/2}}=
+	g_{\mu\nu}^{(d)}(\sqrt{g_{(D-d)}})^{\frac{1}{d/2-1}}=\tilde{g}_{\mu\nu}(e^{2\sigma})^{\frac{1}{d-2}}.
+\end{equation}
+Putting this together we get the equation for our reduced metric as
+\begin{equation}
+	g_{\mu\nu}^{(D-1)}=\left(g_{\mu\nu}^{D}-A_{\mu}A_{\nu}e^{2\sigma}\right)(e^2{\sigma})^{\frac{1}{d-2}}
+\end{equation}
+Going back to our line element we see that
+\begin{align}
+	g_{tt}&= -\frac{1-F}{Z_{1}}\\
+	g_{ty}&=g_{yt}=A_{\mu}e^{2\sigma}=\frac{-F}{Z_{1}}\\
+	g_{yy}&=e^{2\sigma}=\frac{1+F}{Z_{1}}\\
+	g_{x_{i}x_{i}}&=Z_{1}
+\end{align}
+giving us that our new metric has elements
+\begin{align}
+	g_{tt}^{(5)}&=\left(	-\frac{1-F}{Z_{1}} -\frac{F^{2}}{Z_{1}^{2}}\frac{Z_{1}}{1+F}\right){\left(\frac{1+F}{Z_{1}}\right)}^{\frac{1}{3}}\\
+	&=\frac{1}{Z_{1}^{4/3}}\frac{-1}{(1+F)^{2/3}}\\
+	g_{x_{i}x_{i}}^{(5)}&=Z_{1}{\left(\frac{1+F}{Z_{1}}\right)}^{\frac{1}{3}}\\
+	&=(1+F)^{1/3}Z_{1}^{2/3}.
+\end{align}
+The final thing we do is to now specialise to our RN case where there is only 1 charge, i.e. $Q_{P}=Q_{1} \implies Z_{1}=(1+F)\equiv Z$, meaning that we can write our reduced metric as 
+\begin{equation}
+	ds^{2}_{reduced}=-Z^{-2}dt^{2}+Z dx_{i}^{2}.
+\end{equation}
+% subsection kaluza_klein_reduction (end)
+\subsection{Entropy of the String Metric} % (fold)
+\label{sub:entropy_of_the_string_metric}
+To calculate the entropy of the metric we will need to calculate the surface area of the black hole in this space time. The infinitesimal surface area of a sphere in 5 dimensional hyper-spherical coordinates ($r,\theta,\phi,\xi$) in a curved space time is given by 
+\begin{equation}
+	A=r^{3}\int\sqrt{\det(g_{\Omega\Omega})d\Omega^{2}_{3}}.
+\end{equation}
+Had we not equated any of the $Z$ functions the angular metric element would be 
+\begin{equation}
+	\left(Z_{1}Z_{2}F\right)^{1/3}d\Omega^{2}_{3}
+\end{equation}
+which means that we have
+\begin{equation}
+	A=r^{3}\sqrt{Z_{1}Z_{2}F}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi} \sin(\theta)\sin(\phi)\; d\theta d\phi d\xi=2\pi^{2}r^{3}\sqrt{Z_{1}Z_{2}F}.
+\end{equation}
+We want to evaluate this at the horizon which in these coordinates is at $r=0$ so if we expand the terms in the square root and take the limit towards the horizon we get that
+\begin{equation}
+	A=2\pi^{2}\lim_{r\to 0}\left(r^{3}\sqrt{\frac{Q_{1}Q_{2}Q_{P}}{r^{6}}}\right)=\sqrt{Q_{1}Q_{2}Q_{P}}.
+\end{equation}
+By plugging this into our equation for the entropy (\ref{eq:entropy}) and by using the definition of the $Q$'s given earlier in (\ref{eq:q_defintions}) we can see that the BH entropy for this 5D black hole is given by
+\begin{equation}
+	S=2\pi\sqrt{\hat{Q}_{1}\hat{Q}_{2}\hat{Q}_{P}}
+\end{equation}
+which is entirely dependent on the integer numbers defined above. It is possible to count the possible number of states, as was done by Mohaupt, and you come to the same result; this is important as it shows the the BH entropy formula gives the same value as a counting of states which is classically the way entropy is calculated.
+% subsection entropy_of_the_string_metric (end)
+\subsection{Comparison of Metrics} % (fold)
+\label{sub:comparison_of_metrics}
+To make sure that this is actually the RN black hole in 5 dimensions we need to compare the metrics and show that there is a coordinate transform from one to the other. First we need to set the coordinates $x_{i}$ as $r$ and the angular coordinates $\Omega$. The string metric is in a frame such that the horizon is at $r=0$ so we should expect the that the transformation would be 
+\begin{equation}
+	r^{2}=r^{2}_{s}+GQ^{2}
+\end{equation}
+where $r_{s}$ is the string metric radius, $r$ is the radius in the metric as given by (\ref{eq:RN_higher_dim_metric}) and we will also set it such that $Q_{1}=GQ$. We can verify this for each dimension starting with time 
+\begin{align}
+	g_{tt}^{s}&=-\left(1+\frac{GQ}{r_{s}^{2}}\right)^{-2}=-\left(\frac{r_{s}^{2}+GQ}{r_{s}^{2}}\right)^{-2}\\
+	&=-\left(\frac{r^{2}}{r^{2}-GQ^{2}}\right)^{-2}=-\left(1-\frac{GQ^{2}}{r^{2}}\right)^{2}=g_{tt}.
+\end{align}
+The next one to compare will be the angular elements as its the easiest of the two remaining
+\begin{align}
+	g_{\Omega\Omega}^{s}&=Zr^{2}_{s}=\left(1+ \frac{GQ^{2}}{r^{2}_{s}}\right)r^{2}_{s}=r^{2}=g_{\Omega\Omega}.
+\end{align}
+The final one is the radial coordinate so we first need to write that
+\begin{equation}
+	dr_{s}^{2}=\frac{r^{2}}{r^{2}-GQ^{2}}
+\end{equation}
+which gives us that
+\begin{equation}
+	g_{rr}^{s}dr^{2}_{s}=\left(1+\frac{GQ^{2}}{r^{2}_{s}}\right)dr_{s}^{2}=\left(\frac{r^{2}}{r^{2}-GQ^{2}}\right)^{2}dr^{2}=\left(\frac{1}{1- \frac{GQ^{2}}{r^{2}}}\right)^{2}dr^{2}=g_{rr}dr^{2}.
+\end{equation}
+As we can see all the elements of the metric agree perfectly with that coordinate transform and therefore we have proved that the metric we derived from string theory is in fact the same as the 5 dimensional RN metric we derived before. 
+% subsection comparison_of_metrics (end)
+\subsection{Instability in 5D} % (fold)
+\label{sub:instability_in_5d}
+To see if there exists an instability in 5D we first need to know what the metric looks like in the EF coordinates. We approach the problem in the exact same way by requiring that 
+\begin{equation}
+	\frac{dr^{*}}{dr}=\left(1- \frac{GM}{r^{2}}\right)^{-2}
+\end{equation}
+which gives us that 
+\begin{equation}
+	r^{*}=r+\frac{GMr}{2GM-2r^{2}}-\frac{3}{2}\sqrt{GM}\arctanh\left(\frac{r}{\sqrt{GM}}\right)
+\end{equation}
+and then using the ingoing EF coordinate defined as $v=t+r^{*}$ we can then just write the line element in the form
+\begin{equation}
+	ds^{2}=-\left(1- \frac{GM}{r^{2}}\right)^{2}dv^{2}+2dvdr+r^{2}d\Omega^{2}_{3}
+\end{equation}
+and our inverse metric as 
+\begin{equation}
+	g^{\mu\nu}=
+	\begin{pmatrix}
+		0 & 1 & 0 & 0 & 0\\
+		1 & (1- \frac{GM}{r^{2}})^{2} & 0 & 0& 0\\
+		0 & 0 & \frac{1}{r^{2}} & 0& 0\\
+		0 & 0 & 0 & \frac{1}{r^{2}sin^{2}(\theta)}& 0\\
+		0 & 0 & 0 & 0 & \frac{1}{r^{2}sin^{2}(\theta)\cos^{2}(\phi)}\\
+	\end{pmatrix}.
+\end{equation}
+Finally, we now have that $\sqrt{-g}=r^{3}f(\Omega)$ as we now have three angular elements in the metric. Now using (\ref{KG_equation_curved}) we get that
+\begin{equation}
+	\nabla^{2}\psi=\frac{1}{r^{3}}\left[\partial_{v}\left(r^{3}\partial_{r}\psi_{l}\right)	+\partial_{r}\left(r^{3}\partial_{v}\psi_{l}\right) + \partial_{r}\left(\left(1- \frac{GM}{r^{2}}\right)^{2}r^{3}\partial_{r}\psi_{l}\right) \right]- \frac{1}{r^{3}}l(l+2)\psi_{l}=0. \label{eq:5d_rn_kg}
+\end{equation}
+The reason the last term has changed to be $l(l+2)$ is as that additive term is related to the number of angular dimensions. By setting $l=0$ and evaluating at the horizon $(r^{2}=GM)$ we find that only the first two terms survive and we see that
+\begin{equation}
+	\partial_{v}\left(3GM\psi_{0}+2(GM)^{3/2}\partial_{r}\psi_{0}\right)_{r^{2}=GM}=0
+\end{equation}
+which means that the terms in the bracket must be a conserved quantity. If we choose to define this such that
+\begin{equation}
+	(3GM\psi_{0}+2(GM)^{3/2}\partial_{r}\psi_{0})_{r^{2}=GM}\equiv 2 (GM)^{3/2}H_{0}^{\prime} 
+\end{equation}
+then by taking the limit of late time i.e. $v\to \infty$ and if we make the assumption that $\psi$ still decays then we get that
+\begin{equation}
+	\lim_{v\to\infty}(\partial_{r}\psi_{0})_{r^{2}=GM}=H_{0}^{\prime} 
+\end{equation}
+just as we had in 4 dimensions. We also see that the energy density $T_{rr}=(\partial_{r}\psi)^{2}$ still does not decay again due to the lack of gravitational redshift. The next step is to once again act $\partial_{r}$ on (\ref{eq:5d_rn_kg}) and setting $l=0$ to get that
+\begin{equation}
+	6r^{2}\partial_{v}\partial_{r}\psi_{0}+2r^{3}\partial_{v}\partial_{r}^{2}\psi_{0}+6r\partial_{v}\psi_{0}+\partial_{r}^{2}\left(\left(1- \frac{GM}{r^{2}}\right)^{2}r^{3}\partial_{r}\psi_{0}\right)=0.
+\end{equation}
+We can see that there will only be one surviving contribution from the last term when evaluating at the horizon which means after simplifying our expression we have
+\begin{equation}
+	\left[\partial_{v}(3\psi_{0}+2\sqrt{GM}\partial_{r}\psi_{0})+\sqrt{GM}\partial_{v}\partial_{r}\psi_{0}+GM\partial_{v}\partial_{r}^{2}\psi_{0}+4(\partial_{r}\psi)\right]_{r^{2}=GM}=0.
+\end{equation}
+The reason we have written it in this form is so we can easily see that the first term is 0 and that when we take the late time limit we have that
+\begin{equation}
+	\partial_{v}\left[\sqrt{GM}\partial_{r}\psi_{0}+GM\partial_{r}^{2}\psi_{0}\right]+4H_{0}^{\prime} =0 \;\;\;\text{as}\;\; v\to\infty
+\end{equation}
+which means that the term in the brackets must be equal to $-4H_{0}^{\prime}v$. Seeing that the first term is also proportional to $H_{0}^{\prime}$ and remembering we are in the late time limit we finally see that
+\begin{equation}
+	(\partial_{r}^{2}\psi_{0})_{r^{2}=GM}\approx \frac{-4H_{0}^{\prime}v}{GM}
+\end{equation}
+where, as in the four dimensional case, we get that the second derivative of the field blows up at late time meaning there is an instability for this black hole.
+% subsection instability_in_5d (end)
+\section{Discussion} % (fold)
+\label{sec:conclusion}
+In this work we have derived the metrics as well as thermodynamic properties of both the Schwarzschild and Reissner-Nordstr\"om black holes in $D\ge4$ dimensions; we have also shown that the extremal RN black hole exhibits an instability when perturbed by a massless scalar field. This is cause for concern, we expect the extremal solution to be stable; even more so in 5 dimensions where the black hole can be embedded in string theory. What we have done is cover the groundwork of a larger area of study and we have left many unanswered questions; what is the final state of the black hole, do there exist non-generic perturbations that do not lead to an instability, and does this result extend to other extremal black holes regardless of dimension? 
+
+The first question, that of the final state, has been answered by numerical calculations done by Murata et al\cite{Murata:2013daa} and they found that for a general perturbation the late time result is that of a non-extreme RN black hole. However, they also found that for a specific tuning of the perturbation it is possible to have a time-dependent extremal RN black hole at a late time; one that outside the horizon acts as an extremal RN but on the horizon does not. The idea of a non-extreme black hole settling down to an extreme one may considered to be a violation of the third law of thermodynamics but by using a definition of the third law as given by Israel\cite{PhysRevLett.57.397} it is possible to have this situation without violating the third law.
+
+The final question of whether this applies to other extremal black holes was also answered by Murata\cite{Murata:2012ct} who studied gravitational (and electromagnetic) perturbations on extremal black hole solutions by a more mathematical approach. They show that many of the extreme higher dimensional black holes exhibit the instability, and specifically all of such solutions in 5 dimensions.
+
+Finally, we can briefly discuss one question that, as far as we can tell, has not yet been answered; what happens if we perturb the 3-charge string theory metric with a supersymmetric scalar? One might expect that by using a supersymmetric scalar that the supersymmetries of the system might be preserved leading to no instability on the horizon. It may very well be that this perturbation is analogous to the tuned parameter found by Murata et al that lead to the time-dependent extremal RN result. 
+
+It is clear that a lot of work has been done on the topic of the instabilities, both theoretically for generic perturbations, and numerically for both generic and tuned cases, and that we are closer to understanding why and how such instabilities occur. However there is still the need for theoretical study of particular perturbations to the black hole, be they supersymmetric or otherwise, in an attempt to find exact final-state solutions to broaden our understanding of this unexpected result.
+% section conclusion (end)
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{black_hole_references} 
+\end{document}

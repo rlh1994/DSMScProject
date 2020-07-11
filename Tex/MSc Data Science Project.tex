@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\usepackage[margin=3cm]{geometry}
+\usepackage[superscript,nomove]{cite}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\usepackage[makeroom]{cancel}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\DeclareMathOperator\arctanh{arctanh}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{cleveref}
+\crefdefaultlabelformat{[#2#1#3]}
+\begin{document}
+\renewcommand\citeform[1]{[#1]}
+%
+\title{MSc Data Science Project: Can a Convolutional Neural Network judge a book by its cover?}
+\author{\\Ryan Hill MSci\\\\
+Supervisor: Dr Hubie Chen\\\\
+Birkbeck, University Of London\\\\
+\texttt{rhill06@mail.bbk.ac.uk}}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+\graphicspath{{images/}}
+\begin{abstract}
+	Coming soon...
+\end{abstract}
+\begin{figure}[!b]
+	\centering
+	\includegraphics[scale=0.4]{bbk_logo.jpg}
+\end{figure}
+
+\clearpage
+%
+{\hypersetup{linkcolor=black}
+\tableofcontents}
+\thispagestyle{empty}
+\clearpage
+%
+\setcounter{page}{1}
+\section{Introduction} % (fold)
+\label{sec:intro}
+
+% section CNN Theory and Architectures
+
+\section{Data collection and pre-processing} 
+\label{sec:Data_collection_and_pre-processing} 
+\subsection{Manual review} 
+\label{sub:Manual_review} 
+Rule of thumb: single front facing book cover, book cover did not contain pictures of multiple books, and was not just an arrangement of book covers. Covers designed specifically for a boxset were allowed.
+% section Manual_review end 
+% section Data_Collection_and_pre-processing end 
+% Section Data collection and pre-processing and exploratory analysis
+    % include size heatmap
+    % include average image per class
+
+
+% Section Model Training and Results
+
+% Section Feature Visualisation
+
+% Section Discussion and future work
+
+% Section Conclusion
+
+
+%\nocite{*}
+\bibliographystyle{ieeetran}
+\bibliography{BBK_MSc_Project} 
+\end{document}
