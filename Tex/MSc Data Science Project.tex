@@ -45,33 +45,114 @@ Birkbeck, University Of London\\\\
 \clearpage
 %
 \setcounter{page}{1}
-\section{Introduction} % (fold)
+\section{Introduction} 
 \label{sec:intro}
 
-% section CNN Theory and Architectures
+Introduce the project, describe the goal and the idea behind why this is important. Explain the structure of this work,
 
+\subsection{Related Works} 
+\label{sub:Related Works} 
+Discuss the work of Iwana as the main source, reference their methods and results but keep much for later where relevant for comparison with my work.
+% subsection Related Works end 
+% section CNN Theory and Architectures
+\section{Theory} 
+\label{sec:Theory} 
+\subsection{Components of Convolutional Neural Networks} 
+\label{sub:Components_of_Convolutional_Neural_Networks} 
+Describe the maths and the theory behind the various components of CNNs to the best of my ability, referring to the source papers for more complex combined units where sensible. 
+% subsection Components_of_Convolutional_Neural_Networks end 
+\subsection{Transfer Learning} 
+\label{sub:Transfer_Learning} 
+Describe the theory and maths behind transfer learning to the reader.
+% subsection Transfer_Learning end 
+
+\subsection{Activation Maximisation} 
+\label{sub:Activation_Maximisation} 
+Describe the theory and/or maths of activation maximisation and the methods used within the package we use the regularisations applied. 
+% subsection Activation_Maximisation end 
+% section Theory end 
 \section{Data collection and pre-processing} 
 \label{sec:Data_collection_and_pre-processing} 
-\subsection{Manual review} 
-\label{sub:Manual_review} 
+\subsection{Image Download and Manual Review} 
+\label{sub:Image Download and Manual Review} 
+Detail the process of collecting the data and manually reviewing those chosen for use within the train/test set, as well as the validation split.
+
 Rule of thumb: single front facing book cover, book cover did not contain pictures of multiple books, and was not just an arrangement of book covers. Covers designed specifically for a boxset were allowed.
-% section Manual_review end 
+% subsection Image Download and Manual Review end 
+\subsection{Image Pre-processing Technique} 
+\label{sub:Image_Pre-processing_Technique} 
+Detail the approaches taken when considering how to pre-process the images and their results, including what the final choice was.
+% section Image_Pre-processing_Technique end 
 % section Data_Collection_and_pre-processing end 
-% Section Data collection and pre-processing and exploratory analysis
-    % include size heatmap
-    % include average image per class
+\section{Model Training} 
+\label{sec:Model_Training} 
+\subsection{Configuration} 
+\label{sub:Configuration} 
+Detail the models used, the hyperparameters set as well as the optimiser and the loss functions chosen. Denote the pre-trained sources and the reason for choosing these models.
+% subsection Configuration end 
+\subsection{Training Performance} 
+\label{sub:Training_Performance} 
+Detail and visualise the performance of the models through training; compare length of training to that of Iwana.
+% subsection Training_Performance end 
 
+% section Model_Training end 
 
-% Section Model Training and Results
+\section{Evaluation} 
+\label{sec:Evaluation_and_Further_Exploration} 
+\subsection{Results} 
+\label{sub:Results} 
+Present and discuss the basic results for each model, including a comparison with Iwana with the caveat of a slightly different dataset and different pre-processing. 
 
-% Section Feature Visualisation
+% section Results end 
+\subsection{Further Analysis} 
+\label{sub:Further_Analysis} 
+Consider further, in depth, analysis on the best performing model, including some of the insight provided by Iwana.
 
-% Section Discussion and future work
+Idea: compare class average colour by predicted and actual and compare to accuracy?
+% section Further_Analysis end 
+\subsection{Feature Visualisation} 
+\label{sub:Feature_Visualisation} 
+Detail the approach taken to try and visualise the ideal input to trigger the most accurate classes in an attempt to understand what feature the model is picking up on. Show output and discuss impact.
+% section Feature_Visualisation end  
 
-% Section Conclusion
+\subsection{Discussion} 
+\label{sub:Discussion} 
+Discussion around the reasons we have seen some of these results if not already covered in the previous subsections. 
+% subsection Discussion end 
+% section Evaluation_and_Further_Exploration end 
+
+\section{Conclusion} 
+\label{sec:Conclusion} 
+Discuss the project as a whole, the impact of the results when compared to the literature, and what future work there could be off the back of this.
+% section Conclusion end 
+
 
 
 %\nocite{*}
 \bibliographystyle{ieeetran}
 \bibliography{BBK_MSc_Project} 
+
+\appendix
+
+\section{CNN Architectures} 
+\label{sec:CNN_Architectures} 
+Detail the exact configurations of these architectures
+\subsection{MobileNetV2} 
+\label{sub:MobileNetV2} 
+ 
+% subsection MobileNetV2 end  
+\subsection{Inception-ResnetV2} 
+\label{sub:Inception-ResnetV2} 
+ 
+% subsection Inception-ResnetV2 end 
+\subsection{ResNeXt50} 
+\label{sub:ResNeXt50} 
+ 
+% subsection ResNeXt50 end 
+% section CNN_Architectures end 
+
+\section{Technology} 
+\label{sec:Technology} 
+List of software and packages/libraries including their versions.
+% section Technology end 
 \end{document}

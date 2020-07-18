@@ -14,3 +14,9 @@ book-dataset/
 *.bbl
 *.aux
 *.fdb_latexmk
+Files and scripts/cropped_05.h5
+Files and scripts/mobilenet_10.h5
+Files and scripts/padded_05.h5
+Files and scripts/noprep_06.h5
+Files and scripts/resnext_84.h5
+Files and scripts/incep_56.h5
