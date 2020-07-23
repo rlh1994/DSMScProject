@@ -75,13 +75,40 @@ Describe the theory and/or maths of activation maximisation and the methods used
 \label{sec:Data_collection_and_pre-processing} 
 \subsection{Image Download and Manual Review} 
 \label{sub:Image Download and Manual Review} 
-Detail the process of collecting the data and manually reviewing those chosen for use within the train/test set, as well as the validation split.
+The 207, 572 images within the complete book32 dataset covering all original 32 classes were downloaded at full resolution using a slightly altered version of the script provided within the Iwana repository \cite{iwanarepo}. The original csv containing all image URLs was split into files of no more than 20,000 records each to allow to the downloads to be run over multiple sessions do to the slow data transfer rates and the overhead of reading data between Google Drive and Google Colab meaning that even checking before downloading an individual file was not much faster than downloading and writing the file anyway. Each sub-file was then iterated over using the remainder of the original script, downloading each image into a sub-folder of the class for that image i.e. the genre classification.
 
-Rule of thumb: single front facing book cover, book cover did not contain pictures of multiple books, and was not just an arrangement of book covers. Covers designed specifically for a boxset were allowed.
+Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. At this point we attempted to identify if any records used in the bookcover30 train or test datasets were actually boxsets, and as such would likely have an unrepresentative cover image, and example of such an image can be seen in \textcolor{red}{TODO: add image}\cref{fig:TBC}. The terms used in a regex search of the titles were \emph{"boxed set", "boxset", "box set", "anthology", "bundle", "\#-book", "\# book"}. 264 records within the bookcover30 dataset matched at least one of these terms and were extracted into a new folder for manual review. The process was somewhat subjective but as a rule of thumb we rejected any image that was not a single front facing cover, that contained pictures of multiple books and was not an arrangement of covers; single covers that seemed to be specifically designed for a boxset were considered acceptable. In total 94 records needed to be removed due to these rules. To preserve the class balance of the train and test datasets, new records were chosen from the book32 dataset by making like-for-like swaps of the same class; any new covers were also reviewed to ensure they were not boxsets. No verification of the class assignment to images was performed so any errors that existed in the original data would have persisted and we continue to use the single class chosen by the original authors in the case of multi-class books.
+
+We chose to split the training data out into training and validation data using a 90/10 random split per class to ensure class balance in all of the training, validation, and test sets. In total the training set compromised of 46,170 records, the validation set 5130 records, and 
+the test set 5700 records; with 1,539, 171, and 190 records per class respectively. 
+
 % subsection Image Download and Manual Review end 
 \subsection{Image Pre-processing Technique} 
 \label{sub:Image_Pre-processing_Technique} 
-Detail the approaches taken when considering how to pre-process the images and their results, including what the final choice was.
+
+We next used 3 different image preparation methods on the datasets to attempt to identify the method that would lead to the best accuracy within our models. At this stage all methods output an image 299x299 pixels as this was the largest size we would need for any future models. By reducing the image size twice, first now and then again when using a specific model, we were potentially losing some information that would lead to a less accurate model; however we chose to do this to speed up training and testing by having to load much smaller data in compared to the original full sized images. Before pre-processing was done we collected the initial shape and average RGB values of each image for further analysis later.
+
+The first pre-processing method (\emph{NoPrep}) was to simply rescale the image directly down to a 299x299 shape using inter-cubic interpolation \textcolor{red}{TODO: explain this mathematically}. This was chosen at the time as a common all-purpose interpolation method, however after later research this method is often chosen to enlarging images, not shrinking them so the potential to use a better interpolation method could be used in future work.
+
+The second method (\emph{Padded}) was to first pad the images with a symmetric pure white border on either the left/right or top/bottom depending on if the image was portrait or landscape (no padding was done if the image was already a perfect square). These images were then downscaled to 299x299 using the same method as above. The final method (\emph{Cropped}) was to crop the image to a perfect square before the same downscaling method was used. 
+
+Once the images had been processed we used a MobileNetV2 model on each processed training and validation dataset for 30 epochs with an early stopping patience of 15 (i.e. if no improvement was seen in validation accuracy over 15 epochs then we did not continue) and the best model for validation accuracy was kept. The model was trained using the default TensorFlow 2 settings of the adam optimiser with a loss function of sparse categorical cross entropy. More details of the set up are detailed in \cref{sec:Model_Training} as other than the epoch and early stopping the same configuration was used for the main training process. The test results of this model trained on each of the 3 datasets is presented in \cref{tab:preprocres} and the second method, padding the image with a white border, achieved the best result on the test data of 15.81\% accuracy. 
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{|l|r|r|}
+	\hline
+	\textbf{Pre-processing Method} & \multicolumn{1}{l|}{\textbf{Best epoch}} & \multicolumn{1}{l|}{\textbf{Test Accuracy}} \\ \hline
+	NoPrep                         & 8                                        & 14.39\%                                     \\ \hline
+	Padded                         & 6                                        & 15.81\%                                     \\ \hline
+	Cropped                        & 5                                        & 12.88\%                                     \\ \hline
+	\end{tabular}
+	\caption{Results of short training on MobileNetV2 on different image pre-processing methods}
+	\label{tab:preprocres}
+\end{table}
+
+It is important to note at this point that just because this method achieved the best result for this model in a short number of epochs is no guarantee that this would be the method that achieves the best results in other models or over longer epochs. We use this as a rough benchmark as given the constraints on computing power available to us we were only able to train each model in \cref{sec:Model_Training} once for a reasonable number of epochs, so a decision had to be made. It is also possible that hyperparameter tuning for each of these datasets may have led to different outcomes, but again due to the constraint on resources we decided it best to use domain accepted defaults and as such we progress with the padded dataset.
+
 % section Image_Pre-processing_Technique end 
 % section Data_Collection_and_pre-processing end 
 \section{Model Training} 
@@ -118,6 +145,9 @@ Detail the approach taken to try and visualise the ideal input to trigger the mo
 \subsection{Discussion} 
 \label{sub:Discussion} 
 Discussion around the reasons we have seen some of these results if not already covered in the previous subsections. 
+
+Future work:
+use different interpolation method
 % subsection Discussion end 
 % section Evaluation_and_Further_Exploration end 
 
