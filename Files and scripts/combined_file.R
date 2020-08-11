@@ -367,7 +367,7 @@ comb_overlap_data %>%
 
 
 # Analysis ----------------------------------------------------------------
-
+#class overlap
 comb_overlap_data %>% 
   filter(avg_overlap < 1) %>%
   group_by(model) %>% 
@@ -375,3 +375,33 @@ comb_overlap_data %>%
   slice(1:5) %>%
   ungroup() %>%
   select(Predicted_Class.x, Predicted_Class.y) %>% distinct()
+
+#precision
+mob_results %>% mutate(model = 'MobileNetV2') %>%
+  rbind(inc_results %>% mutate(model = 'InceptionResnetV2')) %>%
+  rbind(res_results %>% mutate(model = 'ResneXt50')) %>%
+  pivot_longer(`Arts & Photography`:Travel, names_to = 'Predicted_Class', values_to = 'Prediction_Perc') %>%
+  group_by(Filename, model) %>%
+  arrange(desc(Prediction_Perc)) %>%
+  slice(1) %>% 
+  left_join(test_data) %>%
+  select(Filename, Category, Predicted_Class, model) %>%
+  mutate(correct = if_else(Predicted_Class == Category, 1, 0)) %>%
+  group_by(Predicted_Class, model) %>%
+  summarise(precision = sum(correct)/n()) %>%
+  pivot_wider(names_from = model, values_from = precision) %>%
+  clipr::write_clip()
+
+mob_results %>% mutate(model = 'MobileNetV2') %>%
+  rbind(inc_results %>% mutate(model = 'InceptionResnetV2')) %>%
+  rbind(res_results %>% mutate(model = 'ResneXt50')) %>%
+  pivot_longer(`Arts & Photography`:Travel, names_to = 'Predicted_Class', values_to = 'Prediction_Perc') %>%
+  group_by(Filename, model) %>%
+  arrange(desc(Prediction_Perc)) %>%
+  slice(1) %>% 
+  left_join(test_data) %>%
+  select(Filename, Category, Predicted_Class, model) %>%
+  mutate(correct = if_else(Predicted_Class == Category, 1, 0)) %>%
+  group_by(model) %>%
+  summarise(precision = sum(correct)/n()) %>%
+  pivot_wider(names_from = model, values_from = precision) 

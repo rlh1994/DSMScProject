@@ -51,20 +51,20 @@ Write up:
     Data collection and pre-processing:
         ☐ Add image of bad cover
         ☐ Explain inter-cubic interpolation
-        ☐ Add graph of training the models
+        ✔ Add graph of training the models @done(20-08-11 16:12)
     Model Training:
         ✔ Write configuration section @done(20-08-10 16:58)
         ✔ Write Training Performance section @done(20-08-10 16:58)
-        ☐ Insert visualise training
+        ✔ Insert visualise training @done(20-08-11 16:12)
     Evaluation:
-        ☐ Write Results section
-        ☐ Visualise average colour for prediction and actual
-        ☐ Table of results comparison
-        ☐ Write further analysis section
-        ☐ Write feature visualisation section
-        ☐ Write discussion section
+        ✔ Write Results section @done(20-08-11 16:12)
+        ✔ Visualise average colour for prediction and actual @done(20-08-11 16:12)
+        ✔ Table of results comparison @done(20-08-11 16:12)
+        ✔ Write further analysis section @done(20-08-11 16:12)
+        ✔ Write discussion section @done(20-08-11 16:12)
+        ✔ Write feature visualisation section @done(20-08-11 16:12)
     Conclusion:
-        ☐ Write conclusion
+        ✔ Write conclusion @done(20-08-11 16:12)
         Future work:
             Better interpolation method
             Train longer
