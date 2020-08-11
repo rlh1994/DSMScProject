@@ -30,9 +30,9 @@ Model creating:
     ✔ Train tune and test resneXt @done(20-07-18 14:38)
 
 Reulsts exploration:
-    ☐ Compare the results and explore where failures occur etc.
-    ☐ Do analysis on sizes and colours per class in R
-    ☐ Do some other stuff here I guess
+    ✔ Compare the results and explore where failures occur etc. @done(20-08-10 16:59)
+    ✔ Do analysis on sizes and colours per class in R @done(20-08-10 16:59)
+    ✔ Do some other stuff here I guess @done(20-08-10 16:59)
 
 Make images:
     ✔ Take 3 best classes and use libary to try and make images from them @done(20-07-18 14:38)
@@ -40,4 +40,35 @@ Make images:
     ✘ If you have the time, try to use DGN-AMs maybe? @cancelled(20-07-18 14:38)
 
 Write up:
-    ☐ Write it up (split this out more)
+    ☐ Write it up
+    Introduction:
+        ☐ Write Introduction
+        ☐ Write Related Works
+    Theory:
+        ☐ Write Components of convolutional neural networks
+        ☐ Write transfer learning
+        ☐ Write Activation maximisation
+    Data collection and pre-processing:
+        ☐ Add image of bad cover
+        ☐ Explain inter-cubic interpolation
+        ☐ Add graph of training the models
+    Model Training:
+        ✔ Write configuration section @done(20-08-10 16:58)
+        ✔ Write Training Performance section @done(20-08-10 16:58)
+        ☐ Insert visualise training
+    Evaluation:
+        ☐ Write Results section
+        ☐ Visualise average colour for prediction and actual
+        ☐ Table of results comparison
+        ☐ Write further analysis section
+        ☐ Write feature visualisation section
+        ☐ Write discussion section
+    Conclusion:
+        ☐ Write conclusion
+        Future work:
+            Better interpolation method
+            Train longer
+    Appendix:
+        ☐ Write CNN Architectures
+        ☐ Write Technology
+    ☐ Tidy Code

@@ -79,8 +79,7 @@ The 207, 572 images within the complete book32 dataset covering all original 32 
 
 Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. At this point we attempted to identify if any records used in the bookcover30 train or test datasets were actually boxsets, and as such would likely have an unrepresentative cover image, and example of such an image can be seen in \textcolor{red}{TODO: add image}\cref{fig:TBC}. The terms used in a regex search of the titles were \emph{"boxed set", "boxset", "box set", "anthology", "bundle", "\#-book", "\# book"}. 264 records within the bookcover30 dataset matched at least one of these terms and were extracted into a new folder for manual review. The process was somewhat subjective but as a rule of thumb we rejected any image that was not a single front facing cover, that contained pictures of multiple books and was not an arrangement of covers; single covers that seemed to be specifically designed for a boxset were considered acceptable. In total 94 records needed to be removed due to these rules. To preserve the class balance of the train and test datasets, new records were chosen from the book32 dataset by making like-for-like swaps of the same class; any new covers were also reviewed to ensure they were not boxsets. No verification of the class assignment to images was performed so any errors that existed in the original data would have persisted and we continue to use the single class chosen by the original authors in the case of multi-class books.
 
-We chose to split the training data out into training and validation data using a 90/10 random split per class to ensure class balance in all of the training, validation, and test sets. In total the training set compromised of 46,170 records, the validation set 5130 records, and 
-the test set 5700 records; with 1,539, 171, and 190 records per class respectively. 
+We chose to split the training data out into training and validation data using a 90/10 random split per class to ensure class balance in all of the training, validation, and test sets. In total the training set compromised of 46,170 records, the validation set 5130 records, and the test set 5700 records; with 1,539, 171, and 190 records per class respectively. 
 
 % subsection Image Download and Manual Review end 
 \subsection{Image Pre-processing Technique} 
@@ -115,11 +114,27 @@ It is important to note at this point that just because this method achieved the
 \label{sec:Model_Training} 
 \subsection{Configuration} 
 \label{sub:Configuration} 
-Detail the models used, the hyperparameters set as well as the optimiser and the loss functions chosen. Denote the pre-trained sources and the reason for choosing these models.
+All model architectures consisted of their respective base CNN structure as detailed in \cref{sec:CNN_Architectures} followed by a global average pooling 2D layer to reduce the dimensionality of our tensor and to ensure a flat 1D vector which is fully connected to a 30 neuron output layer with a softmax activation. All models were also trained using the same setup in terms of hyperparameters, optimisers and loss functions; the loss function was sparse categorical cross entropy (sparse due to the usage of a non one-hot encoded target vector), the optimiser was the Adam optimiser \cite{Kingma2015}. The optimiser was used with default hyperparameters as defined within the TensorFlow implementation, the most important being the learning rate with was left at the initial value of 0.001. The reason for the usage of the default hyperparameters and not using a more advanced custom optimiser, such as WAME \cite{Mosca2017}, was due to the constraints on access time to computing power. As is the training already had to be completed across multiple sessions and doing any tuning would have resulted in too large a time required to produce meaningful results; Adam produces decent results with the defaults and so they were used in this work.
+
+The models themselves, MobileNetV2, Inception-ResnetV2, and ResNeXt50 were chosen to represent a wide spread of model capabilities and complexities as highlighted in Figure 1 of the Benchmark Analysis of CNNs completed by Bianco et al\cite{Bianco2018}. MobileNetV2 was chosen as it is a lightweight model designed to be capable of running on mobile devices and was meant to be a low complexity comparison in line with AlexNet (due to no pre-trained version of AlexNet being available within TensorFlow), Inception-ResnetV2 for its high accuracy in other use cases, and ResNeXt50 as a smaller version of one of the newer CNN architectures. These models, combined with the original work done by Iwana et al, span a range of complexity and training speed allowing for a good comparison between performance.
+
+The models were training once using the training data as described in \cref{sub:Image Download and Manual Review} and validated against the validation data split out at the same point. No cross-validation was done due to resource limitations.
 % subsection Configuration end 
 \subsection{Training Performance} 
 \label{sub:Training_Performance} 
-Detail and visualise the performance of the models through training; compare length of training to that of Iwana.
+The models were each trained with a maximum of 200 epochs and early stopping with a patience of 20 due to the time constraints; in the end all 3 models resulted in early stopping by epoch 104 at most. 
+
+The performance of the models throughout training can be seen in \cref{fig:train_perf} where whilst training accuracy continues to increase over time, the validation accuracy doesn't see as much consistent movement which suggests the model is starting to overfit to the training data as opposed to improving the identification of intrinsic underlying features within the images themselves. Iwana does not report their training accuracy so we are not able to compare the performance of our training with theirs.
+
+\begin{figure}
+	\centering
+	\captionsetup{justification=centering}
+	\includegraphics[scale=0.5]{training_results.png}
+	\caption{Performance of models on training and validation data throughout training. Note that models that end short stopped training due to early stopping.}
+	\label{fig:train_perf}
+\end{figure}
+
+Iwana et al trained their models for 30,000 and 450,000 epochs for LeNet and AlexNet respectively, substantially more than we trained our models for, so it is likely that the results they achieved are better than they would have been if they had trained for only a few hundred epochs. It is possible, but not certain, that by training our models for a factor of 10 or 100 more epochs, and removing the early stopping criteria, that we could have achieved even better validation performance.
 % subsection Training_Performance end 
 
 % section Model_Training end 
