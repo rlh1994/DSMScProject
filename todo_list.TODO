@@ -45,8 +45,8 @@ Write up:
         ☐ Write Introduction
         ☐ Write Related Works
     Theory:
-        ☐ Write Components of convolutional neural networks
-        ☐ Write transfer learning
+        ✔ Write Components of convolutional neural networks @done(20-08-15 11:01)
+        ✔ Write transfer learning @done(20-08-15 11:05)
         ☐ Write Activation maximisation
     Data collection and pre-processing:
         ☐ Add image of bad cover
@@ -66,9 +66,9 @@ Write up:
     Conclusion:
         ✔ Write conclusion @done(20-08-11 16:12)
         Future work:
-            Better interpolation method
-            Train longer
+            ✔ Better interpolation method @done(20-08-13 16:46)
+            ✔ Train longer @done(20-08-13 16:46)
     Appendix:
-        ☐ Write CNN Architectures
-        ☐ Write Technology
+        ✔ Write CNN Architectures @done(20-08-13 16:46)
+        ✔ Write Technology @done(20-08-13 16:46)
     ☐ Tidy Code

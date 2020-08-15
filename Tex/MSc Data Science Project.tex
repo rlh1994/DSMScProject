@@ -1,10 +1,14 @@
 \documentclass[12pt]{article}
+\usepackage{arydshln}
+\usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{bm}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{mathrsfs}
 \usepackage{mdframed}
 \usepackage[margin=3cm]{geometry}
 \usepackage[superscript,nomove]{cite}
@@ -59,13 +63,91 @@ Discuss the work of Iwana as the main source, reference their methods and result
 % section CNN Theory and Architectures
 \section{Theory} 
 \label{sec:Theory} 
+Whilst in this work we do not detail the full design and reasons for those designs of the models we will use, it may be beneficial for the reader to understand some concepts of neural networks in particular the components that make up convolutional neural networks. In this section we briefly describe some of these components as well as some of the other methods used within this work in \cref{sub:Transfer_Learning,sub:Activation_Maximisation}. We assume the reader already has familiarity with machine learning concepts such as backpropagation and fully connected neural networks. For this section and the remainder of this work, unless otherwise specified, we observe the following notational conventions:
+\begin{itemize}
+	\item Unless otherwise stated all tensors (including vectors and matrices) are indexed from 1.
+	\item Roman indices will be used to reference specific components of a tensor within an equation, Greek indices will be used for dimensions to be operated over only.
+	\item Dimensions of each tensor when referring to an image or feature map will be referred to in the order of height, width, (colour) channel (interchangeable with depth), including in the indices.
+	\item Bold items will refer to full vectors of matrices, with it clear which one from the context.
+	\item $\vec{X}$ will always refer to the vector input patterns i.e. images of a dataset. Each element contains more dimensions so this is technically a 4D-tensor.
+	\item $\vec{Y}$ will always refer to the vector of target classes for each of those patterns. Each element is a single value.
+	\item Bracketed roman superscripts i.e. $w^{(i)}$ will be used to refer to, in this case the i\textsuperscript{th}, elements of these vectors. These are 3D-tensors.
+	
+	\item Greek subscripts will be used to refer to elements along the dimensions of each pattern i.e. $x^{(i)}_{\alpha, \beta, \gamma}$ refers to the $alpha$ element of down on the tensor, the $\beta$ element across on the tensor, and the $\gamma$ channel of the tensor.
+	\item $\bigodot$ will refer to element wise multiplication of matrices and tensors across all dimensions where indices are not explicitly summed over in an equation.
+	\item $\bigoplus$ will refer to element wise addition of tensors across all dimensions where indices are not expli
+\end{itemize}
 \subsection{Components of Convolutional Neural Networks} 
 \label{sub:Components_of_Convolutional_Neural_Networks} 
-Describe the maths and the theory behind the various components of CNNs to the best of my ability, referring to the source papers for more complex combined units where sensible. 
+\subsubsection{Activation functions}
+Most layers of a neural network have some kind of activation function; these are used to ensure both that there is at least some level of activity, and also to place the values within a specific range (usually networks only take in values between 0 and 1 so they need to be in this range). Some normalisation is also usually applied which is discussed later. For our purposes there are only 3 activation functions that are relevant for this work.
+
+Linear activation is exactly what it sounds like, there is no transformation to the output. Rectified Linear Unit (ReLU) is a function that returns the input when the value is greater than or equal to zero, and zero otherwise. Finally, softmax is used almost exclusively in the final layer of a network to transform the outputs into values that sum to 1 (to be interpreted as the probability of that record belonging to the class that neuron represents). These are defined mathematically in \cref{eq:act_linear,eq:act_relu,eq:act_softmax}.
+
+\begin{align}
+	f_{linear}(x) &= x \label{eq:act_linear}\\
+	f_{ReLU}(x)   &= \max(0, x) \label{eq:act_relu}\\
+	f_{softmax}(\bm{x})_i &= \frac{e^{x_i}}{\sum_{\alpha=1}^{K}{e^{x_\alpha}}}\label{eq:act_softmax}
+\end{align}
+Where the non-bold $x$s are just individual outputs, but the softmax function requires all K outputs of the layer for calculation. Technically, most pre-built models in Tensorflow use ReLU6 as opposed to pure ReLU, this version is shown in \cref{eq:act_relu6}.
+\begin{equation}
+	f_{ReLU6}(x) = min(max(0, x), 6) \label{eq:act_relu6}
+\end{equation}
+
+\subsubsection{Convolutional layers}
+A convolutional layer, the key part of a neural network, is different to the traditional fully connected layers and is used predominantly in image classifications, forming the fundamental building block of a CNN. A convolutional layer is defined by 3 key parameters, and the additional choice of padding. The 3 parameters that define a basic convolutional layer are the number of filters (analogous to the number of neurons in a dense layer) which is also the number of channels the output of that convolution will have, the size of the filters, and the stride (or step size) of the filter. 
+
+A filter (also called a kernel) is applied atop of the input, starting at the top left of the input, and pointwise multiplication is applied to each set of elements, then their sum is computed. In the case of multiple input channels the same filter is applied over all channel and their outputs are summed. This value is the the output value of the top left cell of the output tensor. The filter is then moved left by the number of elements defined by the stride; when the end of the row has been reached the filter is move down by the same stride. This process is repeated until the filter has been applied to the entire input. Once all filters have been applied this set of outputs is referred to as the feature map. This process is demonstrated in \cref{fig:conv_process} and quantified mathematically as
+
+\begin{equation}
+	m_{i,j,k} = \sum_{\chi = 1}^{C}\sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, k} \times x_{(\alpha +(i-1)*s), (\beta + (j-1)*s),\chi}
+\end{equation}
+where $\bm{m}_k$ is the feature map for output channel $k$, C is the number of channels in the input, $x$ is the input, $f$ is the $k^{th}$ kernel of size $l\times l$, $s$ is the stride. In total for a square input and kernel this leads to an output of the dimensions described in 
+
+\begin{equation}
+	\label{eq:feat_map1}
+	\dim(\mathscr{M}) = \left[\frac{m-f}{s} +1 \right] \times \left[\frac{m-f}{s} +1 \right] \times n_{f}
+\end{equation}
+where $\mathscr{M}$ is the full feature map, $m$ is the width and height of the input, $f$ is the width and height of the filter, $s$ is the stride, and $n_f$ is the number of filters.
+
+Using this method it means that, unless the filter size and stride are both equal to 1, certain parts of the input will never be exposed to the centre of the filter, and the output of the process will always lead to a smaller size. This can be an issue when multiple convolutional layers are applied in sequence as whilst the number of channels may increase the size of each channel will decrease. An approach that removes this problem is to first pad the input with 0s on all sides, the size of the padding being determined by the goal output size as well as the filter size and stride. By applying padding the output size of the image changes from that described in \cref{eq:feat_map1} to instead be
+\begin{equation}
+	\label{eq:feat_map2}
+	\dim(\mathscr{M}) = \left[\frac{m+2p-f}{s} +1 \right] \times \left[\frac{m+2p-f}{s} +1 \right] \times n_{f}
+\end{equation}
+where $p$ is the padding size on one side.
+
+
+\begin{figure}
+	\centering
+	\captionsetup{justification=centering}
+	\includegraphics[scale=0.25]{cnn_application.png}
+	\caption{An example of a 3x3 filter being applied to a single channel input, with stride of 1 and 0 padding. \cite{Yamashita2018}}
+	\label{fig:conv_process}
+\end{figure}
+
+Whilst the number of filters, filter size, and stride are hyperparameters that must be set by the user, the actual values of each filter in the layers are learned as part of the backpropagation training of the network.
+
+
+\subsubsection{Depth-Wise Convolutions}
+Depth wise convolutions are similar to normal convolutional layers in all ways except one; instead of applying the filter to each channel of the input and summing the outputs to produce a single output channel we instead keep these outputs separate and produce an output with as many channels as the input per filter.  When followed by a 1x1 convolution (also known as a pointwise convolution) this has the effect of merging the layers via addition and combined these two processes actually have a reduced computational cost when compared to a traditional convolution \cite{Sandler2018}.
+
+\subsubsection{Pooling}
+Pooling is an operation used within convolutional neural networks to reduce the size of channels/feature maps within the network. Pooling is applied using the same size and stride arguments as convolutions however instead of pointwise multiplication they aggregate across their area. These operations tend to either be maximum or average and is determined either by the user of the CNN architecture. These are applied per-channel and no aggregation across channels is completed afterwards. The dimensions of the output after pooling can be calculated using the same method as before displayed in \cref{eq:feat_map2}. Traditionally (and in our work) pooling is completed with no padding. Global pooling refers to when the size of the filter matches the size of the input and a 1x1xdepth output is returned.
+
+\subsubsection{Batch Normalisation}
+Batch normalisation was introduced in a 2015 paper by Sergey Ioffee and Christain Szegedy\cite{Ioffe2015} and is a step introduced into neural networks, including CNNs, between the layers and the activation functions. Batch normalisation works by applying re-scaling and re-centering transformations to the output of a layer i.e. transforming the output of that layer for that batch to have a mean of 0 and a standard deviation of 1. This has the effect of greatly reducing training time and increases accuracy by way of reducing the change in the data distribution between layers and reducing the change of this over time via backpropagation. 
+
+\subsubsection{Residual Networks}
+Residual networks (ResNets) were introduced by He et al in 2015\cite{He2015a} to allow for far deeper networks than previously used. The basic premise is that the layer input forms part of the output directly via a scaled addition to the convolved, normalised, and activated output. This allows for information to be carried further through the network and was shown to achieve better results against benchmark image classification datasets. Further detail and formulation is available in the original paper so we do not reproduce that here as a grasp of the main concept is all that is required.
+
 % subsection Components_of_Convolutional_Neural_Networks end 
 \subsection{Transfer Learning} 
 \label{sub:Transfer_Learning} 
-Describe the theory and maths behind transfer learning to the reader.
+Transfer learning is a concept in machine learning that \emph{knowledge} gained by a network in one domain could be used within another domain, either out of the box or as a starting point for training. In our case, the models we use have already been trained on the more complex ImageNet dataset so would be suitable to use in transfer learning to save a lot of time training the model from scratch.
+
+
+In transfer learning it is possible to take one of two approaches; the first is to use the existing model weight and biases as a starting point for training and to train the entire model using your training data, the second is to freeze the weights and biases for the feature engineering part of the model i.e. all but the fully connected layers at the end, and just train the classification top of the model. In our work we took the second approach as given the size of the models we are using training the full model would have been computationally expensive, and given the relatively small amount of training data would also have when compared to the number of parameters in the model it would have been unlikely to have improved accuracy.
 % subsection Transfer_Learning end 
 
 \subsection{Activation Maximisation} 
@@ -77,9 +159,17 @@ Describe the theory and/or maths of activation maximisation and the methods used
 \label{sec:Data_collection_and_pre-processing} 
 \subsection{Image Download and Manual Review} 
 \label{sub:Image Download and Manual Review} 
-The 207, 572 images within the complete book32 dataset covering all original 32 classes were downloaded at full resolution using a slightly altered version of the script provided within the Iwana repository \cite{iwanarepo}. The original csv containing all image URLs was split into files of no more than 20,000 records each to allow to the downloads to be run over multiple sessions do to the slow data transfer rates and the overhead of reading data between Google Drive and Google Colab meaning that even checking before downloading an individual file was not much faster than downloading and writing the file anyway. Each sub-file was then iterated over using the remainder of the original script, downloading each image into a sub-folder of the class for that image i.e. the genre classification.
+The 207, 572 images within the complete book32 dataset covering all original 32 classes were downloaded at full resolution using a slightly altered version of the script provided within the Iwana repository \cite{iwanarepo}. The original csv containing all image URLs was split into files of no more than 20,000 records each to allow the downloads to be run over multiple sessions due to the slow data transfer rates and the overhead of reading data between Google Drive and Google Colab meaning that even checking before downloading an individual file was not much faster than downloading and writing the file anyway. Each sub-file was then iterated over using the remainder of the original script, downloading each image into a sub-folder of the class for that image i.e. the genre classification.
 
-Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. At this point we attempted to identify if any records used in the bookcover30 train or test datasets were actually boxsets, and as such would likely have an unrepresentative cover image, and example of such an image can be seen in \textcolor{red}{TODO: add image}\cref{fig:TBC}. The terms used in a regex search of the titles were \emph{"boxed set", "boxset", "box set", "anthology", "bundle", "\#-book", "\# book"}. 264 records within the bookcover30 dataset matched at least one of these terms and were extracted into a new folder for manual review. The process was somewhat subjective but as a rule of thumb we rejected any image that was not a single front facing cover, that contained pictures of multiple books and was not an arrangement of covers; single covers that seemed to be specifically designed for a boxset were considered acceptable. In total 94 records needed to be removed due to these rules. To preserve the class balance of the train and test datasets, new records were chosen from the book32 dataset by making like-for-like swaps of the same class; any new covers were also reviewed to ensure they were not boxsets. No verification of the class assignment to images was performed so any errors that existed in the original data would have persisted and we continue to use the single class chosen by the original authors in the case of multi-class books.
+Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. At this point we attempted to identify if any records used in the bookcover30 train or test datasets were actually boxsets, and as such would likely have an unrepresentative cover image, an example of such an image can be seen in \cref{fig:bad_cover}. The terms used in a regex search of the titles were \emph{``boxed set'', ``boxset'', ``box set'', ``anthology'', ``bundle'', ``\#-book'', and ``\# book''}. 264 records within the bookcover30 dataset matched at least one of these terms and were extracted into a new folder for manual review. The process was somewhat subjective but as a rule of thumb we rejected any image that was not a single front facing cover, that contained pictures of multiple books and was not an arrangement of covers; single covers that seemed to be specifically designed for a boxset were considered acceptable. In total 94 records needed to be removed due to these rules. To preserve the class balance of the train and test datasets, new records were chosen from the book32 dataset by making like-for-like swaps of the same class; any new covers were also reviewed to ensure they were not boxsets. No verification of the class assignment to images was performed so any errors that existed in the original data would have persisted and we continue to use the single class chosen by the original authors in the case of multi-class books.
+
+\begin{figure}
+	\centering
+	\captionsetup{justification=centering}
+	\includegraphics[scale=0.5]{0345535529.jpg}
+	\caption{An example of a rejected \emph{``cover''} image as it did not meet our criteria.}
+	\label{fig:bad_cover}
+\end{figure}
 
 We chose to split the training data out into training and validation data using a 90/10 random split per class to ensure class balance in all of the training, validation, and test sets. In total the training set compromised of 46,170 records, the validation set 5130 records, and the test set 5700 records; with 1,539, 171, and 190 records per class respectively. 
 
@@ -89,7 +179,7 @@ We chose to split the training data out into training and validation data using 
 
 We next used 3 different image preparation methods on the datasets to attempt to identify the method that would lead to the best accuracy within our models. At this stage all methods output an image 299x299 pixels as this was the largest size we would need for any future models. By reducing the image size twice, first now and then again when using a specific model, we were potentially losing some information that would lead to a less accurate model; however we chose to do this to speed up training and testing by having to load much smaller data in compared to the original full sized images. Before pre-processing was done we collected the initial shape and average RGB values of each image for further analysis later.
 
-The first pre-processing method (\emph{NoPrep}) was to simply rescale the image directly down to a 299x299 shape using inter-cubic interpolation \textcolor{red}{TODO: explain this mathematically}. This was chosen at the time as a common all-purpose interpolation method, however after later research this method is often chosen to enlarging images, not shrinking them so the potential to use a better interpolation method could be used in future work.
+The first pre-processing method (\emph{NoPrep}) was to simply rescale the image directly down to a 299x299 shape using inter-cubic interpolation. This method uses a 4x4 neighbourhood around the new pixel location to smooth the transition between boundaries as smoothly as possible and the implementation in the \emph{opencv} python library was used throughout. This was chosen at the time as a common all-purpose interpolation method, however after later research this method is often chosen to enlarging images, not shrinking them so the potential to use a better interpolation method (e.g. inter-area) could be used in future work.
 
 The second method (\emph{Padded}) was to first pad the images with a symmetric pure white border on either the left/right or top/bottom depending on if the image was portrait or landscape (no padding was done if the image was already a perfect square). These images were then downscaled to 299x299 using the same method as above. The final method (\emph{Cropped}) was to crop the image to a perfect square before the same downscaling method was used. 
 
@@ -359,20 +449,270 @@ There is still lots to explore in this space as we discussed in \cref{sub:Discus
 Detail the exact configurations of these architectures
 \subsection{MobileNetV2} 
 \label{sub:MobileNetV2} 
- 
+Full technical details of the specification is available in the paper by Sandler at al. \cite{Sandler2018} where the model is first published. The version we use is identical using the Keras implementation with the exception that we do not use a final Conv2D layer but instead use a dense fully connected layer of size 30 to use for our classification. The table and captions explaining the architecture is copied from their paper to here for convenience. The only other difference not detailed in these tables is batch normalisation is applied after each convolution but before the ReLU, and zero padding is applied where a stride of 2 is used. 
+
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c|c|c}
+	\hline
+	\textbf{Input}                            & \textbf{Operator}           & \textbf{Output}                            \\ \hline \hline
+	$h \times w \times k$                     & 1x1 conv2d, ReLU6           & $h \times w \times tk$                     \\
+	$h \times w \times tk$                    & 3x3 dwise stride=$s$, ReLU6 & $\frac{h}{s} \times \frac{w}{s} \times k$  \\
+	$\frac{h}{s} \times \frac{w}{s} \times k$ & linear 1x1 covn2d           & $\frac{h}{s} \times \frac{w}{s} \times k'$ \\ \hline
+	Iff $s \equiv 1$ \& $k \equiv k'$ then $h \times w \times k$ & add original input           & $h \times w \times k'$ \\ \hline
+	\end{tabular}
+	\caption{Bottleneck residual block transforming from $k$ to $k'$ channels, with stride $s$, and expansion factor $t$.
+	}
+	\label{tab:bottleneck}
+	\end{table}
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c|c|c|c|c|c}
+	\hline
+	\textbf{Input}         & \textbf{Operator} & \textbf{t} & \textbf{c} & \textbf{n} & \textbf{s} \\ \hline \hline
+	$224^2$ $\times$ 3         & conv2d, ReLU6           & -          & 32         & 1          & 2          \\
+	$112^2$ $\times$ 32        & bottleneck        & 1          & 16         & 1          & 1          \\
+	$112^2$ $\times$ 16        & bottleneck        & 6          & 24         & 2          & 2          \\
+	$56^2$ $\times$ 24         & bottleneck        & 6          & 32         & 3          & 2          \\
+	$28^2$ $\times$ 32         & bottleneck        & 6          & 64         & 4          & 2          \\
+	$14^2$ $\times$ 64         & bottleneck        & 6          & 96         & 3          & 1          \\
+	$14^2$ $\times$ 96         & bottleneck        & 6          & 160        & 3          & 2          \\
+	$7^2$ $\times$ 190         & bottleneck        & 6          & 320        & 1          & 1          \\
+	$7^2$ $\times$ 320         & conv2d 1x1, ReLU        & -          & 1280       & 1          & 1          \\
+	$7^2$ $\times$ 1280        & avgpool 7x7       & -          & -          & 1          & -          \\
+	1 $\times$ 1 $\times$ 1280 & dense             & -          & 30         & -          & -          \\ \hline
+	\end{tabular}%
+	\caption{MobileNetV2 : Each line describes a sequence of 1 or more identical (modulo stride) layers, repeated n times. All layers in the same sequence have the same number c of output channels. The first layer of each sequence has a stride s and all others use stride 1. All
+	spatial convolutions use 3 x 3 kernels. The expansion factor t is always applied to the input size as described in \cref{tab:bottleneck}.
+	}
+	\label{tab:mobilenetv2_arch}
+	\end{table}
+
 % subsection MobileNetV2 end  
 \subsection{Inception-ResnetV2} 
 \label{sub:Inception-ResnetV2} 
- 
+The architecture, with all the relevant filter and stride settings are detailed within the original paper by Szegedy et al. \cite{Szegedy2016} however the Keras implementation seems to differ slightly and the original paper does not provide a full spec in a single place so it is composed here. For simplicity batch normalisation is not explicitly written but is used after every convolution operator and ReLU activation is used throughout. A summarised version is available in \cref{fig:incepresnetv2}\cite{Alemi2016}.
+
+
+\begin{figure}
+	\centering
+	\captionsetup{justification=centering}
+	\includegraphics[scale=0.25]{inception_resnetv2.png}
+	\caption{High level view of the inception-resnetv2 architecture. The early classifier (bottom of image) is not used in our work.}
+	\label{fig:incepresnetv2}
+\end{figure}
+
+
+
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{c|c|c|c|c|c|c}
+	\textbf{Block Name}      & \textbf{LayerID} & \textbf{Input} & \textbf{Operator} & \textbf{Filters} & \textbf{Shape} & \textbf{Scale} \\ \hline \hline
+	Inception-ResNet-A block & 0                & -              & conv2d            & 32               & 1              & -              \\
+	Inception-ResNet-A block & 1                & -              & conv2d            & 32               & 1              & -              \\
+	Inception-ResNet-A block & 2                & 1              & conv2d            & 32               & 3              & -              \\
+	Inception-ResNet-A block & 3                & -              & conv2d            & 32               & 1              & -              \\
+	Inception-ResNet-A block & 4                & 3              & conv2d            & 48               & 3              & -              \\
+	Inception-ResNet-A block & 5                & 4              & conv2d            & 64               & 3              & -              \\
+	Inception-ResNet-A block & 6                & 0, 2, 5        & concat            & -                & -              & -              \\
+	Inception-ResNet-A block & 7                & -, 6           & add w/ scale      & -                & -              & (1, 0.17) \\ \hline  
+	\end{tabular}
+	}
+	\caption{Structure of the Inception-ResNet-A block. Shape unless otherwise specified is square, and scale is the multiplier of the inputs of the addition. - in input represents the input to the block.}
+	\label{tab:incepresa}
+	\end{table}
+
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{c|c|c|c|c|c|c}
+	\textbf{Block Name}        & \textbf{LayerID} & \textbf{Input} & \textbf{Operator} & \textbf{Filters} & \textbf{Shape} & \textbf{Scale} \\ \hline \hline
+	Inception-ResNet-B block & 0                & -              & conv2d            & 192              & 1              & -              \\
+	Inception-ResNet-B block   & 1                & -              & conv2d            & 128              & 1              & -              \\
+	Inception-ResNet-B block   & 2                & 1              & conv2d            & 160              & (1, 7)         & -              \\
+	Inception-ResNet-B block   & 3                & 2              & conv2d            & 192              & (7, 1)         & -              \\
+	Inception-ResNet-B block   & 4                & 0, 3           & concat            & -                & -              & -              \\
+	Inception-ResNet-B block   & 5                & `-, 4          & add w/ scale      & -                & -              & (1, 0.1)     \\ \hline  
+	\end{tabular}%
+	}
+	\caption{Structure of the Inception-ResNet-B block. Shape unless otherwise specified is square, and scale is the multiplier of the inputs of the addition. - in input represents the input to the block.}
+	\label{tab:incepresb}
+	\end{table}
+
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{c|c|c|c|c|c|c}
+	\textbf{Block Name}      & \textbf{LayerID} & \textbf{Input} & \textbf{Operator} & \textbf{Filters} & \textbf{Shape} & \textbf{Scale} \\ \hline \hline
+	Inception-ResNet-C block & 0                & -              & conv2d            & 192              & 1              & -              \\
+	Inception-ResNet-C block & 1                & -              & conv2d            & 192              & 1              & -              \\
+	Inception-ResNet-C block & 2                & 1              & conv2d            & 224              & (1, 3)         & -              \\
+	Inception-ResNet-C block & 3                & 2              & conv2d            & 256              & (3, 1)         & -              \\
+	Inception-ResNet-C block & 4                & 0, 3           & concat            & -                & -              & -              \\
+	Inception-ResNet-C block & 5                & `-, 4          & add w/ scale      & -                & -              & (1, 1) \\ \hline  
+	\end{tabular}%
+	}
+	\caption{Structure of the Inception-ResNet-C block. Shape unless otherwise specified is square, and scale is the multiplier of the inputs of the addition. - in input represents the input to the block.}
+	\label{tab:incepresc}
+	\end{table}
+	
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{c|c|c|c|c|c|c|c}
+	\textbf{Block Name}               & \textbf{LayerID} & \textbf{Input} & \textbf{Operator} & \textbf{Filters} & \textbf{Shape} & \textbf{Strides}       & \textbf{N} \\ \hline\hline
+	Stem                              & 0                & -              & conv2d            & 32               & 3              & 2                      & 1          \\
+	Stem                              & 1                & 0              & conv2d            & 32               & 3              & 1                      & 1          \\
+	Stem                              & 2                & 1              & conv2d            & 64               & 3              & 1                      & 1          \\
+	Stem                              & 3                & 2              & maxpooling        & -                & 3              & 2                      & 1          \\
+	Stem                              & 4                & 3              & conv2d            & 80               & 1              & 1                      & 1          \\
+	Stem                              & 5                & 4              & conv2d            & 192              & 3              & 1                      & 1          \\
+	Stem                              & 6                & 5              & maxpooling        & -                & 3              & 2                      & 1          \\\hdashline
+	Inception-A block                 & 7                & 6              & conv2d            & 96               & 1              & 1                      & 1          \\
+	Inception-A block                 & 8                & 6              & conv2d            & 48               & 1              & 1                      & 1          \\
+	Inception-A block                 & 9                & 8              & conv2d            & 64               & 5              & 1                      & 1          \\
+	Inception-A block                 & 10               & 6              & conv2d            & 64               & 1              & 1                      & 1          \\
+	Inception-A block                 & 11               & 10             & conv2d            & 96               & 3              & 1                      & 1          \\
+	Inception-A block                 & 12               & 11             & conv2d            & 96               & 3              & 1                      & 1          \\
+	Inception-A block                 & 13               & 6              & avgpooling        & -                & 3              & 1                      & 1          \\
+	Inception-A block                 & 14               & 13             & conv2d            & 64               & 1              & 1                      & 1          \\
+	Inception-A block                 & 15               & 7, 9, 12, 14   & concat            & -                & -              & -                      & -          \\\hdashline
+	\textit{Inception-ResNet-A block} & 16               & 15             & -                 & -                & -              & -                      & 10         \\\hdashline
+	Reduction-A block                 & 17               & 16             & conv2d            & 384              & 3              & 2                      & 1          \\
+	Reduction-A block                 & 18               & 16             & conv2d            & 256              & 1              & 1                      & 1          \\
+	Reduction-A block                 & 19               & 18             & conv2d            & 256              & 3              & 1                      & 1          \\
+	Reduction-A block                 & 20               & 19             & conv2d            & 284              & 3              & 2                      & 1          \\
+	Reduction-A block                 & 21               & 16             & maxpooling        & -                & 3              & 2                      & 1          \\
+	Reduction-A block                 & 23               & 17, 20, 21     & concat            & -                & -              & -                      & -          \\\hdashline
+	\textit{Inception-ResNet-B block} & 24               & 23             & -                 & -                & -              & -                      & 20         \\
+	Reduction-B block                 & 25               & 24             & conv2d            & 256              & 1              & 1                      & 1          \\
+	Reduction-B block                 & 26               & 25             & conv2d            & 384              & 3              & 2                      & 1          \\
+	Reduction-B block                 & 27               & 24             & conv2d            & 256              & 1              & 1                      & 1          \\
+	Reduction-B block                 & 28               & 27             & conv2d            & 288              & 3              & 2                      & 1          \\
+	Reduction-B block                 & 29               & 24             & conv2d            & 256              & 1              & 1                      & 1          \\
+	Reduction-B block                 & 30               & 29             & conv2d            & 288              & 3              & 1                      & 1          \\
+	Reduction-B block                 & 31               & 30             & conv2d            & 230              & 3              & 2                      & 1          \\
+	Reduction-B block                 & 32               & 29             & maxpooling        & -                & 3              & 2                      & 1          \\
+	Reduction-B block                 & 33               & 26, 28, 31, 32 & concat            & -                & -              & -                      & -          \\\hdashline
+	\textit{Inception-ResNet-C block} & 34               & 33             & -                 & -                & -              & -                      & 10         \\\hdashline
+	Final convolution block           & 35               & 34             & conv2d            & 1536             & 1              & 1                      & 1          \\
+	Global Pooling                    & 36               & 35             & avgpooling        & -                & -              & -                      & -          \\
+	Dense                             & 37               & 36             & dense (30)        & -                & -              & - 				& -          \\ \hline
+	\end{tabular}%
+	}
+	\caption{Structure of the Inception-ResNetV2 model. Shape unless otherwise specified is square, and N is the number of times that layer or block is repeated. For information on the Inception-ResNet blocks see \cref{tab:incepresa,tab:incepresb,tab:incepresc}.  - represents a non-relevant argument or in the case of input, the input to the model.}
+	\label{tab:incepresfull}
+	\end{table}
+
 % subsection Inception-ResnetV2 end 
 \subsection{ResNeXt50} 
 \label{sub:ResNeXt50} 
- 
+The full details of the ResNeXt50 architecture and in what way it differs from and improves upon regular ResNets is available in the paper by Xie et al.\cite{Xie2016}. We reproduce here the table (\cref{tab:resnextarc})explaining the architecture and an image (\cref{fig:resnextblocks}) explaining the blocks from their paper for convenience. These models differ in their use of a \emph{cardinality} term, C. This is defined as the number of times a repeated series of convolutional filters in parallel with the exact same parameters are used within a block. All layers are followed by batch normalisation and ReLU activation.
+
+
+\begin{table}[]
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{c|c|c|c|c|c|c|c}
+	\textbf{Stage}         & \textbf{Output}                 & \textbf{Operation}                                                                   & \textbf{Filters} & \textbf{Shape} & \textbf{Stride} & \textbf{Cardinality (C)} & \textbf{N}         \\ \hline \hline
+	conv1                  & $112 \times 112$                & conv2d                                                                               & 64               & 7              & 2               & 1                        & 1                  \\ \hline
+	\multirow{4}{*}{conv2} & \multirow{4}{*}{$56 \times 56$} & max pooling                                                                          & -                & 3              & 2               & 1                        & 1                  \\ \cline{3-8} 
+						   &                                 & \multirow{3}{*}{ResNext Block}                                                       & 128              & 1              & 1               & 1                        & \multirow{3}{*}{3} \\ \cline{4-7}
+						   &                                 &                                                                                      & 128              & 3              & 1               & 32                       &                    \\ \cline{4-7}
+						   &                                 &                                                                                      & 256              & 1              & 1               & 1                        &                    \\ \hline
+	\multirow{3}{*}{conv3} & \multirow{3}{*}{$28 \times 28$} & \multirow{3}{*}{ResNext Block}                                                       & 256              & 1              & 1               & 1                        & \multirow{3}{*}{4} \\ \cline{4-7}
+						   &                                 &                                                                                      & 256              & 3              & 1               & 32                       &                    \\ \cline{4-7}
+						   &                                 &                                                                                      & 512              & 1              & 1               & 1                        &                    \\ \hline
+	\multirow{3}{*}{conv4} & \multirow{3}{*}{$14 \times 14$} & \multirow{3}{*}{ResNext Block}                                                       & 512              & 1              & 1               & 1                        & \multirow{3}{*}{6} \\ \cline{4-7}
+						   &                                 &                                                                                      & 512              & 3              & 1               & 32                       &                    \\ \cline{4-7}
+						   &                                 &                                                                                      & 1024             & 1              & 1               & 1                        &                    \\ \hline
+	\multirow{3}{*}{conv5} & \multirow{3}{*}{$7 \times 7$}   & \multirow{3}{*}{ResNext Block}                                                       & 1024             & 1              & 1               & 1                        & \multirow{3}{*}{3} \\ \cline{4-7}
+						   &                                 &                                                                                      & 1024             & 3              & 1               & 32                       &                    \\ \cline{4-7}
+						   &                                 &                                                                                      & 2048             & 1              & 1               & 1                        &                    \\ \hline
+						   & $1 \times 1$                    & \begin{tabular}[c]{@{}c@{}}global average pooling\\ dense (30), softmax\end{tabular} & -                & -              & -               & 1                        & 1                  \\ \hline
+	\end{tabular}%
+	}
+	\caption{Structure of the ResNext-50 model. At the end of each block the input is added in (as with the original resnet models) - see example methods in \cref{fig:resnextblocks}.}
+	\label{tab:resnextarc}
+	\end{table}
+
+	\begin{figure}
+		\centering
+		\captionsetup{justification=centering}
+		\includegraphics[scale=0.5]{resnextblocks.PNG}
+		\caption{\cite{Xie2016} Equivalent methods for each ResNeXt block highlighting the inclusion of the input \emph{shortcut} path as part of the output. In our work the rightmost option was used.}
+		\label{fig:resnextblocks}
+	\end{figure}
 % subsection ResNeXt50 end 
 % section CNN_Architectures end 
 
 \section{Technology} 
-\label{sec:Technology} 
-List of software and packages/libraries including their versions.
+\label{sec:Technology}
+Due to the use of Google Colab for the vast majority of the work is it not possible to confirm which hardware was used over the course of the work, or even that the same was used over multiple sessions.
+Software and library versions:
+\begin{itemize}
+	\item Python: 3.6.9 (linux environment on Google Colab)
+	\begin{itemize}
+		\item argparse: 1.1 
+		\item classification\_model: 0.2.2 
+		\item IPython: 5.5.0 
+		\item joblib: 0.16.0 
+		\item matplotlib: 3.2.2 
+		\item skimage: 0.16.2 
+		\item sklearn: 0.22.2.post1 
+		\item tf\_keras\_vis: 0.5.2 
+		\item tqdm: 4.41.1 
+		\item cv2: 4.1.2 
+		\item numpy: 1.18.5 
+		\item pandas: 1.0.5 
+		\item re: 2.2.1 
+		\item tensorflow: 2.3.0
+	\end{itemize}
+	\item R: 4.0.0 (64-bit windows)
+	\begin{itemize}
+		\item ggforce: 0.3.2
+		\item tidyr: 1.1.0
+		\item ggplot2: 3.3.0
+		\item dplyr: 0.8.5
+		\item Rcpp: 1.0.4.6
+		\item rstudioapi: 0.11
+		\item magrittr: 1.5
+		\item MASS: 7.3-51.5
+		\item tidyselect: 1.1.0
+		\item munsell: 0.5.0
+		\item viridisLite: 0.3.0
+		\item colorspace: 1.4-1
+		\item R6: 2.4.1
+		\item rlang: 0.4.6
+		\item fansi: 0.4.1
+		\item tools: 4.0.0
+		\item grid: 4.0.0
+		\item gtable: 0.3.0
+		\item cli: 2.0.2
+		\item clipr: 0.7.0
+		\item withr: 2.2.0
+		\item ellipsis: 0.3.0
+		\item assertthat: 0.2.1
+		\item tibble: 3.0.1
+		\item lifecycle: 0.2.0
+		\item crayon: 1.3.4
+		\item gridExtra: 2.3
+		\item farver: 2.0.3
+		\item tweenr: 1.0.1
+		\item purrr: 0.3.4
+		\item viridis: 0.5.1
+		\item vctrs: 0.3.0
+		\item glue: 1.4.0
+		\item polyclip: 1.10-0
+		\item stringi: 1.4.6
+		\item compiler: 4.0.0
+		\item pillar: 1.4.4
+		\item scales: 1.1.1
+		\item pkgconfig: 2.0.3
+	\end{itemize}
+\end{itemize}
 % section Technology end 
 \end{document}
