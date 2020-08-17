@@ -34,7 +34,7 @@ Birkbeck, University Of London\\\\
 \thispagestyle{empty}
 \graphicspath{{images/}}
 \begin{abstract}
-	Coming soon...
+	In this work we revisit the work of Iwana et al.\cite{KenjiIwana} in and attempt to use convolutional neural networks (CNNs) to predict the genre of a book based entirely on its cover image. We test various pre-processing methods for the images and use a selection of newer, more complex, CNNs to attempt to improve on the results of the previous work. Using an Inception-ResNet-v2 we achieve Top-1 accuracy of 24.7\% and a Top-3 accuracy of 45.4\% which is an improvement over previous results.
 \end{abstract}
 \begin{figure}[!b]
 	\centering
@@ -51,14 +51,19 @@ Birkbeck, University Of London\\\\
 \setcounter{page}{1}
 \section{Introduction} 
 \label{sec:intro}
+Convolutional neural networks (CNNs) have been used for image classification for the last 30 years\cite{Cun1989}, with ever more accurate, and more complex, model architectures being produced and tuned on benchmark datasets. CNNs have been used to identify clothing types, objects, music, and even identify artists of paintings, but as far as we are aware only once has someone before asked the question of the ability of a CNN to judge a book by its cover i.e. predict the genre of the book based on the cover image. We will discuss the work of this person in \cref{sub:Related Works}. 
 
-Introduce the project, describe the goal and the idea behind why this is important. Explain the structure of this work,
+The question of predicting a genre based only on a cover image is more difficult than it may first appear; many books at least slightly span genres, and designs are at their heart art which means some personal interpretation will always play a part. Being able to successfully build a model to solve this problem would allow designers to use such a tool to ensure that a design is clear to their target audience, it could allow some data-validation of book related data and could help uncover some underlying design principles in genre classification that is not evident to us currently. 
 
+In this work we attempt to train a selection of modern CNN architectures that have been pretrained on the ImageNet dataset to correctly predict the genre of a book from its cover image. The remainder of this work is structured as follows; in the remainder of this section we discuss related works, then in \cref{sec:Technology} we discuss some theoretical concepts that we use within the work for those familiar with Machine Learning but not in CNNs. In \cref{sec:Data_collection_and_pre-processing} we present our methods of the adjustment of the existing datasets and the testing of different methods of pre-processing the images. \Cref{sec:Model_Training} contains the information about how we configured and trained the models, followed by the evaluation of our results and discussion of next steps in \cref{sec:Evaluation_and_Further_Exploration} before summarising out work in \cref{sec:Conclusion}. Please note in this work we will use the terms \emph{class, genre, classification,} and \emph{category} interchangeably to describe the genre that a particular book cover belongs to.
 
-In this work we will use the terms \emph{class, genre, classification,} and \emph{category} interchangeably to describe the genre that a particular book cover belongs to.
 \subsection{Related Works} 
 \label{sub:Related Works} 
-Discuss the work of Iwana as the main source, reference their methods and results but keep much for later where relevant for comparison with my work.
+So far as we can tell at the time of writing there is only one piece of prior work that has been completed in the area of predicting book genres based on their cover images; the work completed by Iwana et al.\cite{KenjiIwana}. In their work they produced 2 datasets, the \emph{Book32} dataset and the smaller, balanced, dataset known as \emph{BookCover30}. These datasets are the best collection of cleaned data that are readily available and we use these within our work, with some small adjustments as discussed in \cref{sub:Image Download and Manual Review}. In their work they trained 2 CNNs, LeNet and AlexNet on the BookCover30 dataset, achieving 13.5\% and 24.7\% top-1 accuracy respectively; more detailed information of their results is available in \cref{tab:results_acc}.
+
+They go on in their work to discuss the results of their models with analysis and call out few cover design principles including the use of colour, objects, and text. We further investigate the colour angle in \cref{sub:Further_Analysis}.
+
+Our work builds atop theirs by using more modern and complex CNNs to attempt to identify if the more powerful architectures are more capable of producing equivalent or improved results whilst training for significantly epochs than the original paper.
 % subsection Related Works end 
 % section CNN Theory and Architectures
 \section{Theory} 
@@ -69,13 +74,6 @@ Whilst in this work we do not detail the full design and reasons for those desig
 	\item Roman indices will be used to reference specific components of a tensor within an equation, Greek indices will be used for dimensions to be operated over only.
 	\item Dimensions of each tensor when referring to an image or feature map will be referred to in the order of height, width, (colour) channel (interchangeable with depth), including in the indices.
 	\item Bold items will refer to full vectors of matrices, with it clear which one from the context.
-	\item $\vec{X}$ will always refer to the vector input patterns i.e. images of a dataset. Each element contains more dimensions so this is technically a 4D-tensor.
-	\item $\vec{Y}$ will always refer to the vector of target classes for each of those patterns. Each element is a single value.
-	\item Bracketed roman superscripts i.e. $w^{(i)}$ will be used to refer to, in this case the i\textsuperscript{th}, elements of these vectors. These are 3D-tensors.
-	
-	\item Greek subscripts will be used to refer to elements along the dimensions of each pattern i.e. $x^{(i)}_{\alpha, \beta, \gamma}$ refers to the $alpha$ element of down on the tensor, the $\beta$ element across on the tensor, and the $\gamma$ channel of the tensor.
-	\item $\bigodot$ will refer to element wise multiplication of matrices and tensors across all dimensions where indices are not explicitly summed over in an equation.
-	\item $\bigoplus$ will refer to element wise addition of tensors across all dimensions where indices are not expli
 \end{itemize}
 \subsection{Components of Convolutional Neural Networks} 
 \label{sub:Components_of_Convolutional_Neural_Networks} 
@@ -91,7 +89,7 @@ Linear activation is exactly what it sounds like, there is no transformation to 
 \end{align}
 Where the non-bold $x$s are just individual outputs, but the softmax function requires all K outputs of the layer for calculation. Technically, most pre-built models in Tensorflow use ReLU6 as opposed to pure ReLU, this version is shown in \cref{eq:act_relu6}.
 \begin{equation}
-	f_{ReLU6}(x) = min(max(0, x), 6) \label{eq:act_relu6}
+	f_{ReLU6}(x) = \min(\max(0, x), 6) \label{eq:act_relu6}
 \end{equation}
 
 \subsubsection{Convolutional layers}
@@ -139,7 +137,7 @@ Pooling is an operation used within convolutional neural networks to reduce the 
 Batch normalisation was introduced in a 2015 paper by Sergey Ioffee and Christain Szegedy\cite{Ioffe2015} and is a step introduced into neural networks, including CNNs, between the layers and the activation functions. Batch normalisation works by applying re-scaling and re-centering transformations to the output of a layer i.e. transforming the output of that layer for that batch to have a mean of 0 and a standard deviation of 1. This has the effect of greatly reducing training time and increases accuracy by way of reducing the change in the data distribution between layers and reducing the change of this over time via backpropagation. 
 
 \subsubsection{Residual Networks}
-Residual networks (ResNets) were introduced by He et al in 2015\cite{He2015a} to allow for far deeper networks than previously used. The basic premise is that the layer input forms part of the output directly via a scaled addition to the convolved, normalised, and activated output. This allows for information to be carried further through the network and was shown to achieve better results against benchmark image classification datasets. Further detail and formulation is available in the original paper so we do not reproduce that here as a grasp of the main concept is all that is required.
+Residual networks (ResNets) were introduced by He et al. in 2015\cite{He2015a} to allow for far deeper networks than previously used. The basic premise is that the layer input forms part of the output directly via a scaled addition to the convolved, normalised, and activated output. This allows for information to be carried further through the network and was shown to achieve better results against benchmark image classification datasets. Further detail and formulation is available in the original paper so we do not reproduce that here as a grasp of the main concept is all that is required.
 
 % subsection Components_of_Convolutional_Neural_Networks end 
 \subsection{Transfer Learning} 
@@ -152,7 +150,7 @@ In transfer learning it is possible to take one of two approaches; the first is 
 
 \subsection{Activation Maximisation} 
 \label{sub:Activation_Maximisation} 
-Describe the theory and/or maths of activation maximisation and the methods used within the package we use the regularisations applied. 
+TBC: Describe the theory and/or maths of activation maximisation and the methods used within the package we use the regularisations applied. 
 % subsection Activation_Maximisation end 
 % section Theory end 
 \section{Data collection and pre-processing} 
@@ -217,7 +215,7 @@ It is important to note at this point that just because this method achieved the
 \label{sub:Configuration} 
 All model architectures consisted of their respective base CNN structure as detailed in \cref{sec:CNN_Architectures} followed by a global average pooling 2D layer to reduce the dimensionality of our tensor and to ensure a flat 1D vector which is fully connected to a 30 neuron output layer with a softmax activation. All models were also trained using the same setup in terms of hyperparameters, optimisers and loss functions; the loss function was sparse categorical cross entropy (sparse due to the usage of a non one-hot encoded target vector), the optimiser was the Adam optimiser \cite{Kingma2015}. The optimiser was used with default hyperparameters as defined within the TensorFlow implementation, the most important being the learning rate with was left at the initial value of 0.001. The reason for the usage of the default hyperparameters and not using a more advanced custom optimiser, such as WAME \cite{Mosca2017}, was due to the constraints on access time to computing power. As is the training already had to be completed across multiple sessions and doing any tuning would have resulted in too large a time required to produce meaningful results; Adam produces decent results with the defaults and so they were used in this work.
 
-The models themselves, MobileNetV2, Inception-ResnetV2, and ResNeXt50 were chosen to represent a wide spread of model capabilities and complexities as highlighted in Figure 1 of the Benchmark Analysis of CNNs completed by Bianco et al\cite{Bianco2018}. MobileNetV2 was chosen as it is a lightweight model designed to be capable of running on mobile devices and was meant to be a low complexity comparison in line with AlexNet (due to no pre-trained version of AlexNet being available within TensorFlow), Inception-ResnetV2 for its high accuracy in other use cases, and ResNeXt50 as a smaller version of one of the newer CNN architectures. These models, combined with the original work done by Iwana et al, span a range of complexity and training speed allowing for a good comparison between performance.
+The models themselves, MobileNetV2, Inception-ResNet-v2, and ResNeXt50 were chosen to represent a wide spread of model capabilities and complexities as highlighted in Figure 1 of the Benchmark Analysis of CNNs completed by Bianco et al\cite{Bianco2018}. MobileNetV2 was chosen as it is a lightweight model designed to be capable of running on mobile devices and was meant to be a low complexity comparison in line with AlexNet (due to no pre-trained version of AlexNet being available within TensorFlow), Inception-ResNet-v2 for its high accuracy in other use cases, and ResNeXt50 as a smaller version of one of the newer CNN architectures. These models, combined with the original work done by Iwana et al, span a range of complexity and training speed allowing for a good comparison between performance.
 
 The models were training once using the training data as described in \cref{sub:Image Download and Manual Review} and validated against the validation data split out at the same point. No cross-validation was done due to resource limitations.
 % subsection Configuration end 
@@ -235,9 +233,9 @@ The performance of the models throughout training can be seen in \cref{fig:train
 	\label{fig:train_perf}
 \end{figure}
 
-Iwana et al trained their models for 30,000 and 450,000 epochs for LeNet and AlexNet respectively, substantially more than we trained our models for, so it is likely that the results they achieved are better than they would have been if they had trained for only a few hundred epochs. It is possible, but not certain, that by training our models for a factor of 10 or 100 more epochs, and removing the early stopping criteria, that we could have achieved even better validation performance. 
+Iwana et al. trained their models for 30,000 and 450,000 epochs for LeNet and AlexNet respectively, substantially more than we trained our models for, so it is likely that the results they achieved are better than they would have been if they had trained for only a few hundred epochs. It is possible, but not certain, that by training our models for a factor of 10 or 100 more epochs, and removing the early stopping criteria, that we could have achieved even better validation performance. 
 
-MobileNetV2 achieved the best validation accuracy early on in the training, where Inception-ResNeXt50 continued to see improvement until just before the 50th epoch/ ResNeXt50 sees its best performance coming after the 75th epoch, but as we will see this is not indicative of better performance the accuracy at any time never improved beyond the lowest accuracy for MobileNetV2 on the training or validation data despite being a more complex model and training for more epochs.
+MobileNetV2 achieved the best validation accuracy early on in the training, where Inception-ResNet-v2 continued to see improvement until just before the 50th epoch, ResNeXt50 sees its best performance coming after the 75th epoch, but as we will see this is not indicative of better performance the accuracy at any time never improved beyond the lowest accuracy for MobileNetV2 on the training or validation data despite being a more complex model and training for more epochs.
 % subsection Training_Performance end 
 
 % section Model_Training end 
@@ -246,17 +244,17 @@ MobileNetV2 achieved the best validation accuracy early on in the training, wher
 \label{sec:Evaluation_and_Further_Exploration} 
 \subsection{Results} 
 \label{sub:Results} 
-Full results for all 3 models evaluated on the test set are available in \cref{tab:results_acc}, along with those reported by Iwana for ease of comparison. A visual representation of this for our models only is shown in \cref{fig:test_perf}. As a reminder, the dataset used for our models was slightly altered from the original set, and due to the use of a validation dataset did not contain the set of records; but for a comparison it is suitable. Inception-ResnetV2 is comparable to the results of AlexNet but is slightly more accurate when Top-3 predictions are taken into account. MobileNetV2 is close to LeNet in performance, with just slightly improvements in many genres. ResNeXt50 shows very odd behaviour, with many classes showing near 0\% accuracy even at Top-3, whilst some classes have a very high accuracy such as Biographies and Memoirs. This is likely an artefact of it overlapping specific classes which along with is discussed further in \cref{sub:Further_Analysis}.
+Full results for all 3 models evaluated on the test set are available in \cref{tab:results_acc}, along with those reported by Iwana for ease of comparison. A visual representation of this for our models only is shown in \cref{fig:test_perf}. As a reminder, the dataset used for our models was slightly altered from the original set, and due to the use of a validation dataset did not contain the set of records; but for a comparison it is suitable. Inception-ResNet-v2 is comparable to the results of AlexNet but is slightly more accurate when Top-3 predictions are taken into account. MobileNetV2 is close to LeNet in performance, with just slightly improvements in many genres. ResNeXt50 shows very odd behaviour, with many classes showing near 0\% accuracy even at Top-3, whilst some classes have a very high accuracy such as Biographies and Memoirs. This is likely an artefact of it overlapping specific classes which along with is discussed further in \cref{sub:Further_Analysis}.
 
-At a per-genre level Inception-ResnetV2 shows the best results on 16 out of the 30 genres for top-1 predictions, followed by 10 for AlexNet. If we further explore the seemingly best performing classes in ResNeXt50 we can see by looking at the precision as presented in \cref{tab:test_prec} that in the genres where this model seems to perform well the precision is low (when compared to for example Inception-ResnetV2) which provides further evidence that for some classes it combines multiple genres and just predicts one of them i.e. whilst the model is able to correctly predict these \emph{chosen}	classes when it sees them, it is highly likely to predict other genres as one of these as well.
+At a per-genre level Inception-ResNet-v2 shows the best results on 16 out of the 30 genres for top-1 predictions, followed by 10 for AlexNet. If we further explore the seemingly best performing classes in ResNeXt50 we can see by looking at the precision as presented in \cref{tab:test_prec} that in the genres where this model seems to perform well the precision is low (when compared to for example Inception-ResNet-v2) which provides further evidence that for some classes it combines multiple genres and just predicts one of them i.e. whilst the model is able to correctly predict these \emph{chosen}	classes when it sees them, it is highly likely to predict other genres as one of these as well.
 
-Overall the results from Inception-ResnetV2 are promising given the low training time and adjusted dataset; the potential improvements are discussed further in \cref{sub:Discussion}.
+Overall the results from Inception-ResNet-v2 are promising given the low training time and adjusted dataset; the potential improvements are discussed further in \cref{sub:Discussion}.
 
 \begin{table}[]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{lrrrrrrrrrrrrrr}
-								   & \multicolumn{2}{c}{\textbf{LeNet*}}                                     & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{AlexNet*}}                                   & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{MobileNetV2}}                                & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{Inception-ResnetV2}}                         & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{ResNeXt50}}                                  \\
+								   & \multicolumn{2}{c}{\textbf{LeNet*}}                                     & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{AlexNet*}}                                   & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{MobileNetV2}}                                & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{Inception-ResNet-v2}}                         & \multicolumn{1}{c}{\textbf{}} & \multicolumn{2}{c}{\textbf{ResNeXt50}}                                  \\
 	\textbf{Genre}                 & \multicolumn{1}{c}{\textbf{Top 1}} & \multicolumn{1}{c}{\textbf{Top 3}} & \multicolumn{1}{c}{\textbf{}} & \multicolumn{1}{c}{\textbf{Top 1}} & \multicolumn{1}{c}{\textbf{Top 3}} & \multicolumn{1}{c}{\textbf{}} & \multicolumn{1}{c}{\textbf{Top 1}} & \multicolumn{1}{c}{\textbf{Top 3}} & \multicolumn{1}{c}{\textbf{}} & \multicolumn{1}{c}{\textbf{Top 1}} & \multicolumn{1}{c}{\textbf{Top 3}} & \multicolumn{1}{c}{\textbf{}} & \multicolumn{1}{c}{\textbf{Top 1}} & \multicolumn{1}{c}{\textbf{Top 3}} \\ \hline
 	Arts \& Photography            & 5.8                                & 11.6                               &                               & 12.1                               & 31.1                               &                               & 11.1                               & 27.9                               &                               & \textit{13.2}                      & \textit{33.7}                      &                               & 3.7                                & 11.1                               \\
 	Biographies \& Memoirs         & 5.3                                & 18.4                               &                               & 13.2                               & 29.5                               &                               & 10.0                               & 30.5                               &                               & \textit{23.2}                      & 46.3                               &                               & 20.0                               & \textit{60.0}                      \\
@@ -311,7 +309,7 @@ Overall the results from Inception-ResnetV2 are promising given the low training
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{lrrr}
-	\textbf{Predicted Genre}      & \multicolumn{1}{c}{\textbf{MobileNetV2}} & \multicolumn{1}{c}{\textbf{InceptionResnet-V2}} & \multicolumn{1}{c}{\textbf{ResNeXt50}} \\ \hline
+	\textbf{Predicted Genre}      & \multicolumn{1}{c}{\textbf{MobileNetV2}} & \multicolumn{1}{c}{\textbf{Inception-ResNet-v2}} & \multicolumn{1}{c}{\textbf{ResNeXt50}} \\ \hline
 	Arts \& Photography           & 17.8                                     & 20.8                                            & 25.9                                   \\
 	Biographies \& Memoirs        & 11.5                                     & 19.3                                            & 5.5                                    \\
 	Business \& Money             & 11.0                                     & 13.4                                            & 20.0                                   \\
@@ -392,7 +390,7 @@ Finally, we can review the \emph{class overlap} for each model. We define class 
 \begin{equation}
 	CO(A, B) \stackrel{\mathrm{def}}{=} \min\left\{\frac{P(A)}{P(B)}, \frac{P(B)}{P(A)}\right\}
 \end{equation}
-The per genre pair class overlap is defined as the average class overlap across all predictions. As we can see in \cref{fig:class_overlap}, where only class overlaps of greater than 0.5 are displayed, the ResNeXt50 model sees large amounts of class overlap between many classes, which agrees with what we saw before that certain classes were being \emph{confused} for each other by the model. Comparatively, MobileNetV2 sees only a few class overlaps greater than 0.5 and Inception-ResnetV2 sees none. When we examine those with higher overlap in MobileNetV2 we can begin to understand the potential true overlap between classes; Self-Help has overlap with Health, Fitness and Dieting, Science and Maths has overlap with Medical Books, and Religion and Spirituality has overlap with Christian Books and Bibles. All of these are logical overlaps and were a human tasked with classifying books based on their cover into these categories it is highly probable that different people would classify them differently. 
+The per genre pair class overlap is defined as the average class overlap across all predictions. As we can see in \cref{fig:class_overlap}, where only class overlaps of greater than 0.5 are displayed, the ResNeXt50 model sees large amounts of class overlap between many classes, which agrees with what we saw before that certain classes were being \emph{confused} for each other by the model. Comparatively, MobileNetV2 sees only a few class overlaps greater than 0.5 and Inception-ResNet-v2 sees none. When we examine those with higher overlap in MobileNetV2 we can begin to understand the potential true overlap between classes; Self-Help has overlap with Health, Fitness and Dieting, Science and Maths has overlap with Medical Books, and Religion and Spirituality has overlap with Christian Books and Bibles. All of these are logical overlaps and were a human tasked with classifying books based on their cover into these categories it is highly probable that different people would classify them differently. 
 
 \begin{figure}
 	\centering
@@ -406,7 +404,7 @@ The per genre pair class overlap is defined as the average class overlap across 
 \label{sub:Feature_Visualisation} 
 The goal of using feature visualisation was to attempt to understand what, if any, underlying structure or information the models were using to aid their classification. To do this we use activation maximisation as implemented into the python package \emph{keras-vis}\cite{keras-vis} to do all the work. To produce the images the final layer activation function was changed from softmax to linear to ensure that class is being visualised as opposed to minimising other classes, and the loss function is simply defined as that linear activation (note here that loss is really a misnomer as we are trying to maximise this value as opposed to minimise it as we traditionally would) as discussed in \cref{sub:Activation_Maximisation}. L2 normalisation was used as the default to attempt to avoid pure static images being produced.
 
-We ran the activation maximisation on the Inception-ResnetV2 model for the 3 best predicted genres (Test Prep, Comics \& Graphic Novels, and Travel) as we believed these had the best probability of returning useful images. The inputs to the model were then trained for 1000 epochs, at which point issues were encountered with the RAM on the machine. During these steps there was some improvement to the loss function however did not appear to converge and when compared to the progress seen on a pure imagenet model these saw very little movement and remained negative the entire time (where as the examples provided by the package are always positive after the first few epochs). 
+We ran the activation maximisation on the Inception-ResNet-v2 model for the 3 best predicted genres (Test Prep, Comics \& Graphic Novels, and Travel) as we believed these had the best probability of returning useful images. The inputs to the model were then trained for 1000 epochs, at which point issues were encountered with the RAM on the machine. During these steps there was some improvement to the loss function however did not appear to converge and when compared to the progress seen on a pure imagenet model these saw very little movement and remained negative the entire time (where as the examples provided by the package are always positive after the first few epochs). 
 
 The results of this attempt can be seen in \cref{fig:act_max_output} and whilst it may be possible to argue that there are some differences between these images that you could prescribe to the common layout of these type of genres covers, it would be difficult to say this with any conviction. Overall the images are generic and provided no additional insight to understand what features the model is identifying to use for the classification.
 
@@ -414,14 +412,14 @@ The results of this attempt can be seen in \cref{fig:act_max_output} and whilst 
 	\centering
 	\captionsetup{justification=centering}
 	\includegraphics[scale=0.6]{visualize-dense-layer.png}
-	\caption{Activation maximisation outputs for the 3 best predicted classes of the Inception-ResnetV2 model}
+	\caption{Activation maximisation outputs for the 3 best predicted classes of the Inception-ResNet-v2 model}
 	\label{fig:act_max_output}
 \end{figure}
 % section Feature_Visualisation end  
 
 \subsection{Discussion \& Future Work} 
 \label{sub:Discussion} 
-Overall the Inception-ResnetV2 model provided the best results of the 3 models we tried, however it is far more complex than AlexNet but did not provide greatly improved results. The counterpoint to this is that the AlexNet model as trained by Iwana et al was trained for 450,000 epochs where out model was trained for less than 50 epochs total. We do not know the progress of the training of the model by Iwana but it would be reasonable to suggest that if their model had trained for less epochs, or ours for more, then there would be a greatly difference between the results. Despite training on slightly less data (due to the validation set), we can see that more modern and powerful CNNs are able to predict book genres with slightly improved accuracy compared to older methods.
+Overall the Inception-ResNet-v2 model provided the best results of the 3 models we tried, however it is far more complex than AlexNet but did not provide greatly improved results. The counterpoint to this is that the AlexNet model as trained by Iwana et al. was trained for 450,000 epochs where out model was trained for less than 50 epochs total. We do not know the progress of the training of the model by Iwana but it would be reasonable to suggest that if their model had trained for less epochs, or ours for more, then there would be a greatly difference between the results. Despite training on slightly less data (due to the validation set), we can see that more modern and powerful CNNs are able to predict book genres with slightly improved accuracy compared to older methods.
 
 There are lots of directions this work could continue to go in the future; as mentioned before there is still more investigation that can be done surrounding the pre-processing of data, either varying the interpolation methods for downsizing or re-testing the pre-processing methods used specifically on the end model architecture for a longer period of time. Our models could be trained for more epochs with a greater requirement on early stopping to allow for long term improvements to be made that may not be evident over a few hundred epochs. Also, additional information such as the width and height or just aspect ratio could be passed to the model as well in an attempt to improve accuracy this way. The final fully connected part of the network could also be increased in complexity to contain more layers as opposed to just the single layer used in our work.
 
@@ -431,9 +429,9 @@ If resources were no constraint some of the larger improvements to the work woul
 
 \section{Conclusion} 
 \label{sec:Conclusion} 
-In this work we have attempted to improve on the work by Iwana et al and better answer the question can a CNN judge a book by its cover. We reprocessed the dataset initially collected by Iwana and applied multiple pre-processing techniques in an attempt to identify the best method to deal with the impact of different shaped images. We then proceeded to train 3 modern models via transfer learning on a padded version of the dataset and evaluated the results. Finally we attempted to produce ideal class images using activation maximisation for the best model and genres.
+In this work we have attempted to improve on the work by Iwana et al. and better answer the question can a CNN judge a book by its cover. We reprocessed the dataset initially collected by Iwana and applied multiple pre-processing techniques in an attempt to identify the best method to deal with the impact of different shaped images. We then proceeded to train 3 modern models via transfer learning on a padded version of the dataset and evaluated the results. Finally we attempted to produce ideal class images using activation maximisation for the best model and genres.
 
-We have seen that using a more modern CNN architecture, namely Inception-ResnetV2, we are able to improve on the results published by Iwana slightly whilst training for substantially less epochs. We have also provided some further supporting insight into the components that factor into book cover design i.e. colour, and identified where classifications are failing where this might be due to overlap between classes.
+We have seen that using a more modern CNN architecture, namely Inception-ResNet-v2, we are able to improve on the results published by Iwana slightly whilst training for substantially less epochs. We have also provided some further supporting insight into the components that factor into book cover design i.e. colour, and identified where classifications are failing where this might be due to overlap between classes.
 
 There is still lots to explore in this space as we discussed in \cref{sub:Discussion} and hopefully this work provides a springboard to enable more complex CNNs to be used for genre identification of book covers in the future. The work itself is unlikely to provide any value for real-world use as the accuracy is too low to be of use for either consumers or even cover designers as a form of QA. Genre prediction from cover images remains a complex topic and given the subjectivity of the classifications is unlikely to ever be fully solved, however the work produced here gets a little closer than we were before. So it seems for now that, if you are a CNN, you should follow the original advice and not try to judge a book by its cover.
 % section Conclusion end 
@@ -491,7 +489,7 @@ Full technical details of the specification is available in the paper by Sandler
 	\end{table}
 
 % subsection MobileNetV2 end  
-\subsection{Inception-ResnetV2} 
+\subsection{Inception-ResNet-v2} 
 \label{sub:Inception-ResnetV2} 
 The architecture, with all the relevant filter and stride settings are detailed within the original paper by Szegedy et al. \cite{Szegedy2016} however the Keras implementation seems to differ slightly and the original paper does not provide a full spec in a single place so it is composed here. For simplicity batch normalisation is not explicitly written but is used after every convolution operator and ReLU activation is used throughout. A summarised version is available in \cref{fig:incepresnetv2}\cite{Alemi2016}.
 
@@ -500,7 +498,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 	\centering
 	\captionsetup{justification=centering}
 	\includegraphics[scale=0.25]{inception_resnetv2.png}
-	\caption{High level view of the inception-resnetv2 architecture. The early classifier (bottom of image) is not used in our work.}
+	\caption{High level view of the Inception-ResNet-v2 architecture. The early classifier (bottom of image) is not used in our work.}
 	\label{fig:incepresnetv2}
 \end{figure}
 
@@ -603,11 +601,11 @@ The architecture, with all the relevant filter and stride settings are detailed 
 	Dense                             & 37               & 36             & dense (30)        & -                & -              & - 				& -          \\ \hline
 	\end{tabular}%
 	}
-	\caption{Structure of the Inception-ResNetV2 model. Shape unless otherwise specified is square, and N is the number of times that layer or block is repeated. For information on the Inception-ResNet blocks see \cref{tab:incepresa,tab:incepresb,tab:incepresc}.  - represents a non-relevant argument or in the case of input, the input to the model.}
+	\caption{Structure of the Inception-ResNet-v2 model. Shape unless otherwise specified is square, and N is the number of times that layer or block is repeated. For information on the Inception-ResNet blocks see \cref{tab:incepresa,tab:incepresb,tab:incepresc}.  - represents a non-relevant argument or in the case of input, the input to the model.}
 	\label{tab:incepresfull}
 	\end{table}
 
-% subsection Inception-ResnetV2 end 
+% subsection Inception-ResNet-v2 end 
 \subsection{ResNeXt50} 
 \label{sub:ResNeXt50} 
 The full details of the ResNeXt50 architecture and in what way it differs from and improves upon regular ResNets is available in the paper by Xie et al.\cite{Xie2016}. We reproduce here the table (\cref{tab:resnextarc})explaining the architecture and an image (\cref{fig:resnextblocks}) explaining the blocks from their paper for convenience. These models differ in their use of a \emph{cardinality} term, C. This is defined as the number of times a repeated series of convolutional filters in parallel with the exact same parameters are used within a block. All layers are followed by batch normalisation and ReLU activation.
@@ -635,7 +633,7 @@ The full details of the ResNeXt50 architecture and in what way it differs from a
 						   & $1 \times 1$                    & \begin{tabular}[c]{@{}c@{}}global average pooling\\ dense (30), softmax\end{tabular} & -                & -              & -               & 1                        & 1                  \\ \hline
 	\end{tabular}%
 	}
-	\caption{Structure of the ResNext-50 model. At the end of each block the input is added in (as with the original resnet models) - see example methods in \cref{fig:resnextblocks}.}
+	\caption{Structure of the ResNeXt50 model. At the end of each block the input is added in (as with the original resnet models) - see example methods in \cref{fig:resnextblocks}.}
 	\label{tab:resnextarc}
 	\end{table}
 

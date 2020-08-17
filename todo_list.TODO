@@ -49,8 +49,8 @@ Write up:
         ✔ Write transfer learning @done(20-08-15 11:05)
         ☐ Write Activation maximisation
     Data collection and pre-processing:
-        ☐ Add image of bad cover
-        ☐ Explain inter-cubic interpolation
+        ✔ Add image of bad cover @done(20-08-17 19:23)
+        ✔ Explain inter-cubic interpolation @done(20-08-17 19:23)
         ✔ Add graph of training the models @done(20-08-11 16:12)
     Model Training:
         ✔ Write configuration section @done(20-08-10 16:58)
