@@ -329,13 +329,12 @@ comb_data_dist %>%
 
 results_clean_res %>%
   ggplot(aes(x = Result, y = reorder(classes, desc(classes)), group = Model, col = Model)) + 
-  geom_point(shape = 15, alpha = 0.7, size = 2.5) + 
+  geom_point(aes(shape = Model), alpha = 0.7, size = 2.5) + 
   scale_color_brewer(palette="Set1", name = 'Model') +
   facet_wrap(~N, scales = 'free_x') +
   theme_bw() +
   labs(x = 'Test Accuracy',
-       y = 'True Class',
-       caption = 'Top 5 classes by Average Accuracy across all models called out specifically') +
+       y = 'True Class') +
   theme(legend.position = 'bottom',
         plot.caption = element_text(face = 'italic'),
         panel.grid.major.x = element_blank(),

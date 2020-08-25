@@ -40,10 +40,10 @@ Make images:
     ✘ If you have the time, try to use DGN-AMs maybe? @cancelled(20-07-18 14:38)
 
 Write up:
-    ☐ Write it up
+    ✔ Write it up @done(20-08-25 09:17)
     Introduction:
-        ☐ Write Introduction
-        ☐ Write Related Works
+        ✔ Write Introduction @done(20-08-25 09:17)
+        ✔ Write Related Works @done(20-08-25 09:17)
     Theory:
         ✔ Write Components of convolutional neural networks @done(20-08-15 11:01)
         ✔ Write transfer learning @done(20-08-15 11:05)
