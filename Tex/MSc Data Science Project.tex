@@ -94,7 +94,21 @@ A filter (also called a kernel) is applied atop of the input, starting at the to
 \begin{equation}
 	m_{i,j,k} = \sum_{\chi = 1}^{C}\sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, k} \times x_{(\alpha +(i-1)*s), (\beta + (j-1)*s),\chi}
 \end{equation}
-where $\bm{m}_k$ is the feature map for output channel $k$, C is the number of channels in the input, $x$ is the input, $f$ is the $k^{th}$ kernel of size $l\times l$, $s$ is the stride. In total for a square input and kernel this leads to an output of the dimensions described in 
+where $m_{i,j,k}$ is the component of the feature map $\bm{m}_k$ for output channel $k$ at position $(i, j)$, C is the number of channels in the input, $x$ is the 3 dimensional input tensor (height, width, and channels) input, $f$ is the $k^{th}$ kernel of size $l\times l$, $s$ is the stride. The complexity of the subscripts on $x$ arises from the need to describe the offset provided by the size and stride of the kernel. We apply this equation for the examples given in \cref{fig:conv_process} in the following, noticing the simplifications that $C = s = 1$ so that $k \subseteq \{1\}$, and in this case $l = 3$. Then for the examples given in the image we have
+\begin{align}
+	m_{1, 1, 1} &= \sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, 1} \times x_{(\alpha +(1-1)), (\beta + (1-1)),1}	\\
+	m_{1, 1, 1} &= (1\times1 )+ (0 \times 2) + (1 \times 1) + (0 \times 2) + (1 \times 0) + (0 \times 0) + (1 \times 1) + (0 \times 0) + (1 \times 2) = 5 \\
+	m_{1, 2, 1} &= \sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, 1} \times x_{(\alpha +(1-1)), (\beta + (2-1)),1}	\\
+	m_{1, 2, 1} &= (1\times 2)+ (0 \times 1) + (1 \times 1) + (0 \times 1) + (1 \times 0) + (0 \times 1) + (1 \times 0) + (0 \times 2) + (1 \times 1) = 3 \\
+	\vdots \nonumber	\\
+	m_{3, 3, 1} &= \sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, 1} \times x_{(\alpha +(3-1)), (\beta + (3-1)),1}	\\
+	m_{3, 3, 1} &= (1\times 2)+ (0 \times 1) + (1 \times 0) + (0 \times 0) + (1 \times 2) + (0 \times 1) + (1 \times 1) + (0 \times 0) + (1 \times 2) = 7
+\end{align}
+Note that in the image the kernel is displayed second visually but due to the order we wrote the equation is in the kernel elements are on the left of the multiplication.
+
+
+
+In total for a square input and kernel this leads to an output of the dimensions described by
 
 \begin{equation}
 	\label{eq:feat_map1}
@@ -122,10 +136,23 @@ Whilst the number of filters, filter size, and stride are hyperparameters that m
 
 
 \subsubsection{Depth-Wise Convolutions}
-Depth wise convolutions are similar to normal convolutional layers in all ways except one; instead of applying the filter to each channel of the input and summing the outputs to produce a single output channel we instead keep these outputs separate and produce an output with as many channels as the input per filter.  When followed by a 1x1 convolution (also known as a pointwise convolution) this has the effect of merging the layers via addition and combined these two processes actually have a reduced computational cost when compared to a traditional convolution \cite{Sandler2018}.
+Depth wise convolutions are similar to normal convolutional layers in all ways except one; instead of applying the filter to each channel of the input and summing the outputs to produce a single output channel we instead keep these outputs separate and produce an output with as many channels as the input per filter.  When followed by a 1x1 convolution (also known as a pointwise convolution) this has the effect of merging the layers via addition and combined these two processes actually have a reduced computational cost when compared to a traditional convolution \cite{Sandler2018}. The results from depth-wise convolutions are identical to to traditional convolutions but due to this improvement in computational cost they are used within many complex models to improve performance. 
 
 \subsubsection{Pooling}
-Pooling is an operation used within convolutional neural networks to reduce the size of channels/feature maps within the network. Pooling is applied using the same size and stride arguments as convolutions however instead of pointwise multiplication they aggregate across their area. These operations tend to either be maximum or average and are determined either by the user or the CNN architecture. These are applied per-channel and no aggregation across channels is completed afterwards. The dimensions of the output after pooling can be calculated using the same method as before displayed in \cref{eq:feat_map2}. Traditionally (and in our work) pooling is completed with no padding. Global pooling refers to when the size of the filter matches the size of the input and a 1x1xdepth output is returned.
+Pooling is an operation used within convolutional neural networks to reduce the size of channels/feature maps within the network. Pooling is applied using the same size and stride arguments as convolutions however instead of pointwise multiplication they aggregate across their area. These operations tend to either be maximum or average and are determined either by the user or the CNN architecture. These are applied per-channel and no aggregation across channels is completed afterwards. The dimensions of the output after pooling can be calculated using the same method as before displayed in \cref{eq:feat_map2}. Traditionally (and in our work) pooling is completed with no padding. Global pooling refers to when the size of the filter matches the size of the input and a 1x1xdepth output is returned. For example global average pooling on the output feature map of \cref{fig:conv_process} would be a 1x1 result of 7, global average pooling would give 4.333\dots and max pooling of size 2x2 with a stride of 1 would lead to
+$$
+\begin{bmatrix}
+	6 & 6 \\
+	6 & 7 \\
+\end{bmatrix}
+$$
+as where average pooling of the same size and stride would result in
+$$
+\begin{bmatrix}
+	5.25 & 4.25 \\
+	5.25 & 4.5 \\
+\end{bmatrix}
+$$.
 
 \subsubsection{Batch Normalisation}
 Batch normalisation was introduced in a 2015 paper by Sergey Ioffee and Christain Szegedy\cite{Ioffe2015} and is a step introduced into neural networks, including CNNs, between the layers and the activation functions. Batch normalisation works by applying re-scaling and re-centering transformations to the output of a layer i.e. transforming the output of that layer for that batch to have a mean of 0 and a standard deviation of 1. This has the effect of greatly reducing training time and increases accuracy by way of reducing the change in the data distribution between layers and reducing the change of this over time via backpropagation. 

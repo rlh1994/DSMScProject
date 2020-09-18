@@ -24,3 +24,13 @@ Files and scripts/incep_56.h5
 Files and scripts/tables to latex.xlsx
 .Rhistory
 .Rhistory
+images/test/cropped.zip
+images/test/noprep.zip
+images/train/noprep.zip
+images/train/padded.zip
+images/valid/cropped.zip
+images/train/cropped.zip
+images/test/padded.zip
+images/valid/padded.zip
+Files and scripts/incep_56.zip
+images/valid/noprep.zip
