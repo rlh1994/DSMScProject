@@ -3,6 +3,7 @@
 \usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{bm}
+\usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
@@ -34,8 +35,13 @@ Birkbeck, University Of London\\\\
 \thispagestyle{empty}
 \graphicspath{{images/}}
 \begin{abstract}
-	In this work we revisit the work of Iwana et al.\cite{KenjiIwana} in an attempt to use convolutional neural networks (CNNs) to predict the genre of a book based entirely on its cover image. We test various pre-processing methods for the images and use a selection of newer, more complex, CNNs to attempt to improve on the results of the previous work. Using an Inception-ResNet-v2 we achieve Top-1 accuracy of 24.7\% and a Top-3 accuracy of 45.4\% which is an improvement over previous results.
+	In this work we revisit and build upon the work of Iwana et al.\cite{KenjiIwana} in an attempt to use convolutional neural networks (CNNs) to predict the genre of a book based entirely on its cover image. We test various pre-processing methods for the images and use a selection of newer, more complex, CNNs to attempt to improve on the results of the previous work. Using an Inception-ResNet-v2 we achieve Top-1 accuracy of 24.7\% and a Top-3 accuracy of 45.4\% which is an improvement over previous results.
 \end{abstract}
+\renewcommand{\abstractname}{Acknowledgements}
+\begin{abstract}
+Thank you to Pete Stewart and Openreach Ltd for sponsoring this degree, and thank you David, Scott, and Craig who made working while studying a little easier and less stressful than it would have been otherwise. Thank you to my friends who have put up with me over the last 2 years. Finally most of all I want to thank my parents, who have always supported me and my learning, even though it has been a long time since they understood any of it. 
+\end{abstract}
+
 \begin{figure}[!b]
 	\centering
 	\includegraphics[scale=0.4]{bbk_logo.jpg}
@@ -53,26 +59,26 @@ Birkbeck, University Of London\\\\
 \label{sec:intro}
 Convolutional neural networks (CNNs) have been used for image classification for the last 30 years\cite{Cun1989}, with ever more accurate, and more complex, model architectures being produced and tuned on benchmark datasets. CNNs have been used to identify clothing types, objects, music, and even identify artists of paintings; but as far as we are aware only once has someone tested asked the question of the ability of a CNN to judge a book by its cover i.e. predict the genre of the book based on the cover image. We will discuss the work of this person in \cref{sub:Related Works}. 
 
-The question of predicting a genre based only on a cover image is more difficult than it may first appear; many books at least slightly span genres, and designs are at their heart art which means some personal interpretation will always play a part. Being able to successfully build a model to solve this problem would allow designers to use such a tool to ensure that a design is clear to their target audience, it could allow some data-validation of book related data and could help uncover some underlying design principles in genre classification that is not evident to us currently. 
+The question of predicting a genre based only on a cover image is more difficult than it may first appear; many books at least slightly span genres, and designs are at their heart art which means some personal interpretation will always play a part. Being able to successfully build a model to solve this problem would allow designers to use such a tool to ensure that a design is clear to their target audience, it could allow some data-validation of book related data, and could help uncover some underlying design principles in genre classification that is not evident to us currently. 
 
-In this work we attempt to train a selection of modern CNN architectures that have been pretrained on the ImageNet dataset to correctly predict the genre of a book from its cover image. The remainder of this work is structured as follows; in the remainder of this section we discuss related works, then in \cref{sec:Theory} we discuss some theoretical concepts that we use within the work for those familiar with Machine Learning but not in CNNs. In \cref{sec:Data_collection_and_pre-processing} we present our methods of the adjustment of the existing datasets and the testing of different methods of pre-processing the images. \Cref{sec:Model_Training} contains the information about how we configured and trained the models, followed by the evaluation of our results and discussion of next steps in \cref{sec:Evaluation_and_Further_Exploration} before summarising out work in \cref{sec:Conclusion}. Please note in this work we will use the terms \emph{class, genre, classification,} and \emph{category} interchangeably to describe the genre that a particular book cover belongs to.
+In this work we attempt to train a selection of modern CNN architectures that have been pretrained on the ImageNet dataset to correctly predict the genre of a book from its cover image. The remainder of this work is structured as follows; in the rest of this section we discuss related works, then in \cref{sec:Theory} we discuss some theoretical concepts that we use within the work for those familiar with Machine Learning but not in CNNs. In \cref{sec:Data_collection_and_pre-processing} we present our methods of the adjustment of the existing datasets and the testing of different methods of pre-processing the images. \Cref{sec:Model_Training} contains the information about how we configured and trained the models, followed by the evaluation of our results and discussion of next steps in \cref{sec:Evaluation_and_Further_Exploration} before summarising our work in \cref{sec:Conclusion}. Please note in this work we will use the terms \emph{class, genre, classification,} and \emph{category} interchangeably to describe the genre that a particular book cover belongs to.
 
 \subsection{Related Works} 
 \label{sub:Related Works} 
-So far as we can tell at the time of writing there is only one piece of prior work that has been completed in the area of predicting book genres based on their cover images; the work completed by Iwana et al.\cite{KenjiIwana}. In their work they produced 2 datasets, the \emph{Book32} dataset and the smaller, balanced, dataset known as \emph{BookCover30}. These datasets are the best collection of cleaned data that are readily available and we use these within our work, with some small adjustments as discussed in \cref{sub:Image Download and Manual Review}. In their work they trained 2 CNNs, LeNet and AlexNet on the BookCover30 dataset, achieving 13.5\% and 24.7\% Top-1 accuracy respectively; more detailed information of their results is available in \cref{tab:results_acc}.
+So far as we can tell at the time of writing there is only one piece of prior work that has been completed in the area of predicting book genres based on their cover images; the work published by Iwana et al.\cite{KenjiIwana}. In their work they produced 2 datasets, the \emph{Book32} dataset and the smaller, balanced, dataset known as \emph{BookCover30}. These datasets are the best collection of cleaned data that are readily available and we use these within our work, with some small adjustments as discussed in \cref{sub:Image Download and Manual Review}. In their work they trained 2 CNNs, LeNet and AlexNet on the BookCover30 dataset, achieving 13.5\% and 24.7\% Top-1 accuracy respectively; more detailed information of their results is available in \cref{tab:results_acc}.
 
 They go on in their work to discuss the results of their models with analysis and call out few cover design principles including the use of colour, objects, and text. We further investigate the colour angle in \cref{sub:Further_Analysis}.
 
-Our work builds atop theirs by using more modern and complex CNNs to attempt to identify if the more powerful architectures are more capable of producing equivalent or improved results whilst training for significantly epochs than the original paper.
+Our work builds atop theirs by using more modern and complex CNNs to attempt to identify if the more powerful architectures are more capable of producing equivalent or improved results whilst training for significantly fewer epochs than the original paper.
 % subsection Related Works end 
 % section CNN Theory and Architectures
 \section{Theory} 
 \label{sec:Theory} 
-Whilst in this work we do not detail the full design (beyond that provided in \cref{sec:CNN_Architectures}) and reasons for those designs of the models we will use, it may be beneficial for the reader to understand some concepts of neural networks in particular the components that make up convolutional neural networks. In this section we briefly describe some of these components as well as some of the other methods used within this work in \cref{sub:Transfer_Learning,sub:Activation_Maximisation}. We assume the reader already has familiarity with machine learning concepts such as backpropagation and fully connected neural networks.
+Whilst in this work we do not detail the full design (beyond that provided in \cref{sec:CNN_Architectures}) and reasons for those designs of the models we will use, it may be beneficial for the reader to understand some concepts of neural networks in particular the components that make up convolutional neural networks. In this section we briefly describe some of these components as well as some of the other methods used within this work in \cref{sub:Transfer_Learning,sub:Activation_Maximisation}. We assume the reader already has familiarity with introductory machine learning concepts such as backpropagation and fully connected neural networks.
 \subsection{Components of Convolutional Neural Networks} 
 \label{sub:Components_of_Convolutional_Neural_Networks} 
 \subsubsection{Activation functions}
-Most layers of a neural network have some kind of activation function; these are used to ensure both that there is at least some level of activity, and also to place the values within a specific range (usually networks only take in values between 0 and 1 so they need to be in this range). Some normalisation is also usually applied which is discussed later. For our purposes there are only 3 activation functions that are relevant for this work.
+Most layers of a neural network have some kind of activation function (a function that transforms the output of the neuron before passing it to the next layer); these are used to ensure both that there is at least some level of activity, and also to place the values within a specific range (usually networks only take in values between 0 and 1 so they need to be in this range). Some normalisation is also usually applied which is discussed later. For our purposes there are only 3 activation functions that are relevant for this work.
 
 Linear activation is exactly what it sounds like, there is no transformation to the output. Rectified Linear Unit (ReLU) is a function that returns the input when the value is greater than or equal to zero, and zero otherwise. Finally, softmax is used almost exclusively in the final layer of a network to transform the outputs into values that sum to 1 (to be interpreted as the probability of that record belonging to the class that neuron represents). These are defined mathematically in \cref{eq:act_linear,eq:act_relu,eq:act_softmax}.
 
@@ -87,14 +93,14 @@ Where the non-bold $x$s are just individual outputs, but the softmax function re
 \end{equation}
 
 \subsubsection{Convolutional layers}
-A convolutional layer  is different to the traditional fully connected layers and is used predominantly in image classifications, forming the fundamental building block of a CNN. A convolutional layer is defined by 3 key parameters, and the additional choice of padding. The 3 parameters that define a basic convolutional layer are the number of filters (analogous to the number of neurons in a dense layer) which is also the number of channels the output of that convolution will have, the size of the filters, and the stride (or step size) of the filter. 
+A convolutional layer  is different to the traditional fully connected layers and is used predominantly in image classification, forming the fundamental building block of a CNN. A convolutional layer is defined by 3 key parameters, and the additional choice of padding. The 3 parameters that define a basic convolutional layer are the number of filters (analogous to the number of neurons in a dense layer) which is also the number of channels the output of that convolution will have, the size of the filters, and the stride (or step size) of the filter. 
 
 A filter (also called a kernel) is applied atop of the input, starting at the top left of the input, and pointwise multiplication is applied to each set of elements, then their sum is computed. In the case of multiple input channels the same filter is applied over all channel and their outputs are summed. This value is the the output value of the top left cell of the output tensor. The filter is then moved left by the number of elements defined by the stride; when the end of the row has been reached the filter is moved down by the same stride. This process is repeated until the filter has been applied to the entire input. Once all filters have been applied this set of outputs is referred to as the feature map. This process is demonstrated in \cref{fig:conv_process} and quantified mathematically as
 
 \begin{equation}
 	m_{i,j,k} = \sum_{\chi = 1}^{C}\sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, k} \times x_{(\alpha +(i-1)*s), (\beta + (j-1)*s),\chi}
 \end{equation}
-where $m_{i,j,k}$ is the component of the feature map $\bm{m}_k$ for output channel $k$ at position $(i, j)$, C is the number of channels in the input, $x$ is the 3 dimensional input tensor (height, width, and channels) input, $f$ is the $k^{th}$ kernel of size $l\times l$, $s$ is the stride. The complexity of the subscripts on $x$ arises from the need to describe the offset provided by the size and stride of the kernel. We apply this equation for the examples given in \cref{fig:conv_process} in the following, noticing the simplifications that $C = s = 1$ so that $k \subseteq \{1\}$, and in this case $l = 3$. Then for the examples given in the image we have
+where $m_{i,j,k}$ is the component of the feature map $\bm{m}_k$ for output channel $k$ at position $(i, j)$, C is the number of channels in the input, $x$ is the 3 dimensional input tensor (height, width, and channels) input, $f$ is the $k^{th}$ filter of size $l\times l$, and $s$ is the stride. The complexity of the subscripts on $x$ arises from the need to describe the offset provided by the size and stride of the kernel. We apply this equation for the examples given in \cref{fig:conv_process} in the following, noticing the simplifications that $C = s = 1$ so that $k \subseteq \{1\}$, and in this case $l = 3$. Then for the examples given in the image we have
 \begin{align}
 	m_{1, 1, 1} &= \sum_{\alpha = 1}^{l}\sum_{\beta = 1}^{l} f_{\alpha,\beta, 1} \times x_{(\alpha +(1-1)), (\beta + (1-1)),1}	\\
 	m_{1, 1, 1} &= (1\times1 )+ (0 \times 2) + (1 \times 1) + (0 \times 2) + (1 \times 0) + (0 \times 0) + (1 \times 1) + (0 \times 0) + (1 \times 2) = 5 \\
@@ -136,7 +142,7 @@ Whilst the number of filters, filter size, and stride are hyperparameters that m
 
 
 \subsubsection{Depth-Wise Convolutions}
-Depth wise convolutions are similar to normal convolutional layers in all ways except one; instead of applying the filter to each channel of the input and summing the outputs to produce a single output channel we instead keep these outputs separate and produce an output with as many channels as the input per filter.  When followed by a 1x1 convolution (also known as a pointwise convolution) this has the effect of merging the layers via addition and combined these two processes actually have a reduced computational cost when compared to a traditional convolution \cite{Sandler2018}. The results from depth-wise convolutions are identical to to traditional convolutions but due to this improvement in computational cost they are used within many complex models to improve performance. 
+Depth wise convolutions are similar to normal convolutional layers in all ways except one; instead of applying the filter to each channel of the input and summing the outputs to produce a single output channel we instead keep these outputs separate and produce an output with as many channels as the input per filter.  When followed by a 1x1 convolution (also known as a pointwise convolution) this has the effect of merging the layers via addition and combined these two processes actually have a reduced computational cost when compared to a traditional convolution \cite{Sandler2018}. The results from depth-wise convolutions are identical to traditional convolutions but due to this improvement in computational cost they are used within many complex models to improve performance. 
 
 \subsubsection{Pooling}
 Pooling is an operation used within convolutional neural networks to reduce the size of channels/feature maps within the network. Pooling is applied using the same size and stride arguments as convolutions however instead of pointwise multiplication they aggregate across their area. These operations tend to either be maximum or average and are determined either by the user or the CNN architecture. These are applied per-channel and no aggregation across channels is completed afterwards. The dimensions of the output after pooling can be calculated using the same method as before displayed in \cref{eq:feat_map2}. Traditionally (and in our work) pooling is completed with no padding. Global pooling refers to when the size of the filter matches the size of the input and a 1x1xdepth output is returned. For example global average pooling on the output feature map of \cref{fig:conv_process} would be a 1x1 result of 7, global average pooling would give 4.333\dots and max pooling of size 2x2 with a stride of 1 would lead to
@@ -152,10 +158,10 @@ $$
 	5.25 & 4.25 \\
 	5.25 & 4.5 \\
 \end{bmatrix}
-$$.
+$$
 
 \subsubsection{Batch Normalisation}
-Batch normalisation was introduced in a 2015 paper by Sergey Ioffee and Christain Szegedy\cite{Ioffe2015} and is a step introduced into neural networks, including CNNs, between the layers and the activation functions. Batch normalisation works by applying re-scaling and re-centering transformations to the output of a layer i.e. transforming the output of that layer for that batch to have a mean of 0 and a standard deviation of 1. This has the effect of greatly reducing training time and increases accuracy by way of reducing the change in the data distribution between layers and reducing the change of this over time via backpropagation. 
+Batch normalisation was introduced in a 2015 paper by Sergey Ioffee and Christain Szegedy\cite{Ioffe2015} and is a step introduced into neural networks, including CNNs, between the layers and the activation functions. Batch normalisation works by applying re-scaling and re-centering transformations to the output of a layer i.e. transforming the output of that layer for that batch to have a mean of 0 and a standard deviation of 1. This has the effect of greatly reducing training time and increases accuracy by way of reducing the change in the data distribution between different layers and more importantly reducing the change of this over time via backpropagation. 
 
 \subsubsection{Residual Networks}
 Residual networks (ResNets) were introduced by He et al. in 2015\cite{He2015a} to allow for far deeper networks than previously used. The basic premise is that the layer input forms part of the output directly via a scaled addition to the convolved, normalised, and activated output. This allows for information to be carried further through the network and was shown to achieve better results against benchmark image classification datasets. Further detail and formulation is available in the original paper so we do not reproduce that here as a grasp of the main concept is all that is required.
@@ -166,7 +172,7 @@ Residual networks (ResNets) were introduced by He et al. in 2015\cite{He2015a} t
 Transfer learning is a concept in machine learning that \emph{knowledge} gained by a network in one domain could be used within another domain, either out of the box or as a starting point for training. In our case, the models we use have already been trained on the more complex ImageNet dataset so would be suitable to use in transfer learning to save a lot of time training the model from scratch.
 
 
-In transfer learning it is possible to take one of two approaches; the first is to use the existing model weight and biases as a starting point for training and to train the entire model using your training data, the second is to freeze the weights and biases for the feature engineering part of the model i.e. all but the fully connected layers at the end, and just train the classification top of the model. In our work we took the second approach as, given the size of the models we are using, training the full model would have been computationally expensive, and given the relatively small amount of training data would also have, when compared to the number of parameters in the model, been unlikely to have improved accuracy.
+In transfer learning it is possible to take one of two approaches; the first is to use the existing model weights and biases as a starting point for training and to train the entire model using your training data, the second is to freeze the weights and biases for the feature engineering part of the model i.e. all but the fully connected layers at the end, and just train the classification top of the model. In our work we took the second approach as, given the size of the models we are using, training the full model would have been computationally expensive, and given the relatively small amount of training data would also have, when compared to the number of parameters in the model, been unlikely to have improved accuracy.
 % subsection Transfer_Learning end 
 
 \subsection{Activation Maximisation} 
@@ -188,7 +194,7 @@ where $\eta$ is the learning rate which in this work was set at 1, $\mathcal{R}$
 \label{sec:Data_collection_and_pre-processing} 
 \subsection{Image Download and Manual Review} 
 \label{sub:Image Download and Manual Review} 
-The 207, 572 images within the complete book32 dataset covering all original 32 classes were downloaded at full resolution using a slightly altered version of the script provided within the Iwana repository \cite{iwanarepo}. The original csv containing all image URLs was split into files of no more than 20,000 records each to allow the downloads to be run over multiple sessions due to the slow data transfer rates and the overhead of reading data between Google Drive and Google Colab meaning that even checking before downloading an individual file was not much faster than downloading and writing the file anyway. Each sub-file was then iterated over using the remainder of the original script, downloading each image into a sub-folder of the class for that image i.e. the genre classification. Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. 
+The 207,572 images within the complete book32 dataset covering all original 32 classes were downloaded at full resolution using a slightly altered version of the script provided within the Iwana repository \cite{iwanarepo}. The original csv containing all image URLs was split into files of no more than 20,000 records each to allow the downloads to be run over multiple sessions due to the slow data transfer rates. The overhead of reading data between Google Drive and Google Colab meant that even checking before downloading an individual file if it already existed was not much faster than downloading and writing the file anyway. Each sub-file was then iterated over using the remainder of the original script, downloading each image into a sub-folder of the class for that image i.e. the genre classification. Once all images were downloaded a sample few were manually checked to verify as best as possible that the data was still correct and the downloads has worked. 
 
 At this point we attempted to identify if any records used in the bookcover30 train or test datasets were actually boxsets, and as such would likely have an unrepresentative cover image, an example of such an image can be seen in \cref{fig:bad_cover}. The terms used in a regex search of the titles were \emph{``boxed set'', ``boxset'', ``box set'', ``anthology'', ``bundle'', ``\#-book'', and ``\# book''}. 264 records within the bookcover30 dataset matched at least one of these terms and were extracted into a new folder for manual review. The process was somewhat subjective but as a rule of thumb we rejected any image that was not a single front facing cover or that contained pictures of multiple books and was not an arrangement of covers; single covers that seemed to be specifically designed for a boxset were considered acceptable. In total 94 records needed to be removed due to these rules. To preserve the class balance of the train and test datasets, new records were chosen from the book32 dataset by making like-for-like swaps of the same class; any new covers were also reviewed to ensure they were not boxsets. No verification of the class assignment to images was performed so any errors that existed in the original data would have persisted and we continue to use the single class chosen by the original authors in the case of multi-class books.
 
@@ -248,7 +254,7 @@ All model architectures consisted of their respective base CNN structure as deta
 
 The models themselves, MobileNetV2 \cite{Sandler2018}, Inception-ResNet-v2 \cite{Szegedy2016}, and ResNeXt50 \cite{Xie2016} were chosen to represent a wide spread of model capabilities and complexities as highlighted in Figure 1 of the Benchmark Analysis of CNNs completed by Bianco et al\cite{Bianco2018}. MobileNetV2 was chosen as it is a lightweight model designed to be capable of running on mobile devices and was meant to be a low complexity comparison in line with AlexNet (due to no pre-trained version of AlexNet being available within TensorFlow), Inception-ResNet-v2 for its high accuracy in other use cases, and ResNeXt50 as a smaller version of one of the newer CNN architectures. These models, combined with the original work done by Iwana et al, span a range of complexity and training speed allowing for a good comparison between performance.
 
-The models were training once using the training data as described in \cref{sub:Image Download and Manual Review} and validated against the validation data split out at the same point. No cross-validation was done due to resource limitations.
+The models were trained once using the training data as described in \cref{sub:Image Download and Manual Review} and validated against the validation data split out at the same point. No k-fold cross-validation was done due to resource limitations.
 % subsection Configuration end 
 \subsection{Training Performance} 
 \label{sub:Training_Performance} 
@@ -275,7 +281,7 @@ MobileNetV2 achieved the best validation accuracy early on in its training, wher
 \label{sec:Evaluation_and_Further_Exploration} 
 \subsection{Results} 
 \label{sub:Results} 
-Full results for all 3 models evaluated on the test set are available in \cref{tab:results_acc}, along with those reported by Iwana for ease of comparison. A visual representation of this for our models only is shown in \cref{fig:test_perf}. As a reminder, the dataset used for our models was slightly altered from the original set, and due to the use of a validation dataset was not trained on the fill set of records; but for a comparison it is suitable. Inception-ResNet-v2 is comparable to the results of AlexNet but is slightly more accurate when Top-3 predictions are taken into account. MobileNetV2 is close to LeNet in performance, with just slightly improvements in many genres. ResNeXt50 shows very odd behaviour, with many classes showing near 0\% accuracy even at Top-3, whilst some classes have a very high accuracy such as Biographies and Memoirs. This is likely an artefact of it overlapping specific classes which along with is discussed further in \cref{sub:Further_Analysis}.
+Full results for all 3 models evaluated on the test set are available in \cref{tab:results_acc}, along with those reported by Iwana for ease of comparison. A visual representation of this for our models only is shown in \cref{fig:test_perf}. As a reminder, the dataset used for our models was slightly altered from the original set, and due to the use of a validation dataset was not trained on the full set of records; but for a comparison it is suitable. Inception-ResNet-v2 is comparable to the results of AlexNet but is slightly more accurate when Top-3 predictions are taken into account. MobileNetV2 is close to LeNet in performance, with just slightly improvements in many genres. ResNeXt50 shows very odd behaviour, with many classes showing near 0\% accuracy even at Top-3, whilst some classes have a very high accuracy such as Biographies and Memoirs. This is likely an artefact of it overlapping specific classes which along with is discussed further in \cref{sub:Further_Analysis}.
 
 At a per-genre level Inception-ResNet-v2 shows the best results on 16 out of the 30 genres for top-1 predictions, followed by 10 for AlexNet. If we further explore the seemingly best performing classes in ResNeXt50 we can see by looking at the precision as presented in \cref{tab:test_prec} that in the genres where this model seems to perform well the precision is low (when compared to for example Inception-ResNet-v2) which provides further evidence that for some classes it combines multiple genres and just predicts one of them i.e. whilst the model is able to correctly predict these \emph{chosen}	classes when it sees them, it is highly likely to predict other genres as one of these as well.
 
@@ -396,9 +402,9 @@ First, as displayed in \cref{fig:col_distributions}, we can see that whilst ther
 The average overall colour per genre is presented in \cref{fig:avg_col} which does suggest some slight differences between the genres; similar to the callouts made by Iwana, Sci-Fi and Fantasy seem to be darker when compared to something like Cookbooks, Food and Wine. We can compare the average colour of the true classes against those predicted by each model and visualise how these correlate with the accuracy per class as shown in \cref{fig:col_distance}. Here the colour distance is defined as 
 
 \begin{equation}
-	d_{colour} = \sqrt{(R_2 - R_1)^2 + ((G_2 - G_1)^2 +((B_2 - B_1)^2 }
+	d_{colour} = \sqrt{(R_2 - R_1)^2 + (G_2 - G_1)^2 +(B_2 - B_1)^2 }
 \end{equation}
-where R/G/B are the average red, green, and blue values for each predicted and true class respectively. We can see a small trends here, particular in MobileNetV2, where the closer the average colour of the true class the better the recall of that class. This is of course a somewhat self-fulfilling prophecy; the more you correctly predict the class the more the dataset will be the true class, however is highlights that even by just guessing based on closeness to average colour you can make some small improvements. This supports the claims made by Iwana in their work. 
+where R/G/B are the average red, green, and blue values for each predicted and true class respectively. We can see a small trends here, particular in MobileNetV2, where the closer the average colour of the true class the better the recall of that class. This is of course a somewhat self-fulfilling prophecy; the more you correctly predict the class the more the dataset will be the true class, however it highlights that even by just guessing based on closeness to average colour you can make some small improvements. This supports the claims made by Iwana in their work. 
 
 
 \begin{figure}
@@ -417,7 +423,7 @@ where R/G/B are the average red, green, and blue values for each predicted and t
 	\label{fig:col_distance}
 \end{figure}
 
-Finally, we can review the \emph{class overlap} for each model. We define class overlap between class A and B for a single prediction as the ratio of the probability of prediction for class A and class B (where A has a higher probability) i.e.
+Finally, we can review the \emph{class overlap} for each model. We define class overlap between class A and B for a single prediction as the ratio of the probability of prediction for class A and class B (where B has a higher probability) i.e.
 \begin{equation}
 	CO(A, B) \stackrel{\mathrm{def}}{=} \min\left\{\frac{P(A)}{P(B)}, \frac{P(B)}{P(A)}\right\}
 \end{equation}
@@ -433,9 +439,9 @@ The per genre pair class overlap is defined as the average class overlap across 
 % section Further_Analysis end 
 \subsection{Feature Visualisation} 
 \label{sub:Feature_Visualisation} 
-The goal of using feature visualisation was to attempt to understand what, if any, underlying structure or information the models were using to aid their classification. To do this we use activation maximisation as implemented into the python package \emph{tf-keras-vis}\cite{keras-vis} to do the computational work. To produce the images the final layer activation function was changed from softmax to linear to ensure that class is being visualised as opposed to minimising other classes, and the loss function is simply defined as that linear activation (note here that loss is really a misnomer as we are trying to maximise this value as opposed to minimise it as we traditionally would) as discussed in \cref{sub:Activation_Maximisation}. L2 normalisation was used as the default to attempt to avoid pure static images being produced.
+The goal of using feature visualisation was to attempt to understand what, if any, underlying structure or information the models were using to aid their classification. To do this we use activation maximisation as implemented into the python package \emph{tf-keras-vis}\cite{keras-vis} to do the computational work. To produce the images the final layer activation function was changed from softmax to linear to ensure that target class is being visualised as opposed to just minimising minimising other class activations, and the loss function is simply defined as that linear activation (note here that loss is really a misnomer as we are trying to maximise this value as opposed to minimise it as we traditionally would) as discussed in \cref{sub:Activation_Maximisation}. L2 normalisation was used as the default to attempt to avoid pure static images being produced.
 
-We ran the activation maximisation on the Inception-ResNet-v2 model for the 3 best predicted genres (Test Prep, Comics \& Graphic Novels, and Travel) as we believed these had the best probability of returning useful images. The inputs to the model were then trained for 1000 epochs, at which point issues were encountered with the RAM on the machine. During these steps there was some improvement to the loss function however did not appear to converge and when compared to the progress seen on a pure ImageNet model these saw very little movement and remained negative the entire time (where as the examples provided by the package are always positive after the first few epochs). Even when all regularisation terms were removed, allowing the process to fully maximise the activation without constraints we still did not see an improvement in the loss values.
+We ran the activation maximisation on the Inception-ResNet-v2 model for the 3 best predicted genres (Test Prep, Comics \& Graphic Novels, and Travel) as we believed these had the best probability of returning useful images. The inputs to the model were then trained for 1000 epochs, at which point issues were encountered with the RAM on the machine. During these steps there was some improvement to the loss function however did not appear to converge. When compared to the progress seen on a pure ImageNet model these saw very little movement and remained negative the entire time (where as the examples provided by the package are always positive after the first few epochs). Even when all regularisation terms were removed, allowing the process to fully maximise the activation without constraints we still did not see an improvement in the loss values.
 
 The results of this attempt can be seen in \cref{fig:act_max_output} and whilst it may be possible to argue that there are some differences between these images that you could prescribe to the common layout of these type of genres covers, it would be difficult to say this with any conviction. Overall the images are generic and provided no additional insight to understand what features the model is identifying to use for the classification.
 
@@ -464,7 +470,7 @@ In this work we have attempted to improve on the work of Iwana et al. and better
 
 We have seen that by using a more modern CNN architecture, namely Inception-ResNet-v2, we are able to improve on the results published by Iwana slightly, whilst training for substantially less epochs. We have also provided some further supporting insight into the components that factor into book cover design i.e. colour, and identified where classifications are failing where this might be due to overlap between classes.
 
-There is still lots to explore in this space as we discussed in \cref{sub:Discussion} and hopefully this work provides a springboard to enable more complex CNNs to be used for genre identification of book covers in the future. The work itself is unlikely to provide any value for real-world use as the accuracy is too low to be of use for either consumers or even cover designers as a form of QA. Genre prediction from cover images remains a complex topic and given the subjectivity of the classifications is unlikely to ever be fully solved, however the work produced here gets a little closer than we were before. So it seems for now that, if you are a CNN, you should follow the original advice and not try to judge a book by its cover.
+There is still lots to explore in this space as we discussed in \cref{sub:Discussion} and hopefully this work provides a springboard to enable more complex CNNs to be used for genre identification of book covers in the future. The work itself is unlikely to provide any value for real-world use as the accuracy is too low to be of use for either consumers or even cover designers as a form of QA. Genre prediction from cover images remains a complex topic and given the subjectivity of the classifications is unlikely to ever be fully solved, however the work produced here gets a little closer than we were before. So it seems for now that, if you are a CNN, you should follow the old adage and don't judge a book by its cover.
 % section Conclusion end 
 
 %\nocite{*}
@@ -481,7 +487,7 @@ Detail the exact configurations of these architectures
 Full technical details of the specification is available in the paper by Sandler at al. \cite{Sandler2018} where the model is first published. The version we use is identical using the Keras implementation with the exception that we do not use a final Conv2D layer but instead use a dense fully connected layer of size 30 to use for our classification. The table and captions explaining the architecture is copied from their paper to here for convenience. The only other difference not detailed in these tables is batch normalisation is applied after each convolution but before the ReLU, and zero padding is applied where a stride of 2 is used. 
 
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{c|c|c}
 	\hline
@@ -496,7 +502,7 @@ Full technical details of the specification is available in the paper by Sandler
 	\label{tab:bottleneck}
 	\end{table}
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{c|c|c|c|c|c}
 	\hline
@@ -525,7 +531,7 @@ Full technical details of the specification is available in the paper by Sandler
 The architecture, with all the relevant filter and stride settings are detailed within the original paper by Szegedy et al. \cite{Szegedy2016} however the Keras implementation seems to differ slightly and the original paper does not provide a full spec in a single place so it is composed here. For simplicity batch normalisation is not explicitly written but is used after every convolution operator and ReLU activation is used throughout. A summarised version is available in \cref{fig:incepresnetv2}\cite{Alemi2016}.
 
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\captionsetup{justification=centering}
 	\includegraphics[scale=0.25]{inception_resnetv2.png}
@@ -535,7 +541,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 
 
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{c|c|c|c|c|c|c}
@@ -554,7 +560,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 	\label{tab:incepresa}
 	\end{table}
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{c|c|c|c|c|c|c}
@@ -571,7 +577,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 	\label{tab:incepresb}
 	\end{table}
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{c|c|c|c|c|c|c}
@@ -588,7 +594,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 	\label{tab:incepresc}
 	\end{table}
 	
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{c|c|c|c|c|c|c|c}
@@ -642,7 +648,7 @@ The architecture, with all the relevant filter and stride settings are detailed 
 The full details of the ResNeXt50 architecture and in what way it differs from and improves upon regular ResNets is available in the paper by Xie et al.\cite{Xie2016}. We reproduce here the table (\cref{tab:resnextarc})explaining the architecture and an image (\cref{fig:resnextblocks}) explaining the blocks from their paper for convenience. These models differ in their use of a \emph{cardinality} term, C. This is defined as the number of times a repeated series of convolutional filters in parallel with the exact same parameters are used within a block. All layers are followed by batch normalisation and ReLU activation.
 
 
-\begin{table}[]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{c|c|c|c|c|c|c|c}
@@ -668,7 +674,7 @@ The full details of the ResNeXt50 architecture and in what way it differs from a
 	\label{tab:resnextarc}
 	\end{table}
 
-	\begin{figure}
+	\begin{figure}[H]
 		\centering
 		\captionsetup{justification=centering}
 		\includegraphics[scale=0.5]{resnextblocks.PNG}
